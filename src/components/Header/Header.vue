@@ -38,14 +38,14 @@
     </b-nav>
     -->
     <a class="navbarBrand d-md-none">
-      <i class="fa fa-circle text-danger" />
+      <i class="fa fa-circle text-primary" />
       &nbsp;
-      sing
+      Naxsys
       &nbsp;
       <i class="fa fa-circle text-primary" />
     </a>
     <b-nav class="ml-auto">
-      <!--
+      
       <b-nav-item-dropdown
         class="notificationsMenu d-sm-down-none mr-2"
         menu-class="notificationsWrapper py-0 animate__animated animate__animated-fast animate__fadeIn"
@@ -54,16 +54,16 @@
           <span class="avatar rounded-circle thumb-sm float-left mr-2">
             <img class="rounded-circle" src="../../assets/people/a7.png" alt="..." />
           </span>
-          <span class="px-2">Philip Smith</span>
+          <span class="px-2">Nome do Usuário</span>
           <span class="ml-1 mr-2 circle text-white fw-bold avatar-badge">9</span>
           <i class='fi flaticon-arrow-down px-2' />
         </template>
         <Notifications />
       </b-nav-item-dropdown>
-      -->
+      
       <b-nav-item-dropdown id="v-step-2" class="settingsDropdown d-sm-down-none" no-caret right>
         <template slot="button-content">
-          Nome do Usuário <i class='fi flaticon-settings-10 px-2' />
+           <i class='fi flaticon-settings-10 px-2' />
         </template>
         <b-dropdown-item><i class='fi flaticon-person px-3 mr-3' /> My Account</b-dropdown-item>
         <b-dropdown-divider />
