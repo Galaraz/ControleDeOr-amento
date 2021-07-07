@@ -5,6 +5,7 @@ import Layout from '@/components/Layout/Layout';
 
 import Login from '@/pages/login/Login';
 import DashboardPage from '@/pages/dashboard';
+import OrcamentoPage from '@/pages/orcamento/orcamento';
 
 
 Vue.use(Router);
@@ -18,7 +19,7 @@ export default new Router({
       component: Login,
     },
     {
-      path: '/app',
+      path: '/',
       name: 'Layout',
       component: Layout,
       children: [
@@ -27,7 +28,13 @@ export default new Router({
           name: 'DashboardPage',
           component: DashboardPage,
         },
+
+        {
+          path: 'orcamento',
+          name: 'orcamentoPage',
+          component: OrcamentoPage,
+        },
       ],
     }
-  ] 
+   ] 
 });

@@ -6,7 +6,8 @@
         @mouseleave="sidebarMouseLeave"
     >
       <header class="logo">
-        <router-link to="/app/dashboard"><span class="primary-word">Controle</span> <span class="secondary-word"> Orçamentos</span></router-link>
+        <router-link to="/dashboard"><span class="primary-word">LogoEmpresa</span>
+        </router-link>
       </header>
       <!--<h5 class="navTitle first">
         APP
@@ -14,40 +15,46 @@
       <ul class="nav">
         <NavLink
             :activeItem="activeItem"
-            header="Dashboard"
-            link="/app/dashboard"
+            header="Painel"
+            link="/dashboard"
             iconName="flaticon-home"
             index="dashboard"
             isHeader
         />
         <NavLink
             :activeItem="activeItem"
-            header="Typography"
-            link="/app/typography"
+            header="Equipamentos"
+            link="/typography"
             iconName="flaticon-list"
             index="typography"
             isHeader
         />
         <NavLink
             :activeItem="activeItem"
-            header="Tables Basic"
-            link="/app/tables"
+            header="Atividades"
+            link="/tables"
             iconName="flaticon-equal-1"
             index="tables"
             isHeader
         />
         <NavLink
             :activeItem="activeItem"
-            header="Notifications"
-            link="/app/notifications"
+            header="Funçoes"
+            link="/notifications"
             iconName="flaticon-bell"
             index="notifications"
-            isHeader
+             :childrenLinks="[
+              { header: 'Equipamentos', link: '/app/cadastros/charts' },
+              { header: 'Serviços', link: '/app/cadastros/icons' },
+              { header: 'Funções', link: '/app/cadastros/maps' },
+              { header: 'Clientes', link: '/app/cadastros/clientes' },
+              { header: 'Usuários', link: '/app/cadastros/usuarios' },
+            ]"
         />
         <NavLink
             :activeItem="activeItem"
             header="Cadastros"
-            link="/app/cadastros"
+            link="/cadastros"
             iconName="flaticon-network"
             index="cadastros"
             :childrenLinks="[
@@ -58,6 +65,40 @@
               { header: 'Usuários', link: '/app/cadastros/usuarios' },
             ]"
         />
+         <NavLink
+            :activeItem="activeItem"
+            header="Orçamentos"
+            link="/orcamento"
+            iconName="flaticon-network"
+            index="orcamento"
+            :childrenLinks="[
+              { header: 'Novo Orçamento', link: '/cadastros/charts' },
+              { header: 'Orçamentos Enviados', link: '/cadastros/icons' },
+              { header: 'Rascunhos', link: '/cadastros/maps' },
+            ]"
+        />
+         <NavLink
+            :activeItem="activeItem"
+            header="Usuarios"
+            link="/cadastros"
+            iconName="flaticon-network"
+            index="cadastros"
+            :childrenLinks="[
+              { header: 'Equipamentos', link: '/app/cadastros/charts' },
+              { header: 'Serviços', link: '/app/cadastros/icons' },
+              { header: 'Funções', link: '/app/cadastros/maps' },
+              { header: 'Clientes', link: '/app/cadastros/clientes' },
+              { header: 'Usuários', link: '/app/cadastros/usuarios' },
+            ]"
+        />
+         <NavLink
+            :activeItem="activeItem"
+            header="Sair"
+            link="/login"
+            iconName="flaticon-equal-1"
+            index="tables"
+            isHeader
+          />
       </ul>
       <!--
       <h5 class="navTitle">
@@ -84,7 +125,7 @@
         </li>
       </ul>
       -->
-      <h5 class="navTitle">
+      <!-- <h5 class="navTitle">
         PROJECTS
       </h5>
       <div class="sidebarAlerts">
@@ -99,7 +140,7 @@
                       :variant="alert.color" :value="alert.value" :max="100"/>
           <small>{{alert.footer}}</small>
         </b-alert>
-      </div>
+      </div> -->
       
     </nav>
   </div>
