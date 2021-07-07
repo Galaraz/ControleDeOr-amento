@@ -72,7 +72,7 @@
             iconName="flaticon-network"
             index="orcamento"
             :childrenLinks="[
-              { header: 'Novo Orçamento', link: '/cadastros/charts' },
+              { header: 'Novo Orçamento', link: '/orcamento/' },
               { header: 'Orçamentos Enviados', link: '/cadastros/icons' },
               { header: 'Rascunhos', link: '/cadastros/maps' },
             ]"
