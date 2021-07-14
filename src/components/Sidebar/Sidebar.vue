@@ -23,22 +23,6 @@
         />
         <NavLink
             :activeItem="activeItem"
-            header="Equipamentos"
-            link="/typography"
-            iconName="flaticon-list"
-            index="typography"
-            isHeader
-        />
-        <NavLink
-            :activeItem="activeItem"
-            header="Atividades"
-            link="/tables"
-            iconName="flaticon-equal-1"
-            index="tables"
-            isHeader
-        />
-        <NavLink
-            :activeItem="activeItem"
             header="Funçoes"
             link="/notifications"
             iconName="flaticon-bell"
