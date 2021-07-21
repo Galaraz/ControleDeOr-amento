@@ -1,9 +1,10 @@
 <template>
   <li v-if="!childrenLinks && isHeader" :class="{headerLink: true, className}">
     <router-link :to="link" class="sidebar-link">
-      <span class="icon">
+      <!-- <span class="icon">
         <i :class="fullIconName"></i>
-      </span>
+      </span> -->
+      <span class="icon" v-html="menuIcon()"></span>
       {{header}} <sup v-if="label" :class="'text-' + labelColor" class="headerLabel">{{label}}</sup>
       <b-badge v-if="badge" variant="primary" pill>{{badge}}</b-badge>
     </router-link>
@@ -11,9 +12,10 @@
   <li v-else-if="childrenLinks" :class="{headerLink: true, className}">
     <div @click="() => togglePanelCollapse(link)">
       <router-link :to="link" event="" class="d-flex sidebar-link">
-        <span class="icon">
+        <!-- <span class="icon">
           <i :class="fullIconName"></i>
-        </span>
+        </span> -->
+        <span class="icon" v-html="menuIcon()"></span>
         {{header}} <sup v-if="label" :class="'text-' + labelColor" class="ml-1 headerLabel">{{label}}</sup>
         <div :class="{caretWrapper: true, carretActive: isActive}">
           <i class="fa fa-angle-right" />
@@ -28,6 +30,7 @@
           :index="link.index"
           :link="link.link"
           :childrenLinks="link.childrenLinks"
+          :iconName="link.iconName"
           :key="link.link"
         />
       </ul>
@@ -35,6 +38,7 @@
   </li>
   <li v-else>
     <router-link :to="index !== 'menu' && link">
+      <span class="icon-sub" v-html="menuIcon()"></span>
       {{header}} <sup v-if="label" :class="'text-' + labelColor" class="headerLabel">{{label}}</sup>
     </router-link>
   </li>
@@ -73,10 +77,15 @@ export default {
       this.headerLinkWasClicked = !this.headerLinkWasClicked
       || !this.activeItem.includes(this.index);
     },
+    menuIcon(){
+      return `<i class="${this.iconName}"></i>`;
+      //  '<i class="'+$this.iconName+'"></i>';
+    },
   },
   computed: {
     fullIconName() {
-      return `fi ${this.iconName}`;
+      // return `fi ${this.iconName}`;
+      return `${this.iconName}`;
     },
     isActive() {
       return (this.activeItem

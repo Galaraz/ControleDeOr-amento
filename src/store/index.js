@@ -11,6 +11,7 @@ export default new Vuex.Store({
   },
   state: {
     user: { id:null, uuid:null, name:null },
+    nomePagina: '',
   },
   mutations: {
     setUser(state, payload){
@@ -22,6 +23,9 @@ export default new Vuex.Store({
       state.sistemas = [] 
       state.appToken = null
       state.appTokenExpiration = null
+    },
+    setNomePagina(state, payload){
+      state.nomePagina = payload
     },
   } 
 });
