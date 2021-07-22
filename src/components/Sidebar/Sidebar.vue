@@ -6,13 +6,68 @@
         @mouseleave="sidebarMouseLeave"
     >
       <header class="logo">
-        <router-link to="/dashboard"><span class="primary-word">LogoEmpresa</span>
-        </router-link>
+        <router-link to="/dashboard"><span class="primary-word">LogoEmpresa</span></router-link>
       </header>
+
+      <NavLink
+        :activeItem="activeItem"
+        header="Painel"
+        link="/dashboard"
+        iconName="fas fa-tachometer-alt"
+        index="dashboard"
+        isHeader
+      />
+      <NavLink
+        :activeItem="activeItem"
+        header="Novo Orçamento"
+        link="/orcamento/novo"
+        iconName="fas fa-plus"
+        index="orcamento/novo"
+        isHeader
+      />
+      <NavLink
+        :activeItem="activeItem"
+        header="Orçamentos Enviados"
+        link="/orcamento/enviados"
+        iconName="far fa-paper-plane"
+        index="orcamento/enviados"
+        isHeader
+      />
+      <NavLink
+        :activeItem="activeItem"
+        header="Orçamentos - Lista"
+        link="/orcamento/enviados"
+        iconName="fas fa-list"
+        index="orcamento/lista"
+        isHeader
+      />
+
+      <NavLink
+        :activeItem="activeItem"
+        header="Cadastros"
+        link="/cadastros"
+        iconName="fas fa-cogs"
+        index="cadastros"
+        :childrenLinks="[
+          { header: 'Equipamentos', link: '/app/cadastros/equipamentos', iconName: 'fas fa-microchip' },
+          { header: 'Serviços', link: '/app/cadastros/servicos', iconName: 'fas fa-tools' },
+          { header: 'Funções', link: '/app/cadastros/funcoes', iconName: 'fas fa-user-cog' },
+          { header: 'Clientes', link: '/app/cadastros/clientes', iconName: 'fas fa-user-tie' },
+        ]"
+      />
+
+
+
+
+
+
+
+
+
       <!--<h5 class="navTitle first">
         APP
       </h5>-->
-      <ul class="nav">
+      <!-- <ul class="nav">
         <NavLink
             :activeItem="activeItem"
             header="Painel"
@@ -83,7 +138,7 @@
             index="tables"
             isHeader
           />
-      </ul>
+      </ul> -->
       <!--
       <h5 class="navTitle">
         LABELS
@@ -125,8 +180,9 @@
           <small>{{alert.footer}}</small>
         </b-alert>
       </div> -->
-      
+    <!-- <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br> -->
     </nav>
+    
   </div>
 </template>
 

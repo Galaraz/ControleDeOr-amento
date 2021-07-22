@@ -9,6 +9,8 @@
           <i class='fi flaticon-menu' />
         </a>
       </b-nav-item>
+      <b-nav-item>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b-nav-item>
+      <b-nav-item><span v-html="nomePagina==''?'Página não identificada':nomePagina"></span></b-nav-item>
       <!--
       <b-nav-item class="d-md-down-none">
         <a href="#" class="px-2">
@@ -46,7 +48,7 @@
     </a>
     <b-nav class="ml-auto">
       
-      <b-nav-item-dropdown
+      <!-- <b-nav-item-dropdown
         class="notificationsMenu d-sm-down-none mr-2"
         menu-class="notificationsWrapper py-0 animate__animated animate__animated-fast animate__fadeIn"
         right>
@@ -59,21 +61,29 @@
           <i class='fi flaticon-arrow-down px-2' />
         </template>
         <Notifications />
-      </b-nav-item-dropdown>
+      </b-nav-item-dropdown> -->
       
       <b-nav-item-dropdown id="v-step-2" class="settingsDropdown d-sm-down-none" no-caret right>
         <template slot="button-content">
-           <i class='fi flaticon-settings-10 px-2' />
+          <!-- <i class='fi flaticon-settings-10 px-2' /> -->
+          <i class="far fa-user" />&nbsp;{{user.name==null?"Não Logado":user.name}}&nbsp;<i class="fas fa-angle-down text-primary" />
         </template>
-        <b-dropdown-item><i class='fi flaticon-person px-3 mr-3' /> My Account</b-dropdown-item>
-        <b-dropdown-divider />
+        <!-- <b-dropdown-item><i class='fi flaticon-person px-3 mr-3' /> My Account</b-dropdown-item>
+        <b-dropdown-divider /> -->
         <!--<b-dropdown-item><i class='fi flaticon-calendar-9 px-3 mr-3' />Calendar</b-dropdown-item>
         <b-dropdown-item><i class='fi flaticon-email px-3 mr-3' />
           Inbox &nbsp;&nbsp;<b-badge variant="inverse" pill class="animate__animated animate__bounceIn" style="padding: 6px 9px;">9</b-badge>
         </b-dropdown-item>
         <b-dropdown-divider />-->
-        <b-dropdown-item-button @click="logout">
+        <!-- <b-dropdown-item-button @click="logout">
           <i class="fi flaticon-power-1 px-3 mr-3" /> Log Out
+        </b-dropdown-item-button> -->
+        <b-dropdown-item><i class="far fa-user" /> Meus Dados</b-dropdown-item>
+        <b-dropdown-divider />
+        <b-dropdown-item><i class="fas fa-lock" /> Trocar senha</b-dropdown-item>
+        <b-dropdown-divider />
+        <b-dropdown-item-button @click="logout">
+          <i class="fas fa-sign-out-alt" /> Sair do Sistema
         </b-dropdown-item-button>
       </b-nav-item-dropdown>
     </b-nav>
@@ -89,6 +99,12 @@ export default {
   components: { Notifications },
   computed: {
     ...mapState('layout', ['sidebarClose', 'sidebarStatic']),
+    user(){
+      return this.$store.state.user
+    },
+    nomePagina(){
+      return this.$store.state.nomePagina
+    },
   },
   methods: {
     ...mapActions('layout', ['toggleSidebar', 'switchSidebar', 'changeSidebarActive']),
@@ -116,6 +132,7 @@ export default {
     },
     logout() {
       window.localStorage.setItem('authenticated', false);
+      this.$store.commit('clearUser')
       this.$router.push('/login');
     },
   }
