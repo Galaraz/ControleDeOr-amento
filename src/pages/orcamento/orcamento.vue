@@ -1,15 +1,30 @@
 <template>
   <div>
-    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+    <div class="row">
+        <div class="col">
+            <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
+            <Widget
+                title="<h5><i class='fas fa-flask text-primary'></i> Lista de Tipos de Exames</h5>"
+                bodyClass="mt-2"
+                customHeader
+            >
+    <!-- <b-form @submit="onSubmit" @reset="onReset" v-if="show"> -->
+      <div class="row"><div class="col"><hr></div></div>
+
+      <div class="row">
+        <div class="col col-6">
+          <b-form-group id="input-group-1" label="Empresa:" label-for="input-1">
+            <b-form-select
+              id="input-1"
+              v-model="form.empresa"
+              :options="empresa"
+              required
+            ></b-form-select>
+          </b-form-group>
+        </div>
+      </div>
      
-     <b-form-group id="input-group-1" label="Empresa:" label-for="input-1">
-        <b-form-select
-          id="input-1"
-          v-model="form.empresa"
-          :options="empresa"
-          required
-        ></b-form-select>
-      </b-form-group>
+     
     
     <b-form-group
         id="input-group-2"
@@ -62,10 +77,41 @@
 
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
-    </b-form>
+    <!-- </b-form> -->
     <b-card class="mt-3" header="Form Data Result">
       <pre class="m-0">{{ form }}</pre>
     </b-card>
+
+    </Widget>
+            </b-overlay>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
+            <Widget
+                style="width:100%"
+            >
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <b-button @click="modalAddRegistry()" v-b-tooltip.hover title="Incluir Registro" variant="success" size="sm" class="mr-4"><i class="fas fa-plus ml-2 mr-2"></i></b-button>
+                            <b-button @click="modalAddRegistry()" v-b-tooltip.hover title="Salvar Registro" variant="primary" size="sm" class="mr-4"><i class="fas fa-save ml-2 mr-2"></i></b-button>
+                        </td>
+                        <td class="text-right">
+                            <!-- <b-button disabled v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
+                            &nbsp;&nbsp;&nbsp;
+                            <b-button disabled v-b-tooltip.hover title="Imprimir" variant="default" size="sm" class="mr-2"><i class="fas fa-print ml-2 mr-2"></i></b-button> -->
+                        </td>
+                    </tr>
+                </table>
+
+            </Widget>
+            </b-overlay>
+        </div>
+    </div>
+
   </div>
 </template>
 
@@ -80,7 +126,9 @@
           telefone:'',
         },
         empresa: [{ text: 'Selecione uma empresa', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
-        show: true
+        show: true,
+        processando: false,
+        registers: [],
       }
     },
     methods: {
