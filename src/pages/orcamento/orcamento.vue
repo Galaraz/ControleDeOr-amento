@@ -102,6 +102,9 @@
           this.show = true
         })
       }
+    },
+    created(){
+      this.$store.commit('setNomePagina', '<i class="fas fa-plus"></i>&nbsp;&nbsp;Orçamento - Novo')
     }
   }
 </script>
