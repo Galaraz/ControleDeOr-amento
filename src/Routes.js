@@ -35,6 +35,18 @@ export default new Router({
           component: OrcamentoPage,
         },
       ],
+    },
+    {
+      path: '/app',
+      name: 'Layout',
+      component: Layout,
+      children: [
+        {
+          path: 'cadastros/equipamentos',
+          name: 'CadastroEquipamentosPage',
+          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/app/cadastros/equipamentos.vue')
+        },
+      ],
     }
    ] 
 });
