@@ -49,10 +49,10 @@
         iconName="fas fa-cogs"
         index="cadastros"
         :childrenLinks="[
-          { header: 'Equipamentos', link: '/app/cadastros/equipamentos', iconName: 'fas fa-microchip' },
-          { header: 'Serviços', link: '/app/cadastros/servicos', iconName: 'fas fa-tools' },
-          { header: 'Funções', link: '/app/cadastros/funcoes', iconName: 'fas fa-user-cog' },
-          { header: 'Clientes', link: '/app/cadastros/clientes', iconName: 'fas fa-user-tie' },
+          { header: 'Equipamentos', link: '/cadastros/equipamentos', iconName: 'fas fa-microchip' },
+          { header: 'Serviços', link: '/cadastros/servicos', iconName: 'fas fa-tools' },
+          { header: 'Funções', link: '/cadastros/funcoes', iconName: 'fas fa-user-cog' },
+          { header: 'Clientes', link: '/cadastros/clientes', iconName: 'fas fa-user-tie' },
         ]"
       />
 

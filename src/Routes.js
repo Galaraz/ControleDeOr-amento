@@ -39,16 +39,20 @@ export default new Router({
       
 
     {
-      path: '/app',
+      path: '/cadastros',
       name: 'Layout',
       component: Layout,
       children: [
         {
-          path: 'cadastros/equipamentos',
+          path: '/equipamentos',
           name: 'CadastroEquipamentosPage',
           component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/app/cadastros/equipamentos.vue')
         },
-        
+        {
+          path: '/funcoes',
+          name: 'CadastroFuncoesPage',
+          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/funcoes.vue')
+        },
       ],
     }
    ] 
