@@ -51,15 +51,15 @@
       </b-form-group>
 <b-form-group
         id="input-group-4"
-        label="Telefone do Responsavel:"
-        label-for="input-4"
+        label="Equipamento:"
+        label-for="input-5"
         description=""
       >
 
            <b-form-input
-          id="input-4"
+          id="input-5"
           v-model="form.telefone"
-          placeholder="telefone aqui"
+          placeholder="equipamento aqui"
           required
         ></b-form-input>
       </b-form-group>
