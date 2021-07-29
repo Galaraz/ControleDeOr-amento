@@ -5,7 +5,7 @@ import Layout from '@/components/Layout/Layout';
 
 import Login from '@/pages/login/Login';
 import DashboardPage from '@/pages/dashboard';
-import OrcamentoPage from '@/pages/orcamento/orcamento';
+import OrcamentoNovo from '@/pages/orcamento/orcamentoNovo';
 
 
 Vue.use(Router);
@@ -30,21 +30,28 @@ export default new Router({
         },
 
         {
-          path: 'orcamento',
-          name: 'orcamentoPage',
-          component: OrcamentoPage,
+          path: 'orcamento/novo',
+          name: 'orcamento-novo',
+          component: OrcamentoNovo,
         },
       ],
     },
+      
+
     {
-      path: '/app',
+      path: '/cadastros',
       name: 'Layout',
       component: Layout,
       children: [
         {
-          path: 'cadastros/equipamentos',
+          path: '/equipamentos',
           name: 'CadastroEquipamentosPage',
           component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/app/cadastros/equipamentos.vue')
+        },
+        {
+          path: '/funcoes',
+          name: 'CadastroFuncoesPage',
+          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/funcoes.vue')
         },
       ],
     }
