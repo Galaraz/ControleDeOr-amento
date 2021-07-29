@@ -6,6 +6,8 @@ import Layout from '@/components/Layout/Layout';
 import Login from '@/pages/login/Login';
 import DashboardPage from '@/pages/dashboard';
 import OrcamentoNovo from '@/pages/orcamento/orcamentoNovo';
+import OrcamentoLista from '@/pages/orcamento/orcamentoLista';
+import OrcamentoEnviado from '@/pages/orcamento/orcamentoEnviados';
 
 
 Vue.use(Router);
@@ -33,6 +35,18 @@ export default new Router({
           path: 'orcamento/novo',
           name: 'orcamento-novo',
           component: OrcamentoNovo,
+        },
+
+        {
+          path: 'orcamento/lista',
+          name: 'orcamento-lista',
+          component: OrcamentoLista,
+        },
+
+        {
+          path: 'orcamento/enviados',
+          name: 'orcamento-enviado',
+          component: OrcamentoEnviado,
         },
       ],
     },
