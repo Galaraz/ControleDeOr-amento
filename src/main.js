@@ -28,6 +28,7 @@ dom.watch()
 //Mixin
 import mccMixin from './mixins/mccMixin.js';
 Vue.mixin(mccMixin);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 import vSelect from "vue-select";
 Vue.component("v-select", vSelect);
