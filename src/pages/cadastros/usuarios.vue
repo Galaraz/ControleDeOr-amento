@@ -28,6 +28,9 @@ export default {
   },
   computed: {
     
+  },
+  created(){
+    this.$store.commit('setNomePagina', '<i class="fas fa-cogs"></i>&nbsp;Cadastros&nbsp;&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;&nbsp;&nbsp;<i class="fas fa-user"></i>&nbsp;Usuários')
   }
 };
 </script>

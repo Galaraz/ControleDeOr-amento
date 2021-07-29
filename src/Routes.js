@@ -44,14 +44,24 @@ export default new Router({
       component: Layout,
       children: [
         {
-          path: '/equipamentos',
+          path: 'equipamentos',
           name: 'CadastroEquipamentosPage',
-          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/app/cadastros/equipamentos.vue')
+          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/equipamentos.vue')
         },
         {
-          path: '/funcoes',
+          path: 'funcoes',
           name: 'CadastroFuncoesPage',
           component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/funcoes.vue')
+        },
+        {
+          path: 'servicos',
+          name: 'CadastroServicosPage',
+          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/servicos.vue')
+        },
+        {
+          path: 'clientes',
+          name: 'CadastroClientesPage',
+          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/clientes.vue')
         },
       ],
     }

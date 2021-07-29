@@ -23,6 +23,7 @@
                         <th class="text-center" style="width:50px"><i class="fas fa-circle text-secondary fa-lg"></i></th>
                         <th>Nome</th>
                         <th>Descrição</th>
+                        <th>Valor</th>
                         <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
                     </tr>
                     </thead>
@@ -31,6 +32,7 @@
                         <td class="text-center"><span v-html="colorStatus(index)"></span></td>
                         <td>{{row.nome}}</td>
                         <td>{{row.descricao}}</td>
+                        <td>{{row.valor}}</td>
                         <td v-if="canUpdate" class="text-center">
                             <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
                         </td>
@@ -186,7 +188,7 @@ export default {
             this.processando = true
             this.$http({
                 method: 'get',
-                url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao/?page=' + page,
+                url: 'http://back.naxsysbrasil.com.br/api/cad/equipamentos?page=' + page,
             })
             .then(result => {
                 this.processando = false
@@ -344,7 +346,7 @@ export default {
         // this.canUpdate = this.usuarioTemPermissao('jps.exametipo.update')
         // this.canGet = this.usuarioTemPermissao('privilegio_para_get')
 
-        // this.getRegisters()
+        this.getRegisters()
         // this.getSecoes()
     }
 };
