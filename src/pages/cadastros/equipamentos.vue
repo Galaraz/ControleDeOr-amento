@@ -229,7 +229,7 @@ export default {
             if(this.registry.action=='U'){
                 this.$http({
                     method: 'patch',
-                    url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao',
+                    url: 'http://back.naxsysbrasil.com.br/api/cad/equipamentos?',
                     data: this.registry
                 })
                 .then( () => {
@@ -252,7 +252,7 @@ export default {
 
                 this.$http({
                     method: 'post',
-                    url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao',
+                    url: 'http://back.naxsysbrasil.com.br/api/cad/equipamentos?',
                     data: bodyFormData
                 })
                 .then(result => {
