@@ -22,8 +22,9 @@
                     <tr>
                         <th class="text-center" style="width:50px"><i class="fas fa-circle text-secondary fa-lg"></i></th>
                         <th>Nome</th>
+                        <th>Valor hora</th>
+                        <th>Valor hora noturna</th>
                         <th>Descrição</th>
-                        <th>Valor</th>
                         <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
                     </tr>
                     </thead>
@@ -31,8 +32,9 @@
                     <tr v-for="(row, index) in registers.data" :key="row.id">
                         <td class="text-center"><span v-html="colorStatus(index)"></span></td>
                         <td>{{row.nome}}</td>
+                        <td>{{row.valor_hora}}</td>
+                        <td>{{row.valor_hora_noturno}}</td>
                         <td>{{row.descricao}}</td>
-                        <td>{{row.valor}}</td>
                         <td v-if="canUpdate" class="text-center">
                             <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
                         </td>
@@ -98,6 +100,46 @@
             </b-form-group>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col" >
+            <b-form-group
+                id="grp-valor_hora"
+                label="Valor hora"
+                label-for="valor_hora"
+                :state="stateNome"
+            >
+                <b-form-input 
+                    id="valor_hora" 
+                    ref="focusNome"
+                    v-model="registry.valor_hora" 
+                    :state="stateNome"
+                    trim
+                ></b-form-input>
+            </b-form-group>
+        </div>
+    </div>
+
+  <div class="row">
+        <div class="col">
+            <b-form-group
+                id="grp-valor_hora_noturno"
+                label="Valor hora Noturno"
+                label-for="valor_hora_noturno"
+                :state="stateNome"
+            >
+                <b-form-input 
+                    id="valor_hora_noturno" 
+                    ref="focusNome"
+                    v-model="registry.valor_hora_noturno" 
+                    :state="stateNome"
+                    trim
+                   
+                ></b-form-input>
+            </b-form-group>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
             <b-form-group
@@ -218,6 +260,8 @@ export default {
             this.registry = { 
                 action: "I", 
                 nome: "",
+                valor_hora:"",
+                valor_hora_noturno:"",
                 descricao: ""
             }
             this.$bvModal.show("mRegistry")
@@ -248,11 +292,13 @@ export default {
 
                 var bodyFormData = new FormData();
                 bodyFormData.append("nome", this.registry.nome);
+                bodyFormData.append("valor_hora", this.registry.valor_hora);
+                bodyFormData.append("valor_hora_noturno", this.registry.valor_hora_noturno);
                 bodyFormData.append("descricao", this.registry.descricao);
-
+                
                 this.$http({
                     method: 'post',
-                    url: 'http://back.naxsysbrasil.com.br/api/cad/equipamentos?',
+                    url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes?',
                     data: bodyFormData
                 })
                 .then(result => {
