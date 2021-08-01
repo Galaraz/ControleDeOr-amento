@@ -22,6 +22,7 @@
                     <tr>
                         <th class="text-center" style="width:50px"><i class="fas fa-circle text-secondary fa-lg"></i></th>
                         <th>Nome</th>
+                        <th>codigo Atividade</th>
                         <th>Descrição</th>
                         <th>Valor</th>
                         <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
@@ -31,6 +32,7 @@
                     <tr v-for="(row, index) in registers.data" :key="row.id">
                         <td class="text-center"><span v-html="colorStatus(index)"></span></td>
                         <td>{{row.nome}}</td>
+                        <td>{{row.codigo_atividade}}</td>
                         <td>{{row.descricao}}</td>
                         <td>{{row.valor}}</td>
                         <td v-if="canUpdate" class="text-center">
@@ -248,7 +250,9 @@ export default {
 
                 var bodyFormData = new FormData();
                 bodyFormData.append("nome", this.registry.nome);
+                bodyFormData.append("codigo_atividade", this.registry.codigo_atividade);
                 bodyFormData.append("descricao", this.registry.descricao);
+                bodyFormData.append("valor", this.registry.valor);
 
                 this.$http({
                     method: 'post',
