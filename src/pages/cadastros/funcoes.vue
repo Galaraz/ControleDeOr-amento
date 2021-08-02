@@ -298,7 +298,7 @@ export default {
                 
                 this.$http({
                     method: 'post',
-                    url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes?',
+                    url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes',
                     data: bodyFormData
                 })
                 .then(result => {

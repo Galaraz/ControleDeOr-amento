@@ -98,6 +98,26 @@
             </b-form-group>
         </div>
     </div>
+
+   <div class="row">
+        <div class="col">
+            <b-form-group
+                id="grp-valor"
+                label="Valor"
+                label-for="valor"
+                :state="stateValor"
+            >
+                <b-form-input 
+                    id="valor" 
+                    ref=""
+                    v-model="registry.valor" 
+                    :state="stateValor"
+                    trim
+                ></b-form-input>
+            </b-form-group>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
             <b-form-group
@@ -248,6 +268,7 @@ export default {
 
                 var bodyFormData = new FormData();
                 bodyFormData.append("nome", this.registry.nome);
+                bodyFormData.append("valor", this.registry.valor);
                 bodyFormData.append("descricao", this.registry.descricao);
 
                 this.$http({
