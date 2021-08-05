@@ -4,14 +4,14 @@
         <div class="col">
             <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
             <Widget
-                title="<h5><i class='form'></i> Novo Orçamento</h5>"
+                title="<h5><i class='fas fa-flask text-primary'></i> Montar Novo Orçamento </h5>"
                 bodyClass="mt-2"
                 customHeader
             >
     <!-- <b-form @submit="onSubmit" @reset="onReset" v-if="show"> -->
       <div class="row"><div class="col"><hr></div></div>
 
-      <!-- <div class="row">
+      <div class="row">
         <div class="col col-6">
           <b-form-group id="input-group-1" label="Empresa:" label-for="input-1">
             <b-form-select
@@ -22,13 +22,13 @@
             ></b-form-select>
           </b-form-group>
         </div>
-      </div> -->
+      </div>
      
      
     
     <b-form-group
         id="input-group-2"
-        label="E-mail do Responsavel:"
+        label="E-mail do Responsável:"
         label-for="input-2"
         description=""
       >    
@@ -36,7 +36,7 @@
           id="input-2"
           v-model="form.email"
           type="email"
-          placeholder="Enter email"
+          placeholder="Email"
           required
         ></b-form-input>
       </b-form-group>  
@@ -44,29 +44,29 @@
       <b-form-group id="input-group-4" label="Nome do Responsavel:" label-for="input-4">
         <b-form-input
           id="input-2"
-          v-model="form.name"
-          placeholder="Enter name"
+          v-model="form.email"
+          placeholder="Email do Responsável"
           required
         ></b-form-input>
       </b-form-group>
 <b-form-group
         id="input-group-4"
-        label="Telefone do Responsavel:"
-        label-for="input-4"
+        label="Referência:"
+        label-for="input-5"
         description=""
       >
 
            <b-form-input
-          id="input-4"
-          v-model="form.telefone"
-          placeholder="telefone aqui"
+          id="input-5"
+          v-model="form.equipamento"
+          placeholder="Referência"
           required
         ></b-form-input>
       </b-form-group>
 
-  <b-form-group
-        id="input-group-5"
-        label="Nome do equipamento:"
+<b-form-group
+        id="input-group-4"
+        label="Telefone:"
         label-for="input-5"
         description=""
       >
@@ -74,37 +74,39 @@
            <b-form-input
           id="input-5"
           v-model="form.telefone"
-          placeholder="equipamento aqui"
+          placeholder="Telefone"
           required
         ></b-form-input>
       </b-form-group>
-      
-      <!-- <b-form-group id="input-group-5" v-slot="{ ariaDescribedby }">
-        <b-form-checkbox-group
-          v-model="form.checked"
-          id="checkboxes-4"
-          :aria-describedby="ariaDescribedby"
-        >
-          <b-form-checkbox value="me">Check me out</b-form-checkbox>
-          <b-form-checkbox value="that">Check that out</b-form-checkbox>
-        </b-form-checkbox-group>
-      </b-form-group> -->
 
-      
-    <!-- </b-form> -->
-    
     </Widget>
             </b-overlay>
         </div>
     </div>
 
-    <div class="col">
-      <div class="row">
-          <div class="col">
-            <b-button type="submit" variant="primary">Enviar</b-button>
-            <b-button type="reset" variant="danger">Refazer</b-button>
-          </div>
-      </div>
+    <div class="row">
+        <div class="col">
+            <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
+            <Widget
+                style="width:100%"
+            >
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <b-button @click="modalAddRegistry()" v-b-tooltip.hover title="Incluir Registro" variant="success" size="sm" class="mr-4"><i class="fas fa-plus ml-2 mr-2"></i></b-button>
+                            <b-button @click="modalAddRegistry()" v-b-tooltip.hover title="Salvar Registro" variant="primary" size="sm" class="mr-4"><i class="fas fa-save ml-2 mr-2"></i></b-button>
+                        </td>
+                        <td class="text-right">
+                            <!-- <b-button disabled v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
+                            &nbsp;&nbsp;&nbsp;
+                            <b-button disabled v-b-tooltip.hover title="Imprimir" variant="default" size="sm" class="mr-2"><i class="fas fa-print ml-2 mr-2"></i></b-button> -->
+                        </td>
+                    </tr>
+                </table>
+
+            </Widget>
+            </b-overlay>
+        </div>
     </div>
 
   </div>
@@ -120,7 +122,7 @@
           name: '',
           telefone:'',
         },
-        empresa: [{ text: 'Selecione uma empresa', value: null }, 'Carrots', 'Beans', 'Tomatoes', 'Corn'],
+        empresa: [{ text: 'Selecione uma empresa', value: null }, ''],
         show: true,
         processando: false,
         registers: [],
