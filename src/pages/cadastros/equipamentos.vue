@@ -98,6 +98,26 @@
             </b-form-group>
         </div>
     </div>
+
+   <div class="row">
+        <div class="col">
+            <b-form-group
+                id="grp-valor"
+                label="Valor"
+                label-for="valor"
+                :state="stateValor"
+            >
+                <b-form-input 
+                    id="valor" 
+                    ref=""
+                    v-model="registry.valor" 
+                    :state="stateValor"
+                    trim
+                ></b-form-input>
+            </b-form-group>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
             <b-form-group
@@ -229,7 +249,7 @@ export default {
             if(this.registry.action=='U'){
                 this.$http({
                     method: 'patch',
-                    url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao',
+                    url: 'http://back.naxsysbrasil.com.br/api/cad/equipamentos?',
                     data: this.registry
                 })
                 .then( () => {
@@ -248,11 +268,12 @@ export default {
 
                 var bodyFormData = new FormData();
                 bodyFormData.append("nome", this.registry.nome);
+                bodyFormData.append("valor", this.registry.valor);
                 bodyFormData.append("descricao", this.registry.descricao);
 
                 this.$http({
                     method: 'post',
-                    url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao',
+                    url: 'http://back.naxsysbrasil.com.br/api/cad/equipamentos?',
                     data: bodyFormData
                 })
                 .then(result => {
