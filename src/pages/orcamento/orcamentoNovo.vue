@@ -145,8 +145,30 @@
 									</tr>
 								</tbody>
 							</table>
+							<div class="row">
+							<div class="col col-6">
+								<b-form-group
+									id="input-group-7"
+									label="Incluir Atividades"
+									label-for="input-7"
+								>
+									<b-form-select
+										id="input-7"
+										v-model="atividade"
+										:options="atividades"
+										required
+										value-field="id"
+										text-field="nome"
+									></b-form-select>
+								</b-form-group>
+                <b-button size="sm" variant="success" v-b-tooltip.hover title="Incluir Atividade" class="mr-4 ml-4" @click="select_actvitys()">
+                            <i class="fas fa-plus ml-2 mr-2"></i>
+                        </b-button>
+							</div>
+							</div>
+							
 
-							<!-- Primeira tabela 2-->
+							<!-- Segunda tabela 2-->
 							<table
 								class="table table-striped table-hover table-lg mb-0 requests-table mt-3 border-1"
 							>
@@ -185,6 +207,28 @@
 									</tr>
 								</tbody>
 							</table>
+
+							<div class="row">
+							<div class="col col-6">
+								<b-form-group
+									id="input-group-8"
+									label="Incluir Funções"
+									label-for="input-7"
+								>
+									<b-form-select
+										id="input-8"
+										v-model="funcao"
+										:options="funcoes"
+										required
+										value-field="id"
+										text-field="nome"
+									></b-form-select>
+								</b-form-group>
+                <b-button size="sm" variant="success" v-b-tooltip.hover title="Incluir Função" class="mr-4 ml-4" @click="select_function()">
+                            <i class="fas fa-plus ml-2 mr-2"></i>
+                        </b-button>
+							</div>
+							</div>
 
 							<!-- Primeira tabela 3-->
 							<table
@@ -298,6 +342,12 @@ export default {
 			equipamentos: [],
       equip_selected: [],
       equipamento: {},
+			atividades: [],
+			atividade: [],
+			selected_actvity: [],
+			funcoes: [],
+			funcao: [],
+			selected_function: [],
 		};
 	},
 	methods: {
@@ -326,9 +376,61 @@ export default {
 				});
 		},
 
+		getActivitys() {
+			this.processando = true;
+			this.$http({
+				method: 'get',
+				url: 'http://back.naxsysbrasil.com.br/api/cad/atividades?all=1',
+			})
+				.then((result) => {
+					this.processando = false;
+					this.atividades = result.data;
+					// console.log(result)
+					// this.getModelos()
+				})
+				.catch((error) => {
+					// eslint-disable-next-line
+					console.log(error);
+					this.processando = false;
+					this.showMessage('Erro na conexão. Acione o suporte.', 'danger');
+					this.erroConexao(error);
+				});
+		},
+
+		getFuncoes() {
+			this.processando = true;
+			this.$http({
+				method: 'get',
+				url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes?all=1',
+			})
+				.then((result) => {
+					this.processando = false;
+					this.funcoes = result.data;
+					// console.log(result)
+					// this.getModelos()
+				})
+				.catch((error) => {
+					// eslint-disable-next-line
+					console.log(error);
+					this.processando = false;
+					this.showMessage('Erro na conexão. Acione o suporte.', 'danger');
+					this.erroConexao(error);
+				});
+		},
+
     select_equip() {
-      // this.equipamentos.onSubmit()
-      this.equip_selected.push(this.equipamentos[0])
+			let selecionado = this.equipamentos.find(data => data.id === this.equipamento);
+      this.equip_selected.push(selecionado)
+    },
+
+		select_activity() {
+			let selecionado = this.atividades.find(data => data.id === this.atividade);
+      this.activity_selected.push(selecionado)
+    },
+
+		select_function() {
+			let selecionado = this.funcoes.find(data => data.id === this.funcao);
+      this.selected_function.push(selecionado)
     },
 
 		onReset(event) {
