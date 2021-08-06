@@ -161,7 +161,7 @@
 										text-field="nome"
 									></b-form-select>
 								</b-form-group>
-                <b-button size="sm" variant="success" v-b-tooltip.hover title="Incluir Atividade" class="mr-4 ml-4" @click="select_actvitys()">
+                <b-button size="sm" variant="success" v-b-tooltip.hover title="Incluir Atividade" class="mr-4 ml-4" @click="select_actvities()">
                             <i class="fas fa-plus ml-2 mr-2"></i>
                         </b-button>
 							</div>
@@ -423,7 +423,7 @@ export default {
       this.equip_selected.push(selecionado)
     },
 
-		select_activity() {
+		select_activities() {
 			let selecionado = this.atividades.find(data => data.id === this.atividade);
       this.activity_selected.push(selecionado)
     },
