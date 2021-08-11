@@ -448,7 +448,7 @@ export default {
     // this.mccUsuarioValidar('jps.exametipo.list')
     this.$store.commit(
       'setNomePagina',
-      '<i class="fas fa-cogs"></i>&nbsp;Cadastros&nbsp;&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;&nbsp;&nbsp;<i class="fas fa-truck"></i>&nbsp;Servicos'
+      '<i class="fas fa-cogs"></i>&nbsp;Cadastros&nbsp;&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;&nbsp;&nbsp;<i class="fas fa-tools"></i>&nbsp;Atividades'
     );
     // this.canAdd = this.usuarioTemPermissao('jps.exametipo.add')
     // this.canUpdate = this.usuarioTemPermissao('jps.exametipo.update')

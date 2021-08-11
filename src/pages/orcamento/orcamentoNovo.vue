@@ -87,8 +87,15 @@
               ></b-form-input>
             </b-form-group>
 
-            <div class="row mt-4">
+            <div class="row">
               <div class="col">
+                <br><br><hr>
+                <h5><i class='fas fa-truck text-primary'></i> Equipamentos</h5>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col col-8">
                 <b-form-group id="input-group-6" label=" Incluir Equipamentos" label-for="input-6">
                   <b-form-select
                     id="input-6"
@@ -100,9 +107,8 @@
                   ></b-form-select>
                 </b-form-group>
               </div>
-            </div>
-            <div class="row">
-              <div class="col">
+              <div class="col col-4">
+                <h1></h1><br>
                 <b-button
                   size="sm"
                   variant="success"
@@ -136,6 +142,14 @@
                     <td>{{ row.nome }}</td>
                     <td>{{ row.descricao }}</td>
                     <td>{{ row.valor }}</td>
+                    <td>
+                      <b-form-input
+                        id="equip_qtd"
+                        v-model="row.qtd"
+                        required
+                      ></b-form-input>
+                    </td>
+                    <td>{{ row.valor * row.qtd }}</td>
                     <td v-if="canUpdate" class="text-center">
                       <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
                     </td>
@@ -144,7 +158,93 @@
               </table>
             </div>
 
-            <div class="row mt-4">
+            <div class="row">
+              <div class="col">
+                <br><br><hr>
+                <h5><i class='fas fa-tools text-primary'></i> Atividades</h5>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col col-5">
+                <b-form-group
+                  id="input-4"
+                  label="Descrição:"
+                  label-for="descricao"
+                >
+                  <b-form-input
+                    id="descricao"
+                    v-model="novaAtividade.descricao"
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+
+              <div class="col col-2">
+                <b-form-group
+                  id="input-5"
+                  label="Código:"
+                  label-for="codigo"
+                >
+                  <b-form-input
+                    id="codigo"
+                    v-model="novaAtividade.codigo"
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+            
+              <div class="col col-2">
+                <b-form-group
+                  id="input-6"
+                  label="Valor:"
+                  label-for="valor"
+                >
+                  <b-form-input
+                    id="valor"
+                    v-model="novaAtividade.valor"
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+
+              <div class="col col-2">
+                <b-form-group
+                  id="input-7"
+                  label="Quantidade:"
+                  label-for="qtd"
+                >
+                  <b-form-input
+                    id="qtd"
+                    v-model="novaAtividade.qtd"
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+
+              <div class="col col-1">
+                <h1></h1><br>
+                <b-button
+                  size="sm"
+                  variant="success"
+                  v-b-tooltip.hover
+                  title="Incluir Atividade"
+                  class="mr-4 ml-4"
+                  @click="actvities_add()"
+                >
+                  <i class="fas fa-plus ml-2 mr-2"></i>
+                </b-button>
+              </div>
+              
+            </div>
+
+
+
+
+
+
+
+
+
+
+            <!-- <div class="row mt-4">
               <div class="col">
                 <b-form-group id="input-group-7" label="Incluir Atividades" label-for="input-7">
                   <b-form-select
@@ -167,7 +267,7 @@
                   <i class="fas fa-plus ml-2 mr-2"></i>
                 </b-button>
               </div>
-            </div>
+            </div> -->
 
             <!-- Segunda tabela 2-->
             <div class="row">
@@ -189,19 +289,25 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(row, index) in registers.data" :key="row.id">
-                    <td class="text-center">
-                      <span v-html="colorStatus(index)"></span>
-                    </td>
-                    <td>{{ row.nome }}</td>
-                    <td>{{ row.descricao }}</td>
-                    <td>{{ row.valor }}</td>
+                  <tr v-for="(rowAtv, indexAtv) in activity_selected" :key="rowAtv.id">
+                    <td>{{ rowAtv.descricao }}</td>
+                    <td>{{ rowAtv.codigo }}</td>
+                    <td>{{ rowAtv.valor }}</td>
+                    <td>{{ rowAtv.qtd }}</td>
+                    <td>{{ rowAtv.valor * rowAtv.qtd }}</td>
                     <td v-if="canUpdate" class="text-center">
-                      <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
+                      <a @click="deleteAtividade(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
                     </td>
                   </tr>
                 </tbody>
               </table>
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <br><br><hr>
+                <h5><i class='fas fa-user-cog text-primary'></i> Funções</h5>
+              </div>
             </div>
 
             <div class="row mt-4">
@@ -261,6 +367,8 @@
                 </tbody>
               </table>
             </div>
+
+            <div class="row"><div class="col">&nbsp;</div></div>
           </Widget>
         </b-overlay>
       </div>
@@ -338,6 +446,11 @@ export default {
       funcoes: [],
       funcao: [],
       selected_function: [],
+
+      activity_selected: [],
+      novaAtividade: {},
+
+      canUpdate: true,
     };
   },
   methods: {
@@ -410,6 +523,7 @@ export default {
 
     select_equip() {
       let selecionado = this.equipamentos.find((data) => data.id === this.equipamento);
+      selecionado.qtd = 0
       this.equip_selected.push(selecionado);
     },
 
@@ -421,6 +535,15 @@ export default {
     select_function() {
       let selecionado = this.funcoes.find((data) => data.id === this.funcao);
       this.selected_function.push(selecionado);
+    },
+
+    actvities_add(){
+      this.novaAtividade = { descricao: "", codigo: "", valor: "", qtd: "" }
+      this.activity_selected.push(this.novaAtividade)
+    },
+
+    deleteAtividade(index){
+      this.activity_selected.splice(index, 1)
     },
 
     onReset(event) {
