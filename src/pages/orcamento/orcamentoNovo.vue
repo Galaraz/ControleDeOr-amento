@@ -1,5 +1,32 @@
 <template>
   <div>
+
+    <!-- INFORMACOES TOPO PAGINA - INICIO -->
+    <div class="row d-flex justify-content-between mt-0 mb-4 ml-1 mr-1">
+        <div style="width: 10rem;">
+            <b-card bg-variant="info" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
+                <b-card-text>
+                    <span style="font-size:85%;"><i class="fas fa-hashtag"></i></span><br>
+                    <span class="p-0 mt-0" style="font-size:170%;">{{orcamento.id}}</span>
+                </b-card-text>
+            </b-card>
+        </div>
+
+        <div style="width: 44rem;" class="ml-4 mb-0 p-0">
+            
+        </div>
+        <div style="width: 14rem;">
+            <b-card bg-variant="primary" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
+                <b-card-text>
+                    <span style="font-size:85%;"><i class="fas fa-tag"></i> Status</span><br>
+                    <span class="p-0 mt-0" style="font-size:170%;">Em Digitação</span>
+                </b-card-text>
+            </b-card>
+        </div>
+    </div>
+    <!-- INFORMACOES TOPO PAGINA - FIM -->
+
+
     <div class="row">
       <div class="col">
         <b-overlay
@@ -19,7 +46,46 @@
               <div class="col"><hr /></div>
             </div>
 
-            <div class="row">
+            <div class="row mt-4">
+              <div class="col col-6">
+                <b-form-group
+                  id="input-group-11" label="Cliente:" label-for="input-11"
+                >
+                  <b-form-select
+                    id="input-11"
+                    v-model="cliente"
+                    :options="clientes"
+                    value-field="id"
+                    text-field="nome"
+                  ></b-form-select>
+                </b-form-group>
+              </div>
+              <!-- <div class="col col-1">
+                <h1></h1><br>
+                <b-button
+                  size="sm"
+                  variant="success"
+                  v-b-tooltip.hover
+                  title="Incluir Cliente"
+                  class="mr-4 ml-4"
+                  @click="cliente_Add()"
+                >
+                  <i class="fas fa-plus ml-2 mr-2"></i>
+                </b-button>
+              </div> -->
+              <div class="col col-6">
+                <b-form-group id="input-group-4" label="Nome do Responsavel:" label-for="input-4">
+                  <b-form-input
+                    id="input-2"
+                    v-model="form.email"
+                    placeholder="Email do Responsável"
+                    required
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+            </div>
+
+            <!-- <div class="row">
               <div class="col col-6">
                 <b-form-group id="input-group-1" label="Empresa:" label-for="input-1">
                   <b-form-select
@@ -41,7 +107,7 @@
                   ></b-form-input>
                 </b-form-group>
               </div>
-            </div>
+            </div> -->
 
             <div class="row">
               <div class="col col-6">
@@ -53,7 +119,7 @@
                 >
                   <b-form-input
                     id="input-2"
-                    v-model="form.email"
+                    v-model="orcamento.email"
                     type="email"
                     placeholder="Email"
                     required
@@ -70,7 +136,7 @@
                 >
                   <b-form-input
                     id="input-5"
-                    v-model="form.telefone"
+                    v-model="orcamento.telefone"
                     placeholder="Telefone"
                     required
                   ></b-form-input>
@@ -78,14 +144,14 @@
               </div>
             </div>
 
-            <b-form-group id="input-group-4" label="Referência:" label-for="input-5" description="">
+            <!-- <b-form-group id="input-group-4" label="Referência:" label-for="input-5" description="">
               <b-form-input
                 id="input-5"
                 v-model="form.equipamento"
                 placeholder="Referência"
                 required
               ></b-form-input>
-            </b-form-group>
+            </b-form-group> -->
 
             <div class="row">
               <div class="col">
@@ -138,20 +204,20 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(row, index) in equip_selected" :key="row.id">
-                    <td>{{ row.nome }}</td>
-                    <td>{{ row.descricao }}</td>
-                    <td>{{ row.valor }}</td>
-                    <td>
+                  <tr v-for="(rowEqp, indexEqp) in equip_selected" :key="rowEqp.id">
+                    <td>{{ rowEqp.nome }}</td>
+                    <td>{{ rowEqp.descricao }}</td>
+                    <td class="text-right">{{ rowEqp.valor }}</td>
+                    <td class="text-right">
                       <b-form-input
                         id="equip_qtd"
-                        v-model="row.qtd"
+                        v-model="rowEqp.qtd"
                         required
                       ></b-form-input>
                     </td>
-                    <td>{{ row.valor * row.qtd }}</td>
+                    <td class="text-right">{{ rowEqp.valor * rowEqp.qtd }}</td>
                     <td v-if="canUpdate" class="text-center">
-                      <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
+                      <a @click="equip_Delete(indexEqp)"><i class="far fa-trash-alt text-danger"></i></a>
                     </td>
                   </tr>
                 </tbody>
@@ -291,9 +357,9 @@
                   <tr v-for="(rowAtv, indexAtv) in activity_selected" :key="rowAtv.id">
                     <td>{{ rowAtv.descricao }}</td>
                     <td>{{ rowAtv.codigo }}</td>
-                    <td>{{ rowAtv.valor }}</td>
-                    <td>{{ rowAtv.qtd }}</td>
-                    <td>{{ rowAtv.valor * rowAtv.qtd }}</td>
+                    <td class="text-right">{{ rowAtv.valor }}</td>
+                    <td class="text-right">{{ rowAtv.qtd }}</td>
+                    <td class="text-right">{{ rowAtv.valor * rowAtv.qtd }}</td>
                     <td v-if="canUpdate" class="text-center">
                       <a @click="deleteAtividade(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
                     </td>
@@ -301,6 +367,8 @@
                 </tbody>
               </table>
             </div>
+
+
 
             <div class="row">
               <div class="col">
@@ -312,8 +380,8 @@
             <div class="row mt-4">
 
 <!-- inicio da tabela de funçoes --> 
-    <div class="col col-5">
-                <b-form-group
+              <div class="col col-5">
+                <!-- <b-form-group
                   id="input-4"
                   label="Incluir Funções:"
                   label-for="funcao"
@@ -322,18 +390,32 @@
                     id="funcao"
                     v-model="novaAtividade.funcao"
                   ></b-form-input>
+                </b-form-group> -->
+
+                <b-form-group
+                  id="input-group-41" label="Função:" label-for="input-41"
+                >
+                  <b-form-select
+                    id="input-41"
+                    v-model="funcao"
+                    :options="funcoes"
+                    value-field="id"
+                    text-field="nome"
+                  ></b-form-select>
                 </b-form-group>
               </div>
+
 
               <div class="col col-2">
                 <b-form-group
                   id="input-5"
-                  label="Tipo De Hora:"
-                  label-for="codigo"
+                  label="Qtd Colaboradores:"
+                  label-for="qtd_colaboradores"
                 >
                   <b-form-input
-                    id="codigo"
-                    v-model="novaAtividade.codigo"
+                    id="qtd_colaboradores"
+                    v-model="funcao_registro.qtd_colaboradores"
+                    type="number"
                   ></b-form-input>
                 </b-form-group>
               </div>
@@ -341,12 +423,13 @@
               <div class="col col-2">
                 <b-form-group
                   id="input-6"
-                  label="N° Col.:"
-                  label-for="valor"
+                  label="Horas:"
+                  label-for="horas"
                 >
                   <b-form-input
-                    id="valor"
-                    v-model="novaAtividade.valor"
+                    id="horas"
+                    v-model="funcao_registro.horas"
+                    type="number"
                   ></b-form-input>
                 </b-form-group>
               </div>
@@ -354,12 +437,13 @@
               <div class="col col-2">
                 <b-form-group
                   id="input-7"
-                  label="Horas"
-                  label-for="qtd"
+                  label="Horas Extras"
+                  label-for="horas_extras"
                 >
                   <b-form-input
-                    id="qtd"
-                    v-model="novaAtividade.qtd"
+                    id="horas_extras"
+                    v-model="funcao_registro.horas_extras"
+                    type="number"
                   ></b-form-input>
                 </b-form-group>
               </div>
@@ -372,7 +456,7 @@
                   v-b-tooltip.hover
                   title="Incluir Atividade"
                   class="mr-4 ml-4"
-                  @click="actvities_add()"
+                  @click="funcoes_Add()"
                 >
                   <i class="fas fa-plus ml-2 mr-2"></i>
                 </b-button>
@@ -395,24 +479,22 @@
                   <!-- class="text-white" -->
                   <tr>
                     <th>Funçao</th>
-                    <th>Tipo de hora</th>
-                    <th>N° Col</th>
-                    <th>Horas</th>
-                    <th>Valor Hora</th>
-                    <th>Subtotal</th>
+                    <th class="text-right">Qtd Colab</th>
+                    <th class="text-right">Horas</th>
+                    <th class="text-right">Hora Extras</th>
+                    <th class="text-right">Subtotal</th>
                     <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(row, index) in registers.data" :key="row.id">
-                    <td class="text-center">
-                      <span v-html="colorStatus(index)"></span>
-                    </td>
-                    <td>{{ row.nome }}</td>
-                    <td>{{ row.descricao }}</td>
-                    <td>{{ row.valor }}</td>
+                  <tr v-for="(rowFunc, indexFunc) in selected_funcoes" :key="rowFunc.id">
+                    <td>{{ rowFunc.nome }}</td>
+                    <td class="text-right">{{ rowFunc.qtd_colaboradores }}</td>
+                    <td class="text-right">{{ rowFunc.horas }}</td>
+                    <td class="text-right">{{ rowFunc.horas_extras }}</td>
+                    <td class="text-right">{{rowFunc.subtotal}}</td>
                     <td v-if="canUpdate" class="text-center">
-                      <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
+                      <a @click="funcoes_Delete(indexFunc)"><i class="far fa-trash-alt text-danger"></i></a>
                     </td>
                   </tr>
                 </tbody>
@@ -501,13 +583,43 @@ export default {
       activity_selected: [],
       novaAtividade: {},
 
+      clientes: [],
+      cliente: {},
+      orcamento: { id: "_", uuid: null, status: "D"},
+
+      funcoes: [],
+      funcao: {},
+      funcao_registro: {},
+      selected_funcoes: [],
+
       canUpdate: true,
     };
   },
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
-      alert(JSON.stringify(this.form));
+    // onSubmit(event) {
+    //   event.preventDefault();
+    //   alert(JSON.stringify(this.form));
+    // },
+
+    getClientes() {
+      this.processando = true;
+      this.$http({
+        method: 'get',
+        url: 'http://back.naxsysbrasil.com.br/api/cad/clientes?all=1',
+      })
+        .then((result) => {
+          this.processando = false;
+          this.clientes = result.data;
+          // console.log(result)
+          // this.getModelos()
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+          this.processando = false;
+          this.showMessage('Erro na conexão. Acione o suporte.', 'danger');
+          this.erroConexao(error);
+        });
     },
     getEquipamentos() {
       this.processando = true;
@@ -518,6 +630,26 @@ export default {
         .then((result) => {
           this.processando = false;
           this.equipamentos = result.data;
+          // console.log(result)
+          // this.getModelos()
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+          this.processando = false;
+          this.showMessage('Erro na conexão. Acione o suporte.', 'danger');
+          this.erroConexao(error);
+        });
+    },
+    getFuncoes() {
+      this.processando = true;
+      this.$http({
+        method: 'get',
+        url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes?all=1',
+      })
+        .then((result) => {
+          this.processando = false;
+          this.funcoes = result.data;
           // console.log(result)
           // this.getModelos()
         })
@@ -578,6 +710,13 @@ export default {
       this.equip_selected.push(selecionado);
     },
 
+    equip_Delete(index){
+      var mensagem = "Deseja realmente remover o equipamento "+this.equip_selected[index].nome+"?"
+      if(confirm(mensagem)){
+        this.equip_selected.splice(index, 1)
+      }
+    },
+
     select_activities() {
       let selecionado = this.atividades.find((data) => data.id === this.atividade);
       this.activity_selected.push(selecionado);
@@ -594,27 +733,61 @@ export default {
     },
 
     deleteAtividade(index){
-      this.activity_selected.splice(index, 1)
+      var mensagem = "Deseja realmente remover a atividade?"
+      if(confirm(mensagem)){
+        this.activity_selected.splice(index, 1)
+      }
     },
 
-    onReset(event) {
-      event.preventDefault();
-      // Reset our form values
-      this.form.empresa = null;
-      this.form.email = '';
-      this.form.name = '';
-      this.form.telefone = '';
-      this.form.checked = [];
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
+    funcoes_Add(){
+      let selecionado = this.funcoes.find((data) => data.id === this.funcao);
+      this.funcao_registro.id = selecionado.id
+      this.funcao_registro.nome = selecionado.nome
+      this.funcao_registro.valor_hora = selecionado.valor_hora
+      this.funcao_registro.valor_hora_noturno = selecionado.valor_hora_noturno
+
+      this.funcao_registro.subtotal = (this.funcao_registro.horas * selecionado.valor_hora ) +
+                      (this.funcao_registro.horas_extra * selecionado.valor_hora_noturno )
+
+      this.selected_funcoes.push( this.funcao_registro )
+      this.funcao_registro = { id: null, nome: null, qtd_colaboradores: null, horas: null, horas_extra: null}
     },
+
+    funcoes_Delete(index){
+      var mensagem = "Deseja realmente remover a função "+this.selected_funcoes[index].nome+"?"
+      if(confirm(mensagem)){
+        this.selected_funcoes.splice(index, 1)
+      }
+    },
+
+    // onReset(event) {
+    //   event.preventDefault();
+    //   // Reset our form values
+    //   this.form.empresa = null;
+    //   this.form.email = '';
+    //   this.form.name = '';
+    //   this.form.telefone = '';
+    //   this.form.checked = [];
+    //   // Trick to reset/clear native browser form validation state
+    //   this.show = false;
+    //   this.$nextTick(() => {
+    //     this.show = true;
+    //   });
+    // },
+  },
+  computed: {
+    calculaHoras(indice){
+      console.log(indice)
+      console.log(this.selected_funcoes)
+      return 1
+      // return 
+    }
   },
   created() {
     this.$store.commit('setNomePagina', '<i class="fas fa-plus"></i>&nbsp;&nbsp;Orçamento - Novo');
+    this.getClientes();
     this.getEquipamentos();
+    this.getFuncoes();
   },
 };
 </script>
