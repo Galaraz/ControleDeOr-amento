@@ -576,10 +576,7 @@ export default {
       atividades: [],
       atividade: [],
       selected_actvity: [],
-      funcoes: [],
-      funcao: [],
-      selected_function: [],
-
+      
       activity_selected: [],
       novaAtividade: {},
 
@@ -641,26 +638,26 @@ export default {
           this.erroConexao(error);
         });
     },
-    getFuncoes() {
-      this.processando = true;
-      this.$http({
-        method: 'get',
-        url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes?all=1',
-      })
-        .then((result) => {
-          this.processando = false;
-          this.funcoes = result.data;
-          // console.log(result)
-          // this.getModelos()
-        })
-        .catch((error) => {
-          // eslint-disable-next-line
-          console.log(error);
-          this.processando = false;
-          this.showMessage('Erro na conexão. Acione o suporte.', 'danger');
-          this.erroConexao(error);
-        });
-    },
+    // getFuncoes() {
+    //   this.processando = true;
+    //   this.$http({
+    //     method: 'get',
+    //     url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes?all=1',
+    //   })
+    //     .then((result) => {
+    //       this.processando = false;
+    //       this.funcoes = result.data;
+    //       // console.log(result)
+    //       // this.getModelos()
+    //     })
+    //     .catch((error) => {
+    //       // eslint-disable-next-line
+    //       console.log(error);
+    //       this.processando = false;
+    //       this.showMessage('Erro na conexão. Acione o suporte.', 'danger');
+    //       this.erroConexao(error);
+    //     });
+    // },
 
     getActivitys() {
       this.processando = true;
@@ -776,12 +773,12 @@ export default {
     // },
   },
   computed: {
-    calculaHoras(indice){
-      console.log(indice)
-      console.log(this.selected_funcoes)
-      return 1
-      // return 
-    }
+  //   calculaHoras(indice){
+  //     console.log(indice)
+  //     console.log(this.selected_funcoes)
+  //     return 1
+  //     // return 
+  //   }
   },
   created() {
     this.$store.commit('setNomePagina', '<i class="fas fa-plus"></i>&nbsp;&nbsp;Orçamento - Novo');
