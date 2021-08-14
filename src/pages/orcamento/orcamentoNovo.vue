@@ -277,8 +277,7 @@
                 <thead>
                   <!-- class="text-white" -->
                   <tr>
-                    
-                      
+                            
                    
                     <th>Descriçao da atividade</th>
                     <th>Codigo</th>
@@ -311,28 +310,80 @@
             </div>
 
             <div class="row mt-4">
-              <div class="col">
-                <b-form-group id="input-group-8" label="Incluir Funções" label-for="input-7">
-                  <b-form-select
-                    id="input-8"
-                    v-model="funcao"
-                    :options="funcoes"
-                    required
-                    value-field="id"
-                    text-field="nome"
-                  ></b-form-select>
+
+<!-- inicio da tabela de funçoes --> 
+    <div class="col col-5">
+                <b-form-group
+                  id="input-4"
+                  label="Incluir Funções:"
+                  label-for="funcao"
+                >
+                  <b-form-input
+                    id="funcao"
+                    v-model="novaAtividade.funcao"
+                  ></b-form-input>
                 </b-form-group>
+              </div>
+
+              <div class="col col-2">
+                <b-form-group
+                  id="input-5"
+                  label="Tipo De Hora:"
+                  label-for="codigo"
+                >
+                  <b-form-input
+                    id="codigo"
+                    v-model="novaAtividade.codigo"
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+            
+              <div class="col col-2">
+                <b-form-group
+                  id="input-6"
+                  label="N° Col.:"
+                  label-for="valor"
+                >
+                  <b-form-input
+                    id="valor"
+                    v-model="novaAtividade.valor"
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+
+              <div class="col col-2">
+                <b-form-group
+                  id="input-7"
+                  label="Horas"
+                  label-for="qtd"
+                >
+                  <b-form-input
+                    id="qtd"
+                    v-model="novaAtividade.qtd"
+                  ></b-form-input>
+                </b-form-group>
+              </div>
+
+              <div class="col col-1">
+                <h1></h1><br>
                 <b-button
                   size="sm"
                   variant="success"
                   v-b-tooltip.hover
-                  title="Incluir Função"
+                  title="Incluir Atividade"
                   class="mr-4 ml-4"
-                  @click="select_function()"
+                  @click="actvities_add()"
                 >
                   <i class="fas fa-plus ml-2 mr-2"></i>
                 </b-button>
               </div>
+            
+
+
+
+
+
+              
             </div>
 
             <!-- Primeira tabela 3-->
