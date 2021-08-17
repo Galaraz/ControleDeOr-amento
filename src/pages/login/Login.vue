@@ -88,8 +88,8 @@ export default {
   },
   methods: {
     login() {
-      // const email = this.$refs.email.value;
-      // const password = this.$refs.password.value;
+       const email = this.$refs.email.value;
+       const password = this.$refs.password.value;
       
       if (this.email.length !== 0 && this.password.length !== 0) {
         this.txtBtnLogin = '<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Processando...'
@@ -98,7 +98,7 @@ export default {
 
         this.$http({
           method: 'post',
-          url: process.env.VUE_APP_URL_BASE_API + "/api/auth/login",
+          url: "http://back.naxsysbrasil.com.br/api/auth/login",
           data: {
             email: this.email,
             password: this.password
@@ -116,16 +116,16 @@ export default {
           
           this.progresso = 50
           this.getMe()
-          // window.localStorage.setItem('authenticated', true);
-          // this.$router.push('/app/dashboard');
+           window.localStorage.setItem('authenticated', true);
+           this.$router.push('/dashboard');
         })
         .catch((error) => {
           console.log(error)
-          //if (error.response.status === 401) {
-          //  this.errorMessage = '<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Acesso Negado (1)!'
-          //} else {
-          //  this.errorMessage = "Erro na conexão (AXIOS-1)."
-          //}
+          if (error.response.status === 401) {
+            this.errorMessage = '<i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;Acesso Negado (1)!'
+          } else {
+            this.errorMessage = "Erro na conexão (AXIOS-1)."
+          }
           this.txtBtnLogin = '<i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Entrar'
           this.btnLogin = true
           this.email = ""
@@ -138,8 +138,8 @@ export default {
       this.txtBtnLogin = '<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Definindo...'
       this.$http({
         method: 'post',
-        url: process.env.VUE_APP_URL_BASE_API + "/api/auth/me",
-        // headers: {'Authorization': 'Bearer'+this.token}, 
+        url: "http://back.naxsysbrasil.com.br/api/auth/me",
+         headers: {'Authorization': 'Bearer'+this.token}, 
       })
       .then(result => {
         this.progresso = 50
@@ -167,20 +167,20 @@ export default {
   created() {
     this.$store.commit('clearUser')
 
-    // if (window.localStorage.getItem('authenticated') === 'true') {
-    //   this.$router.push('/app/dashboard');
-    // }
+     if (window.localStorage.getItem('authenticated') === 'true') {
+       this.$router.push('/dashboard');
+     }
   },
 };
 
 
-// axios({
-//   method: 'post',     //put
-//   url: url,
-//   headers: {'Authorization': 'Bearer'+token}, 
-//   data: {
-//      firstName: 'Keshav', // This is the body part
-//      lastName: 'Gera'
-//   }
-// });
+//  axios({
+//    method: 'post',     //put
+//    url: url,
+// headers: {'Authorization': 'Bearer'+token}, 
+//  data: {
+//       firstName: 'Keshav', // This is the body part
+//       lastName: 'Gera'
+//    }
+//  });
 </script>
