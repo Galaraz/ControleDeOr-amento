@@ -95,7 +95,7 @@ export default {
         this.txtBtnLogin = '<i class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;Processando...'
         this.btnLogin = false
         this.errorMessage = ""
-
+        console.log(process.env.VUE_APP_URL_BASE_API + "/api/auth/login");
         this.$http({
           method: 'post',
           url: "http://back.naxsysbrasil.com.br/api/auth/login",
@@ -107,12 +107,13 @@ export default {
         .then(res => {
           // console.log(res.data)
           this.token = res.data.access_token
-          this.$http.defaults.headers.common['Authorization'] = 'Bearer'+this.token
-          this.$store.commit('setAppToken', this.token)
+          this.$http.defaults.headers.common['Authorization'] = 'Bearer '+this.token
+          console.log('Bearer '+this.token);
+          // this.$store.commit('setAppToken', this.token)
 
-          var now = new Date();
-          var expira = new Date(now.getTime() + res.data.expires_in*1000);
-          this.$store.commit('setAppTokenExpiration', expira)
+          // var now = new Date();
+          // var expira = new Date(now.getTime() + res.data.expires_in*1000);
+          // this.$store.commit('setAppTokenExpiration', expira)
           
           this.progresso = 50
           this.getMe()
@@ -144,15 +145,16 @@ export default {
       .then(result => {
         this.progresso = 50
         this.$store.commit('setUser', result.data)
+        // console.log(this.$store.state.user);
         this.progresso = 60
-        this.$router.push({name: 'mcc'}); 
+        this.$router.push({name: 'DashboardPage'}); 
         //this.getPrivilegios()
       })
       .catch((error) => {
         if (error.response.status === 401) {
-          this.errorMessage = "Acesso Negado (2)!"  
+          this.errorMessage = "Acesso Negado (auth/me)!"  
         } else {
-          this.errorMessage = "Erro na conexão (AXIOS-2)."
+          this.errorMessage = "Erro na conexão (AXIOS-auth/me)."
         }
         this.txtBtnLogin = '<i class="fa fas fa-sign-in-alt"></i>&nbsp;&nbsp;Entrar'
         this.btnLogin = true

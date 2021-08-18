@@ -32,6 +32,17 @@ export default new Router({
         },
 
         {
+          path: 'orcamento/orcamento',
+          name: 'orcamento-orcamento',
+          component: () => import(/* webpackChunkName: "AppOrcamento" */ '@/pages/orcamento/orcamento.vue')
+        },
+        {
+          path: 'orcamento/orcamento/:uuid',
+          name: 'orcamento-orcamento-uuid',
+          component: () => import(/* webpackChunkName: "AppOrcamento" */ '@/pages/orcamento/orcamento.vue')
+        },
+
+        {
           path: 'orcamento/novo',
           name: 'orcamento-novo',
           component: OrcamentoNovo,
@@ -67,11 +78,11 @@ export default new Router({
           name: 'CadastroFuncoesPage',
           component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/funcoes.vue')
         },
-        {
-          path: 'servicos',
-          name: 'CadastroServicosPage',
-          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/servicos.vue')
-        },
+        // {
+        //   path: 'servicos',
+        //   name: 'CadastroServicosPage',
+        //   component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/servicos.vue')
+        // },
         {
           path: 'clientes',
           name: 'CadastroClientesPage',

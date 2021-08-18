@@ -1,0 +1,754 @@
+<template>
+<div>
+
+    <template v-if="registry.uuid!=null">
+        <!-- INFORMACOES TOPO PAGINA - INICIO -->
+        <div class="row d-flex justify-content-between mt-0 mb-4 ml-1 mr-1">
+            <div style="width: 10rem;">
+                <b-card bg-variant="info" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
+                    <b-card-text>
+                        <span style="font-size:85%;"><i class="fas fa-hashtag"></i></span><br>
+                        <span class="p-0 mt-0" style="font-size:170%;">{{registry.id}}-</span><span class="p-0 mt-0" style="font-size:120%;">{{registry.versao}}</span>
+                    </b-card-text>
+                </b-card>
+            </div>
+
+            <div style="width: 44rem;" class="ml-4 mb-0 p-0">
+                
+            </div>
+            <div style="width: 14rem;">
+                <b-card bg-variant="primary" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
+                    <b-card-text>
+                        <span style="font-size:85%;"><i class="fas fa-tag"></i> Status</span><br>
+                        <span class="p-0 mt-0" style="font-size:170%;">Em Digitação</span>
+                    </b-card-text>
+                </b-card>
+            </div>
+        </div>
+        <!-- INFORMACOES TOPO PAGINA - FIM -->
+    </template>
+
+    <div class="row mt-2">
+        <div class="col">
+            <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
+                <!-- title="<h5><i class='far fa-list-alt text-primary'></i> Lista de Equipamentos</h5>" -->
+            <Widget
+                bodyClass="widget-table-overflow mt-2 mr-2 ml-2 mb-4"
+                customHeader
+                style="width:100%"
+            >
+                <div class="widget-title">
+                    <div class="d-inline-flex mb-1">
+                        <span v-if="registry.uuid==null"><h5>&nbsp;&nbsp;<i class='fas fa-plus text-primary'></i>&nbsp;&nbsp;Novo Orçamento</h5></span>
+                        <span v-else><h5>&nbsp;&nbsp;<i class='far fa-file-alt text-primary'></i>&nbsp;&nbsp;Dados do Orçamento</h5></span>
+                    </div>
+                    <div class="row"><div class="col"><hr></div></div>
+                </div>
+
+
+                <div class="row mt-4">
+                    <div class="col col-6">
+                        <b-form-group
+                            id="input-group-11" label="Cliente:" label-for="input-11"
+                        >
+                            <b-form-select
+                                v-if="canUpdateCliente"
+                                id="input-11"
+                                v-model="cliente"
+                                :options="clientes"
+                                value-field="id"
+                                text-field="nome"
+                            ></b-form-select>
+                            <b-form-input
+                                v-else
+                                id="input-nomecliente"
+                                v-model="registry.nome"
+                                readonly
+                            ></b-form-input>
+                        </b-form-group>
+                        
+
+                    </div>
+                    <div class="col col-6">
+                        <b-form-group id="input-group-4" label="Nome do Responsavel:" label-for="input-4">
+                        <b-form-input
+                            id="input-2"
+                            v-model="registry.contato_nome"
+                            required
+                        ></b-form-input>
+                        </b-form-group>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-6">
+                        <b-form-group
+                        id="input-group-2"
+                        label="E-mail do Responsável:"
+                        label-for="input-2"
+                        description=""
+                        >
+                        <b-form-input
+                            id="input-2"
+                            v-model="registry.contato_email"
+                            type="email"
+                            required
+                        ></b-form-input>
+                        </b-form-group>
+                    </div>
+
+                    <div class="col col-6">
+                        <b-form-group
+                        id="input-group-4"
+                        label="Telefone:"
+                        label-for="input-5"
+                        description=""
+                        >
+                        <b-form-input
+                            id="input-5"
+                            v-model="registry.contato_telefone"
+                            required
+                        ></b-form-input>
+                        </b-form-group>
+                    </div>
+                </div>
+
+
+
+
+                <!-- ********** EQUIPAMENTOS ********** -->
+
+                <div class="row">
+                    <div class="col">
+                        <br><br><hr>
+                        <h3><i class='fas fa-truck text-primary'></i> Equipamentos</h3>
+                    </div>
+                </div>
+
+                <div v-if="canUpdate" class="row mt-4">
+                    <div class="col col-8">
+                        <b-form-group id="input-group-6" label=" Incluir Equipamento" label-for="input-6">
+                        <b-form-select
+                            id="input-6"
+                            v-model="equipamento"
+                            :options="equipamentos"
+                            required
+                            value-field="id"
+                            text-field="nome"
+                        ></b-form-select>
+                        </b-form-group>
+                    </div>
+                    <div class="col col-2">
+                        <h1></h1><br>
+                        <b-button
+                        size="sm"
+                        variant="success"
+                        v-b-tooltip.hover
+                        title="Incluir Equipamento"
+                        class="mr-4 ml-4"
+                        @click="equip_Add()"
+                        >
+                        <i class="fas fa-plus ml-2 mr-2"></i>
+                        </b-button>
+                    </div>
+                </div>
+                <div class="row">
+                    <table
+                        class="table table-striped table-hover table-lg mb-0 requests-table mt-3 border-1"
+                    >
+                        <thead>
+                        <!-- class="text-white" -->
+                        <tr>
+                            <th>Codigo NCM</th>
+                            <th>Descrição</th>
+                            <th class="text-right">Valor</th>
+                            <th class="text-right">Quantidade</th>
+                            <th class="text-right">Subtotal</th>
+                            <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(rowEqp, indexEqp) in equipamentos_orcamento" :key="rowEqp.id">
+                            <td>{{ rowEqp.nome }}</td>
+                            <td>{{ rowEqp.descricao }}</td>
+                            <td class="text-right">{{ numeroBR(rowEqp.valor) }}</td>
+                            <td class="text-right" style="width: 8rem;">
+                                <b-form-input
+                                    id="equip_qtd"
+                                    v-model="rowEqp.qtd"
+                                    required
+                                ></b-form-input>
+                            </td>
+                            <td class="text-right">R$ {{ numeroBR(rowEqp.valor * rowEqp.qtd) }}</td>
+                            <td v-if="canUpdate" class="text-center">
+                                <a @click="equip_Delete(indexEqp)"><i class="far fa-trash-alt text-danger"></i></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+
+
+
+
+
+                    <!-- ********** ATIVIDADES ********** -->
+
+                    <div class="row">
+                        <div class="col">
+                            <br><br><hr>
+                            <h3><i class='fas fa-tools text-primary'></i> Atividades</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col col-5">
+                            <b-form-group
+                            id="input-4"
+                            label="Descrição:"
+                            label-for="descricao"
+                            >
+                            <b-form-input
+                                id="descricao"
+                                v-model="atividadeNova.descricao"
+                                ref="atividadeNovaDescricao"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+
+                        <div class="col col-2">
+                            <b-form-group
+                            id="input-5"
+                            label="Código:"
+                            label-for="codigo"
+                            >
+                            <b-form-input
+                                id="codigo"
+                                v-model="atividadeNova.codigo"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+                        
+                        <div class="col col-2">
+                            <b-form-group
+                            id="input-6"
+                            label="Valor:"
+                            label-for="valor"
+                            >
+                            <b-form-input
+                                id="valor"
+                                v-model="atividadeNova.valor"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+
+                        <div class="col col-2">
+                            <b-form-group
+                            id="input-7"
+                            label="Quantidade:"
+                            label-for="qtd"
+                            >
+                            <b-form-input
+                                id="qtd"
+                                v-model="atividadeNova.qtd"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+
+                        <div class="col col-1">
+                            <h1></h1><br>
+                            <b-button
+                            size="sm"
+                            variant="success"
+                            v-b-tooltip.hover
+                            title="Incluir Atividade"
+                            class="mr-4 ml-4"
+                            @click="atividade_Add()"
+                            >
+                            <i class="fas fa-plus ml-2 mr-2"></i>
+                            </b-button>
+                        </div>
+                        
+                    </div>
+
+                    <div class="row">
+                        <table
+                            class="table table-striped table-hover table-lg mb-0 requests-table mt-3 border-1"
+                        >
+                            <thead>
+                            <!-- class="text-white" -->
+                            <tr>
+                                <th>Descriçao da atividade</th>
+                                <th class="text-center">Codigo</th>
+                                <th class="text-right">Valor</th>
+                                <th class="text-right">Quantidade</th>
+                                <th class="text-right">Subtotal</th>
+                                <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(rowAtv, indexAtv) in atividades_orcamento" :key="rowAtv.id">
+                                <td>{{ rowAtv.descricao }}</td>
+                                <td class="text-center">{{ rowAtv.codigo }}</td>
+                                <td class="text-right">{{ numeroBR(rowAtv.valor) }}</td>
+                                <td class="text-right">{{ numeroBR(rowAtv.qtd) }}</td>
+                                <td class="text-right">R$ {{ numeroBR(rowAtv.valor * rowAtv.qtd) }}</td>
+                                <td v-if="canUpdate" class="text-center">
+                                <a @click="atividade_Delete(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+
+                    <!-- ********** FUNCOES ********** -->
+
+                    <div class="row">
+                        <div class="col">
+                            <br><br><hr>
+                            <h3><i class='fas fa-user-cog text-primary'></i> Funções</h3>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col col-5">
+                            <b-form-group
+                            id="input-group-41" label="Função:" label-for="input-41"
+                            >
+                            <b-form-select
+                                id="input-41"
+                                v-model="funcao"
+                                :options="funcoes"
+                                value-field="id"
+                                text-field="nome"
+                            ></b-form-select>
+                            </b-form-group>
+                        </div>
+
+                        <div class="col col-2">
+                            <b-form-group
+                            id="input-5"
+                            label="Qtd Colaboradores:"
+                            label-for="qtd_colaboradores"
+                            >
+                            <b-form-input
+                                id="qtd_colaboradores"
+                                v-model="funcaoNova.qtd_colaboradores"
+                                type="number"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+                        
+                        <div class="col col-2">
+                            <b-form-group
+                            id="input-6"
+                            label="Horas Normais:"
+                            label-for="horas"
+                            >
+                            <b-form-input
+                                id="horas"
+                                v-model="funcaoNova.horas"
+                                type="number"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+
+                        <div class="col col-2">
+                            <b-form-group
+                            id="input-7"
+                            label="Horas Extras:"
+                            label-for="horas_extras"
+                            >
+                            <b-form-input
+                                id="horas_extras"
+                                v-model="funcaoNova.horas_extras"
+                                type="number"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+
+                        <div class="col col-1">
+                            <h1></h1><br>
+                            <b-button
+                            size="sm"
+                            variant="success"
+                            v-b-tooltip.hover
+                            title="Incluir Atividade"
+                            class="mr-4 ml-4"
+                            @click="funcoes_Add()"
+                            >
+                            <i class="fas fa-plus ml-2 mr-2"></i>
+                            </b-button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <table
+                            class="table table-striped table-hover table-lg mb-0 requests-table mt-3 border-1"
+                        >
+                            <thead>
+                            <!-- class="text-white" -->
+                            <tr>
+                                <th>Funçao</th>
+                                <th class="text-right">Qtd Colab</th>
+                                <th class="text-right">Horas</th>
+                                <th class="text-right">Hora Extras</th>
+                                <th class="text-right">Subtotal</th>
+                                <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(rowFunc, indexFunc) in funcoes_orcamento" :key="rowFunc.id">
+                                <td>{{ rowFunc.nome }}</td>
+                                <td class="text-right">{{ numeroBR(rowFunc.qtd_colaboradores) }}</td>
+                                <td class="text-right">{{ numeroBR(rowFunc.horas) }}</td>
+                                <td class="text-right">{{ numeroBR(rowFunc.horas_extras) }}</td>
+                                <td class="text-right">R$ {{numeroBR(rowFunc.subtotal)}}</td>
+                                <td v-if="canUpdate" class="text-center">
+                                    <a @click="funcoes_Delete(indexFunc)"><i class="far fa-trash-alt text-danger"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+
+
+                    <!-- ********** EQUIPAMENTOS ********** -->
+
+                    <div class="row">
+                        <div class="col">
+                            <br><br><br><hr>
+                            <h3><i class="fas fa-file-invoice-dollar text-success"></i> Total do Orçamento</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table
+                            class="table table-striped table-hover table-lg mb-0 requests-table mt-3 border-1"
+                        >
+                            <tr>
+                                <td>Valores totais de Equipamentos</td>
+                                <td>R$ {{numeroBR(equipamentoTotal)}}</td>
+                            </tr>
+                            <tr>
+                                <td>Valores totais de Atividades</td>
+                                <td>R$ {{numeroBR(atividadeTotal)}}</td>
+                            </tr>
+                            <tr>
+                                <td>Valores totais de Funções</td>
+                                <td>R$ {{numeroBR(funcaoTotal)}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><h5>R$ {{numeroBR(valorTotalOrcamento)}}</h5></td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+
+
+
+
+                
+
+                <div class="row"><div class="col">&nbsp;<br></div></div>
+
+
+            </Widget>
+            </b-overlay>
+        </div>
+    </div>
+
+
+    <!-- BOTOES - INICIO -->
+    <div class="row mt-3">
+        <div class="col">
+            <Widget    
+                customHeader
+                style="width:100%"
+            >
+                <b-button v-if="canUpdate" :disabled="!canSave" size="sm" variant="primary" v-b-tooltip.hover title="Salvar" class="mr-4" @click="saveRegistry()"><i class="fas fa-save ml-2 mr-2"></i></b-button>
+
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b-button v-if="canUpdate && registry.uuid!=null && !canSave" size="sm" variant="success" v-b-tooltip.hover title="Finalizar Orçamento" class="mr-4 ml-4" @click="newVersion()">
+                    <i class="fas fa-file-signature ml-2 mr-2"></i>
+                </b-button>
+                <b-button v-if="canUpdate && registry.uuid!=null && !canSave" size="sm" variant="info" v-b-tooltip.hover title="Enviar para Cliente" class="mr-4 ml-4" @click="newVersion()">
+                    <i class="fas fa-file-export ml-2 mr-2"></i>
+                </b-button>
+                
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b-button v-if="canNovaVersao" size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="newVersion()">
+                    <i class="far fa-copy ml-2 mr-2"></i>
+                </b-button>
+
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span v-if="registry.uuid!=null && !canSave">
+                    <span v-if="registry.status=='E'">
+                        <b-button v-if="canUpdate" size="sm" variant="success" v-b-tooltip.hover title="Vendido" class="mr-4 ml-4" @click="ativar()">
+                            <i class="far fa-thumbs-up ml-2 mr-2"></i>
+                        </b-button>
+                        <b-button v-if="canUpdate" size="sm" variant="danger" v-b-tooltip.hover title="Encerrado" class="mr-4 ml-4" @click="inativar()">
+                            <i class="far fa-thumbs-down ml-2 mr-2"></i>
+                        </b-button>
+                    </span>
+                </span>
+                
+                <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span v-if="registry.uuid!=null">
+                    <span v-if="registry.status=='A'">
+                        <b-button v-if="canUpdate" size="sm" variant="warning" v-b-tooltip.hover title="Inativar" class="mr-4 ml-4" @click="inativar()">
+                            <i class="fas fa-ban ml-2 mr-2"></i>
+                        </b-button>
+                    </span>
+                    <span v-else>
+                        <b-button v-if="canUpdate" size="sm" variant="success" v-b-tooltip.hover title="Ativar" class="mr-4 ml-4" @click="ativar()">
+                            <i class="fas fa-ban ml-2 mr-2"></i>
+                        </b-button>
+                    </span>
+                </span> -->
+
+                <span class="float-right">
+                    <b-button v-if="registry.status=='E'" size="sm" variant="default" v-b-tooltip.hover title="Imprimir" class="mr-4 ml-4" @click="newVersion()">
+                        <i class="fas fa-print ml-2 mr-2"></i>
+                    </b-button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b-button size="sm" variant="default" v-b-tooltip.hover title="Voltar para Lista" class="float-right" @click="backToList()">
+                    <i class="far fa-list-alt ml-2 mr-2"></i>
+                </b-button>
+                </span>
+
+                
+            </Widget>
+        </div>
+    </div>
+    <!-- BOTOES - FIM -->
+
+
+
+
+
+</div>
+</template>
+
+<script>
+import Widget from '@/components/Widget/Widget';
+export default {
+    name: 'NomePagina',
+    components: { Widget },
+    data() {
+        return {
+            //// Privilegios
+            canAdd: false,
+            canUpdate: true,
+            canGet: false,
+            canNovaVersao: true,
+            canUpdateCliente: true,
+            ////
+            processando: false,
+            registry: { id: null, index: null, uuid: null, nome: null, status: "D" },
+            // registers: {data: [] },
+
+            clientes: [],
+            cliente: {},
+
+            equipamentos: [],
+            equipamento: {},
+            equipamentos_orcamento: [],
+            equipamentoTotal: 0,
+
+            atividades_orcamento: [],
+            atividadeNova: {descricao: "", qtd: 0, valor: 0 },
+            atividadeTotal: 0,
+
+            funcoes:[],
+            funcao: {},
+            funcaoNova: { qtd_colaboradores: 1},
+            funcoes_orcamento: [],
+            funcaoTotal: 0,
+        }
+    },
+    methods: {
+        getData(){
+            if(this.$route.params.uuid){
+                this.registry.uuid = this.$route.params.uuid
+                this.registry.id = 1234
+                this.registry.versao = 2
+                this.registry.status = "E"
+                this.registry.nome = "Teste se funcionou"
+                this.canUpdateCliente = false
+                //Passou UUID - Procurar na base
+            } else {
+                this.getClientes()
+            }
+        },
+        getClientes() {
+            this.processando = true;
+            this.$http({
+                method: 'get',
+                url: process.env.VUE_APP_URL_BASE_API + "/api/cad/clientes?all=1",
+            })
+            .then((result) => {
+            this.processando = false;
+            this.clientes = result.data;
+            this.cliente = this.clientes[0].id
+            // console.log(result)
+            // this.getModelos()
+            })
+            .catch((error) => {
+            // eslint-disable-next-line
+            console.log(error);
+            this.processando = false;
+            this.showMessage('Erro na conexão [Clientes]. Acione o suporte.', 'danger');
+            this.erroConexao(error);
+            });
+        },
+        getEquipamentos() {
+            if(this.canUpdate){
+                this.processando = true;
+                this.$http({
+                    method: 'get',
+                    url: process.env.VUE_APP_URL_BASE_API + "/api/cad/equipamentos?all=1",
+                })
+                .then((result) => {
+                this.processando = false;
+                this.equipamentos = result.data;
+                this.equipamento = this.equipamentos[0].id
+                // console.log(result)
+                // this.getModelos()
+                })
+                .catch((error) => {
+                // eslint-disable-next-line
+                console.log(error);
+                this.processando = false;
+                this.showMessage('Erro na conexão[Equipamentos]. Acione o suporte.', 'danger');
+                this.erroConexao(error);
+                });
+            }
+        },
+        getFuncoes() {
+            if(this.canUpdate){
+                this.processando = true;
+                this.$http({
+                    method: 'get',
+                    url: process.env.VUE_APP_URL_BASE_API + "/api/cad/funcoes?all=1",
+                })
+                .then((result) => {
+                this.processando = false;
+                this.funcoes = result.data;
+                this.funcao = this.funcoes[0].id
+                // console.log(result)
+                // this.getModelos()
+                })
+                .catch((error) => {
+                // eslint-disable-next-line
+                console.log(error);
+                this.processando = false;
+                this.showMessage('Erro na conexão [Funcoes]. Acione o suporte.', 'danger');
+                this.erroConexao(error);
+                });
+            }
+        },
+
+
+        equip_Add(){
+            let selecionado = this.equipamentos.find((data) => data.id === this.equipamento);
+            selecionado.qtd = 0
+            this.equipamentos_orcamento.push(selecionado);
+        },
+        equip_Delete(index){
+            var mensagem = "Deseja realmente remover o equipamento "+this.equipamentos_orcamento[index].nome+"?"
+            if(confirm(mensagem)){
+                this.equipamentos_orcamento.splice(index, 1)
+            }
+        },
+
+        atividade_Add(){
+            if(this.atividadeNova.descricao.length<3 || this.atividadeNova.descricao==""){
+                alert("Digite uma descrição válida.")
+                return
+            }
+            if(this.atividadeNova.qtd<0 || this.atividadeNova.qtd==""){
+                alert("Digite uma quantidade válida.")
+                return
+            }
+            if(this.atividadeNova.valor<0 || this.atividadeNova.valor==""){
+                alert("Digite um valor válido.")
+                return
+            }
+
+            this.atividades_orcamento.push(this.atividadeNova)
+            this.atividadeNova = { descricao: "", codigo: "", valor: 0, qtd: 0 }
+            this.$refs.atividadeNovaDescricao.focus()
+
+
+            this.atividadeTotal = this.atividadeTotal + 1.3
+            //////// Mudar a linha acima para fazer o calculo
+        },
+
+        atividade_Delete(index){
+            var mensagem = "Deseja realmente remover a atividade?"
+            if(confirm(mensagem)){
+                this.atividades_orcamento.splice(index, 1)
+            }
+        },
+
+        funcoes_Add(){
+            let selecionado = this.funcoes.find((data) => data.id === this.funcao);
+            this.funcaoNova.id = selecionado.id
+            this.funcaoNova.nome = selecionado.nome
+            this.funcaoNova.valor_hora = selecionado.valor_hora
+            this.funcaoNova.valor_hora_noturno = selecionado.valor_hora_noturno
+
+            this.funcaoNova.subtotal = ( parseFloat(this.funcaoNova.horas) * parseFloat(selecionado.valor_hora) ) +
+                            ( parseFloat(this.funcaoNova.horas_extras) * parseFloat(selecionado.valor_hora_noturno) )
+            // console.log(this.funcaoNova.subtotal);
+            this.funcaoTotal = this.funcaoTotal + this.funcaoNova.subtotal
+
+            this.funcoes_orcamento.push( this.funcaoNova )
+            this.funcaoNova = { id: null, nome: null, qtd_colaboradores: 1, horas: null, horas_extra: null}
+        },
+
+        funcoes_Delete(index){
+            var mensagem = "Deseja realmente remover a função "+this.funcoes_orcamento[index].nome+"?"
+            if(confirm(mensagem)){
+                this.funcaoTotal = this.funcaoTotal - this.funcoes_orcamento[index].subtotal
+                this.funcoes_orcamento.splice(index, 1)
+            }
+        },
+
+
+    },
+    computed: {
+        canSave(){
+            if(this.registry.status=="D"){
+                if( (this.equipamentoTotal+this.atividadeTotal+this.funcaoTotal)>0 ){
+                    return true
+                }
+            }
+            return false
+        },
+        valorTotalOrcamento(){
+            return this.equipamentoTotal+this.atividadeTotal+this.funcaoTotal
+        }
+
+
+    },
+    created(){
+        //Validando permissao e secao
+        // this.mccUsuarioValidar('privilegio_para_acesso_na_pagina')
+        this.$store.commit('setNomePagina', '<i class="far fa-file-alt"></i>&nbsp;Orçamento')
+
+        this.getData()
+        this.getEquipamentos()
+        this.getFuncoes()
+    }
+};
+</script>

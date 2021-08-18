@@ -66,7 +66,7 @@
       <b-nav-item-dropdown id="v-step-2" class="settingsDropdown d-sm-down-none" no-caret right>
         <template slot="button-content">
           <!-- <i class='fi flaticon-settings-10 px-2' /> -->
-          <i class="far fa-user" />&nbsp;{{user.name==null?"Não Logado":user.name}}&nbsp;<i class="fas fa-angle-down text-primary" />
+          <i class="far fa-user" />&nbsp;{{username}}&nbsp;<i class="fas fa-angle-down text-primary" />
         </template>
         <!-- <b-dropdown-item><i class='fi flaticon-person px-3 mr-3' /> My Account</b-dropdown-item>
         <b-dropdown-divider /> -->
@@ -101,6 +101,13 @@ export default {
     ...mapState('layout', ['sidebarClose', 'sidebarStatic']),
     user(){
       return this.$store.state.user
+    },
+    username(){
+      // console.log(this.$store.state.user)
+      if(this.$store.state.user.name==null||this.$store.state.user.name==""){
+        return "Não logado"
+      }
+      return this.$store.state.user.name
     },
     nomePagina(){
       return this.$store.state.nomePagina
