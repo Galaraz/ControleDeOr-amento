@@ -12,9 +12,13 @@ export default {
     //  this.$router.push("/login");
   //  }
 
-    if (currentPath === "/" || currentPath === "/") {
-      this.$router.push("/dashboard");
-      //this.$router.push("/login");
+    // if (currentPath === "/" || currentPath === "/") {
+    //   this.$router.push("/dashboard");
+    //   //this.$router.push("/login");
+    // }
+
+    if(this.$store.state.user.name=="" || this.$store.state.user==null){
+      this.$router.push('/login');
     }
   },
 };

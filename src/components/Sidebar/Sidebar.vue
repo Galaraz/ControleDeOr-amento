@@ -17,12 +17,20 @@
         index="dashboard"
         isHeader
       />
+      <!-- <NavLink
+        :activeItem="activeItem"
+        header="Orçamento"
+        link="/orcamento/orcamento"
+        iconName="far fa-file-alt"
+        index="orcamento/orcamento"
+        isHeader
+      /> -->
       <NavLink
         :activeItem="activeItem"
         header="Novo Orçamento"
-        link="/orcamento/novo"
+        link="/orcamento/orcamento"
         iconName="fas fa-plus"
-        index="orcamento/novo"
+        index="orcamento/orcamento"
         isHeader
       />
       <NavLink
