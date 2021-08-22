@@ -653,8 +653,8 @@ export default {
                 this.processando = true;
                 this.$http({
                     method: 'get',
-                    // url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentos/"+this.$route.params.uuid,
-                    url: "http://127.0.0.1:8000/api/orcamentos/"+this.$route.params.uuid,
+                    url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentos/"+this.$route.params.uuid,
+                    // url: "http://127.0.0.1:8000/api/orcamentos/"+this.$route.params.uuid,
                 })
                 .then((result) => {
                     this.processando = false;
@@ -771,8 +771,8 @@ export default {
 
             this.$http({
                 method: 'post',
-                // url: process.env.VUE_APP_URL_BASE_API + "/api/orcamento",
-                url: "http://127.0.0.1:8000/api/orcamentos",
+                url: process.env.VUE_APP_URL_BASE_API + "/api/orcamento",
+                // url: "http://127.0.0.1:8000/api/orcamentos",
                 data: bodyFormData
             })
             .then((result) => {
@@ -831,8 +831,8 @@ export default {
 
                 this.$http({
                     method: 'post',
-                    // url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoaitividades",
-                    url: "http://127.0.0.1:8000/api/orcamentoversaoaitividades",
+                    url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoaitividades",
+                    // url: "http://127.0.0.1:8000/api/orcamentoversaoaitividades",
                     data: bodyFormData
                 })
                 .then((result) => {
@@ -867,8 +867,8 @@ export default {
                     this.processando = true
                     this.$http({
                         method: 'delete',
-                        // url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoaitividades",
-                        url: "http://127.0.0.1:8000/api/orcamentoversaoaitividades",
+                        url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoaitividades",
+                        // url: "http://127.0.0.1:8000/api/orcamentoversaoaitividades",
                         data: { uuid: this.atividades_orcamento[index].uuid }
                     })
                     .then(() => {

@@ -58,7 +58,6 @@
         index="cadastros"
         :childrenLinks="[
           { header: 'Equipamentos', link: '/cadastros/equipamentos', iconName: 'fas fa-microchip' },
-          
           { header: 'Funções', link: '/cadastros/funcoes', iconName: 'fas fa-user-cog' },
           { header: 'Clientes', link: '/cadastros/clientes', iconName: 'fas fa-user-tie' },
         ]"

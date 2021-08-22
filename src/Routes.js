@@ -10,6 +10,8 @@ import OrcamentoLista from '@/pages/orcamento/orcamentoLista';
 import OrcamentoEnviado from '@/pages/orcamento/orcamentoEnviados';
 
 import OrcamentoPage from '@/pages/orcamento/orcamento';
+import CadClientePage from '@/pages/cadastros/clientes.vue'
+
 
 Vue.use(Router);
 
@@ -89,7 +91,8 @@ export default new Router({
         {
           path: 'clientes',
           name: 'CadastroClientesPage',
-          component: () => import('@/pages/cadastros/clientes.vue')
+          // component: () => import('@/pages/cadastros/clientes.vue')
+          component: CadClientePage,
         },
       ],
     }
