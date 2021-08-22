@@ -6,7 +6,7 @@
         @mouseleave="sidebarMouseLeave"
     >
       <header class="logo">
-        <router-link to="/dashboard"><span class="primary-word">LogoEmpresa</span></router-link>
+        <router-link to="/dashboard"><span class="primary-word"><img src="/img/logo_naxsys.png" width="130px"></span></router-link>
       </header>
 
       <NavLink
@@ -33,18 +33,18 @@
         index="orcamento/orcamento"
         isHeader
       />
-      <NavLink
+      <!-- <NavLink
         :activeItem="activeItem"
         header="Orçamentos Enviados"
         link="/orcamento/enviados"
         iconName="far fa-paper-plane"
         index="orcamento/enviados"
         isHeader
-      />
+      /> -->
       <NavLink
         :activeItem="activeItem"
         header="Orçamentos - Lista"
-        link="/orcamento/enviados"
+        link="/orcamento/lista"
         iconName="fas fa-list"
         index="orcamento/lista"
         isHeader
@@ -58,11 +58,12 @@
         index="cadastros"
         :childrenLinks="[
           { header: 'Equipamentos', link: '/cadastros/equipamentos', iconName: 'fas fa-microchip' },
-          { header: 'Atividades', link: '/cadastros/servicos', iconName: 'fas fa-tools' },
+          
           { header: 'Funções', link: '/cadastros/funcoes', iconName: 'fas fa-user-cog' },
           { header: 'Clientes', link: '/cadastros/clientes', iconName: 'fas fa-user-tie' },
         ]"
       />
+      <!-- { header: 'Atividades', link: '/cadastros/servicos', iconName: 'fas fa-tools' }, -->
 
 
 

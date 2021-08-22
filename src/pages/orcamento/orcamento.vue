@@ -4,11 +4,11 @@
     <template v-if="registry.uuid!=null">
         <!-- INFORMACOES TOPO PAGINA - INICIO -->
         <div class="row d-flex justify-content-between mt-0 mb-4 ml-1 mr-1">
-            <div style="width: 10rem;">
-                <b-card bg-variant="info" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
+            <div style="width: 19rem;">
+                <b-card bg-variant="primary" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
                     <b-card-text>
                         <span style="font-size:85%;"><i class="fas fa-hashtag"></i></span><br>
-                        <span class="p-0 mt-0" style="font-size:170%;">{{registry.id}}-</span><span class="p-0 mt-0" style="font-size:120%;">{{registry.versao}}</span>
+                        <span class="p-0 mt-0" style="font-size:170%;">{{registry.codigo}}-</span><span class="p-0 mt-0" style="font-size:120%;">{{registry.versao}}</span>
                     </b-card-text>
                 </b-card>
             </div>
@@ -62,7 +62,7 @@
                             <b-form-input
                                 v-else
                                 id="input-nomecliente"
-                                v-model="registry.nome"
+                                v-model="registry.fk_cliente.nome"
                                 readonly
                             ></b-form-input>
                         </b-form-group>
@@ -106,8 +106,57 @@
                         >
                         <b-form-input
                             id="input-5"
-                            v-model="registry.contato_telefone"
+                            v-model="registry.contato_fone"
                             required
+                        ></b-form-input>
+                        </b-form-group>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-12">
+                        <b-form-group
+                        id="input-group-21"
+                        label="Referencia:"
+                        label-for="referencia"
+                        description=""
+                        >
+                        <b-form-input
+                            id="referencia"
+                            v-model="registry.referencia"
+                            type="text"
+                        ></b-form-input>
+                        </b-form-group>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-12">
+                        <b-form-group
+                        id="input-group-21"
+                        label="Condição de Pagamento:"
+                        label-for="condicao_pagamento"
+                        description=""
+                        >
+                        <b-form-input
+                            id="condicao_pagamento"
+                            v-model="registry.condicao_pagamento"
+                            type="text"
+                        ></b-form-input>
+                        </b-form-group>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col col-12">
+                        <b-form-group
+                        id="input-group-21"
+                        label="Validade da Proposta:"
+                        label-for="validade_proposta"
+                        description=""
+                        >
+                        <b-form-input
+                            id="validade_proposta"
+                            v-model="registry.validade_proposta"
+                            type="text"
                         ></b-form-input>
                         </b-form-group>
                     </div>
@@ -138,6 +187,18 @@
                         ></b-form-select>
                         </b-form-group>
                     </div>
+                    <div class="col col-2">
+                            <b-form-group
+                            id="input-7"
+                            label="Quantidade:"
+                            label-for="qtd"
+                            >
+                            <b-form-input
+                                id="qtd"
+                                v-model="equipamentoQtd"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
                     <div class="col col-2">
                         <h1></h1><br>
                         <b-button
@@ -172,13 +233,14 @@
                             <td>{{ rowEqp.nome }}</td>
                             <td>{{ rowEqp.descricao }}</td>
                             <td class="text-right">{{ numeroBR(rowEqp.valor) }}</td>
-                            <td class="text-right" style="width: 8rem;">
+                            <td class="text-right">{{ numeroBR(rowEqp.qtd) }}</td>
+                            <!-- <td class="text-right" style="width: 8rem;">
                                 <b-form-input
                                     id="equip_qtd"
                                     v-model="rowEqp.qtd"
                                     required
                                 ></b-form-input>
-                            </td>
+                            </td> -->
                             <td class="text-right">R$ {{ numeroBR(rowEqp.valor * rowEqp.qtd) }}</td>
                             <td v-if="canUpdate" class="text-center">
                                 <a @click="equip_Delete(indexEqp)"><i class="far fa-trash-alt text-danger"></i></a>
@@ -238,7 +300,7 @@
                             >
                             <b-form-input
                                 id="valor"
-                                v-model="atividadeNova.valor"
+                                v-model="atividadeNova.valor_unit"
                             ></b-form-input>
                             </b-form-group>
                         </div>
@@ -291,9 +353,9 @@
                             <tr v-for="(rowAtv, indexAtv) in atividades_orcamento" :key="rowAtv.id">
                                 <td>{{ rowAtv.descricao }}</td>
                                 <td class="text-center">{{ rowAtv.codigo }}</td>
-                                <td class="text-right">{{ numeroBR(rowAtv.valor) }}</td>
+                                <td class="text-right">{{ numeroBR( rowAtv.valor_unit ) }}</td>
                                 <td class="text-right">{{ numeroBR(rowAtv.qtd) }}</td>
-                                <td class="text-right">R$ {{ numeroBR(rowAtv.valor * rowAtv.qtd) }}</td>
+                                <td class="text-right">R$ {{ numeroBR( rowAtv.valor_unit * rowAtv.qtd) }}</td>
                                 <td v-if="canUpdate" class="text-center">
                                 <a @click="atividade_Delete(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
                                 </td>
@@ -474,13 +536,13 @@
                 customHeader
                 style="width:100%"
             >
-                <b-button v-if="canUpdate" :disabled="!canSave" size="sm" variant="primary" v-b-tooltip.hover title="Salvar" class="mr-4" @click="saveRegistry()"><i class="fas fa-save ml-2 mr-2"></i></b-button>
+                <b-button v-if="canUpdate" :disabled="!canSave" size="sm" variant="primary" v-b-tooltip.hover title="Salvar" class="mr-4" @click="orcamento_processar()"><i class="fas fa-save ml-2 mr-2"></i></b-button>
 
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b-button v-if="canUpdate && registry.uuid!=null && !canSave" size="sm" variant="success" v-b-tooltip.hover title="Finalizar Orçamento" class="mr-4 ml-4" @click="newVersion()">
+                <b-button v-if="canUpdate && registry.uuid!=null && !canSave" :disabled="!canSave" size="sm" variant="success" v-b-tooltip.hover title="Finalizar Orçamento" class="mr-4 ml-4" @click="newVersion()">
                     <i class="fas fa-file-signature ml-2 mr-2"></i>
                 </b-button>
-                <b-button v-if="canUpdate && registry.uuid!=null && !canSave" size="sm" variant="info" v-b-tooltip.hover title="Enviar para Cliente" class="mr-4 ml-4" @click="newVersion()">
+                <b-button v-if="canUpdate && registry.uuid!=null && !canSave" :disabled="!canSave" size="sm" variant="info" v-b-tooltip.hover title="Enviar para Cliente" class="mr-4 ml-4" @click="newVersion()">
                     <i class="fas fa-file-export ml-2 mr-2"></i>
                 </b-button>
                 
@@ -553,7 +615,7 @@ export default {
             canUpdateCliente: true,
             ////
             processando: false,
-            registry: { id: null, index: null, uuid: null, nome: null, status: "D" },
+            registry: { id: null, index: null, uuid: null, nome: null, status: "D", fk_cliente: {nome: null}, fk_versao: [] },
             // registers: {data: [] },
 
             clientes: [],
@@ -563,9 +625,10 @@ export default {
             equipamento: {},
             equipamentos_orcamento: [],
             equipamentoTotal: 0,
+            equipamentoQtd: 1,
 
             atividades_orcamento: [],
-            atividadeNova: {descricao: "", qtd: 0, valor: 0 },
+            atividadeNova: {descricao: "", qtd: 0, valor_unit: 0 },
             atividadeTotal: 0,
 
             funcoes:[],
@@ -583,8 +646,35 @@ export default {
                 this.registry.versao = 2
                 this.registry.status = "E"
                 this.registry.nome = "Teste se funcionou"
+                this.registry.fk_cliente = {nome: null}
                 this.canUpdateCliente = false
                 //Passou UUID - Procurar na base
+
+                this.processando = true;
+                this.$http({
+                    method: 'get',
+                    // url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentos/"+this.$route.params.uuid,
+                    url: "http://127.0.0.1:8000/api/orcamentos/"+this.$route.params.uuid,
+                })
+                .then((result) => {
+                    this.processando = false;
+                    this.registry = result.data;
+                    // console.log(result)
+
+                    this.atividades_orcamento = this.registry.fk_atividades
+
+                    this.atividadeTotal = this.registry.atividadeTotal
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line
+                    console.log(error);
+                    this.processando = false;
+                    this.showMessage('Erro na conexão [Orcamento]. Acione o suporte.', 'danger');
+                    this.erroConexao(error);
+                });
+
+
+
             } else {
                 this.getClientes()
             }
@@ -596,18 +686,18 @@ export default {
                 url: process.env.VUE_APP_URL_BASE_API + "/api/cad/clientes?all=1",
             })
             .then((result) => {
-            this.processando = false;
-            this.clientes = result.data;
-            this.cliente = this.clientes[0].id
-            // console.log(result)
-            // this.getModelos()
+                this.processando = false;
+                this.clientes = result.data;
+                this.cliente = this.clientes[0].id
+                // console.log(result)
+                // this.getModelos()
             })
             .catch((error) => {
-            // eslint-disable-next-line
-            console.log(error);
-            this.processando = false;
-            this.showMessage('Erro na conexão [Clientes]. Acione o suporte.', 'danger');
-            this.erroConexao(error);
+                // eslint-disable-next-line
+                console.log(error);
+                this.processando = false;
+                this.showMessage('Erro na conexão [Clientes]. Acione o suporte.', 'danger');
+                this.erroConexao(error);
             });
         },
         getEquipamentos() {
@@ -657,15 +747,62 @@ export default {
             }
         },
 
+        //////// ORCAMENTO
+        orcamento_processar(){
+            if(this.registry.uuid==""||this.registry.uuid==null){
+                this.orcamento_save()
+            }
+        },
+        orcamento_save(){
+            this.processando = true;
+
+            let selecionado = this.clientes.find((data) => data.id === this.cliente);
+
+            var bodyFormData = new FormData();
+            bodyFormData.append("uuid_cliente", selecionado.uuid);
+            bodyFormData.append("contato_nome", this.registry.contato_nome);
+            bodyFormData.append("contato_fone", this.registry.contato_fone);
+            bodyFormData.append("contato_email", this.registry.contato_email);
+            bodyFormData.append("referencia", this.registry.referencia);
+            bodyFormData.append("condicao_pagamento", this.registry.condicao_pagamento);
+            bodyFormData.append("validade_proposta", this.registry.validade_proposta);
+
+            bodyFormData.append("atividades", JSON.stringify(this.atividades_orcamento) );
+
+            this.$http({
+                method: 'post',
+                // url: process.env.VUE_APP_URL_BASE_API + "/api/orcamento",
+                url: "http://127.0.0.1:8000/api/orcamentos",
+                data: bodyFormData
+            })
+            .then((result) => {
+                this.processando = false;
+                this.registry = result.data;
+                // console.log(result)
+                // this.getModelos()
+                this.showMessage("Orçamento salvo com sucesso.","success");
+            })
+            .catch((error) => {
+                // eslint-disable-next-line
+                console.log(error);
+                this.processando = false;
+                this.showMessage('Erro na conexão[Orcamento-Save]. Acione o suporte.', 'danger');
+                this.erroConexao(error);
+            });
+        },
+
 
         equip_Add(){
             let selecionado = this.equipamentos.find((data) => data.id === this.equipamento);
-            selecionado.qtd = 0
+            selecionado.qtd = this.equipamentoQtd
+            this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(selecionado.qtd) * parseFloat(selecionado.valor) )
             this.equipamentos_orcamento.push(selecionado);
+            
         },
         equip_Delete(index){
             var mensagem = "Deseja realmente remover o equipamento "+this.equipamentos_orcamento[index].nome+"?"
             if(confirm(mensagem)){
+                this.equipamentoTotal = this.equipamentoTotal - ( this.equipamentos_orcamento[index].qtd * this.equipamentos_orcamento[index].valor)
                 this.equipamentos_orcamento.splice(index, 1)
             }
         },
@@ -679,24 +816,75 @@ export default {
                 alert("Digite uma quantidade válida.")
                 return
             }
-            if(this.atividadeNova.valor<0 || this.atividadeNova.valor==""){
+            if(this.atividadeNova.valor_unit<0 || this.atividadeNova.valor_unit==""){
                 alert("Digite um valor válido.")
                 return
             }
+            if(this.registry.uuid!=null &&this.registry.uuid!=""&&this.registry.uuid!="null"){
+                this.processando = true
+                var bodyFormData = new FormData();
+                bodyFormData.append("uuid", this.registry.fk_versao[0].uuid);
+                bodyFormData.append("descricao", this.atividadeNova.descricao);
+                bodyFormData.append("valor_unit", this.atividadeNova.valor_unit);
+                bodyFormData.append("qtd", this.atividadeNova.qtd);
+                bodyFormData.append("codigo", this.atividadeNova.codigo);
 
-            this.atividades_orcamento.push(this.atividadeNova)
-            this.atividadeNova = { descricao: "", codigo: "", valor: 0, qtd: 0 }
-            this.$refs.atividadeNovaDescricao.focus()
+                this.$http({
+                    method: 'post',
+                    // url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoaitividades",
+                    url: "http://127.0.0.1:8000/api/orcamentoversaoaitividades",
+                    data: bodyFormData
+                })
+                .then((result) => {
+                    this.processando = false;
+                    this.atividades_orcamento.push(result.data)
+                    this.atividadeTotal = this.atividadeTotal + (this.atividadeNova.valor_unit * this.atividadeNova.qtd)
+                    this.atividadeNova = { descricao: "", codigo: "", valor_unit: 0, qtd: 0 }
+                    this.$refs.atividadeNovaDescricao.focus()
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line
+                    console.log(error);
+                    this.processando = false;
+                    this.showMessage('Erro na conexão[Atividade-Save]. Acione o suporte.', 'danger');
+                    this.erroConexao(error);
+                });
+            } else {
+                this.atividades_orcamento.push(this.atividadeNova)
+                this.atividadeTotal = this.atividadeTotal + (this.atividadeNova.valor_unit * this.atividadeNova.qtd)
+                this.atividadeNova = { descricao: "", codigo: "", valor_unit: 0, qtd: 0 }
+                this.$refs.atividadeNovaDescricao.focus()
+            }
 
-
-            this.atividadeTotal = this.atividadeTotal + 1.3
+            // this.atividadeTotal = this.atividadeTotal + 1.3
             //////// Mudar a linha acima para fazer o calculo
         },
 
         atividade_Delete(index){
             var mensagem = "Deseja realmente remover a atividade?"
             if(confirm(mensagem)){
-                this.atividades_orcamento.splice(index, 1)
+                if(this.atividades_orcamento[index].uuid){
+                    this.processando = true
+                    this.$http({
+                        method: 'delete',
+                        // url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoaitividades",
+                        url: "http://127.0.0.1:8000/api/orcamentoversaoaitividades",
+                        data: { uuid: this.atividades_orcamento[index].uuid }
+                    })
+                    .then(() => {
+                        this.processando = false;
+                        this.atividades_orcamento.splice(index, 1)
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line
+                        console.log(error);
+                        this.processando = false;
+                        this.showMessage('Erro na conexão[Atividade-Delete]. Acione o suporte.', 'danger');
+                        this.erroConexao(error);
+                    });
+                } else {
+                    this.atividades_orcamento.splice(index, 1)
+                }
             }
         },
 
@@ -725,6 +913,10 @@ export default {
         },
 
 
+
+        backToList(){
+            this.$router.push({ name: 'orcamento-lista'})
+        },
     },
     computed: {
         canSave(){
@@ -737,7 +929,7 @@ export default {
         },
         valorTotalOrcamento(){
             return this.equipamentoTotal+this.atividadeTotal+this.funcaoTotal
-        }
+        },
 
 
     },

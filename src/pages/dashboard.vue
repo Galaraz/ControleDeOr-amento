@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-page">
-    Aqui vai o centeúdo
+
     
     
   </div>
@@ -30,7 +30,7 @@ export default {
     
   },
   created(){
-    this.$store.commit('setNomePagina', '<i class="fas fa-cogs"></i>&nbsp;Cadastros&nbsp;&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;&nbsp;&nbsp;<i class="far fa-file-alt"></i>&nbsp;Nome do Cadastro')
+    this.$store.commit('setNomePagina', '<i class="fas fa-tachometer-alt"></i>&nbsp;Dashboard')
   }
 };
 </script>
