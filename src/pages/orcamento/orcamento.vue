@@ -3,6 +3,7 @@
 
     <template v-if="registry.uuid!=null">
         <!-- INFORMACOES TOPO PAGINA - INICIO -->
+        <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
         <div class="row d-flex justify-content-between mt-0 mb-4 ml-1 mr-1">
             <div style="width: 19rem;">
                 <b-card bg-variant="primary" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
@@ -25,6 +26,7 @@
                 </b-card>
             </div>
         </div>
+        </b-overlay>
         <!-- INFORMACOES TOPO PAGINA - FIM -->
     </template>
 
@@ -669,10 +671,10 @@ export default {
         getData(){
             if(this.$route.params.uuid){
                 this.registry.uuid = this.$route.params.uuid
-                this.registry.id = 1234
-                this.registry.versao = 2
+                this.registry.codigo = 0
+                this.registry.versao = 0
                 this.registry.status = "E"
-                this.registry.nome = "Teste se funcionou"
+                this.registry.nome = "Erro getCliente"
                 this.registry.fk_cliente = {nome: null}
                 this.canUpdateCliente = false
                 //Passou UUID - Procurar na base
@@ -686,11 +688,14 @@ export default {
                 .then((result) => {
                     this.processando = false;
                     this.registry = result.data;
+                    // console.log("getOrcamento");
                     // console.log(result)
 
                     this.atividades_orcamento = this.registry.fk_atividades
-
                     this.atividadeTotal = this.registry.atividadeTotal
+
+                    this.equipamentos_orcamento = this.registry.fk_equipamentos
+                    this.equipamentoTotal = this.registry.equipamentoTotal
                 })
                 .catch((error) => {
                     // eslint-disable-next-line
@@ -707,13 +712,13 @@ export default {
             }
         },
         getClientes() {
-            this.processando = true;
+            // this.processando = true;
             this.$http({
                 method: 'get',
                 url: process.env.VUE_APP_URL_BASE_API + "/api/cad/clientes?all=1",
             })
             .then((result) => {
-                this.processando = false;
+                // this.processando = false;
                 this.clientes = result.data;
                 // this.cliente = this.clientes[0].id
                 this.cliente = this.clientes[0]
@@ -731,13 +736,13 @@ export default {
         },
         getEquipamentos() {
             if(this.canUpdate){
-                this.processando = true;
+                // this.processando = true;
                 this.$http({
                     method: 'get',
                     url: process.env.VUE_APP_URL_BASE_API + "/api/cad/equipamentos?all=1",
                 })
                 .then((result) => {
-                this.processando = false;
+                // this.processando = false;
                 this.equipamentos = result.data;
                 // this.equipamento = this.equipamentos[0].id
                 this.equipamento = this.equipamentos[0]
@@ -747,7 +752,7 @@ export default {
                 .catch((error) => {
                 // eslint-disable-next-line
                 console.log(error);
-                this.processando = false;
+                // this.processando = false;
                 this.showMessage('Erro na conexão[Equipamentos]. Acione o suporte.', 'danger');
                 this.erroConexao(error);
                 });
@@ -755,13 +760,13 @@ export default {
         },
         getFuncoes() {
             if(this.canUpdate){
-                this.processando = true;
+                // this.processando = true;
                 this.$http({
                     method: 'get',
                     url: process.env.VUE_APP_URL_BASE_API + "/api/cad/funcoes?all=1",
                 })
                 .then((result) => {
-                this.processando = false;
+                // this.processando = false;
                 this.funcoes = result.data;
                 // this.funcao = this.funcoes[0].id
                 this.funcao = this.funcoes[0]
@@ -829,6 +834,11 @@ export default {
             // this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(selecionado.qtd) * parseFloat(selecionado.valor) )
             // this.equipamentos_orcamento.push(selecionado);
 
+            if(!this.equipamento){
+                alert("Selecione um equipamento")
+                return
+            }
+
             if(isNaN(this.equipamentoQtd)){
                 alert("Digite uma quantidade válida.")
                 return
@@ -844,16 +854,49 @@ export default {
 
             if(this.equipamento){
 
-                //verifica se funcao ja foi incluida
+                //verifica se equipamento ja foi incluida
                 let existe = this.equipamentos_orcamento.find((data) => data.id === this.equipamento.id);
                 if(existe){
                     alert("Equipamento já incluído")
                     return
                 }
+                
 
-                this.equipamento.qtd = this.equipamentoQtd
-                this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(this.equipamento.qtd) * parseFloat(this.equipamento.valor) )
-                this.equipamentos_orcamento.push(this.equipamento)
+                if(this.registry.uuid!=null &&this.registry.uuid!=""&&this.registry.uuid!="null"){
+                    // console.log(this.equipamento);
+                    this.processando = true
+                    var bodyFormData = new FormData();
+                    bodyFormData.append("uuid", this.registry.fk_versao[0].uuid);
+                    bodyFormData.append("id_equipamento", this.equipamento.id);
+                    bodyFormData.append("qtd", this.equipamentoQtd);
+
+                    this.$http({
+                        method: 'post',
+                        url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoequipamentos",
+                        // url: "http://127.0.0.1:8000/api/orcamentoversaoequipamentos",
+                        data: bodyFormData
+                    })
+                    .then((result) => {
+                        this.processando = false;
+
+                        this.equipamento.qtd = this.equipamentoQtd
+                        this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(this.equipamento.qtd) * parseFloat(this.equipamento.valor) )
+                        this.equipamentos_orcamento.push(this.equipamento)
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line
+                        console.log(error);
+                        this.processando = false;
+                        this.showMessage('Erro na conexão[Equipamento-Save]. Acione o suporte.', 'danger');
+                        this.erroConexao(error);
+                    });
+                } else {
+
+                    this.equipamento.qtd = this.equipamentoQtd
+                    this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(this.equipamento.qtd) * parseFloat(this.equipamento.valor) )
+                    this.equipamentos_orcamento.push(this.equipamento)
+                }
+
             } else {
                 alert("Selecione um equipamento")
             }
@@ -864,10 +907,37 @@ export default {
         equip_Delete(index){
             var mensagem = "Deseja realmente remover o equipamento "+this.equipamentos_orcamento[index].nome+"?"
             if(confirm(mensagem)){
-                this.equipamentoTotal = this.equipamentoTotal - ( this.equipamentos_orcamento[index].qtd * this.equipamentos_orcamento[index].valor)
-                this.equipamentos_orcamento.splice(index, 1)
+
+                if(this.equipamentos_orcamento[index].uuid){
+                    this.processando = true
+                    this.$http({
+                        method: 'delete',
+                        url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoequipamentos",
+                        // url: "http://127.0.0.1:8000/api/orcamentoversaoequipamentos",
+                        data: { uuid: this.equipamentos_orcamento[index].uuid }
+                    })
+                    .then(() => {
+                        this.processando = false;
+                        this.equipamentoTotal = this.equipamentoTotal - ( this.equipamentos_orcamento[index].qtd * this.equipamentos_orcamento[index].valor)
+                        this.equipamentos_orcamento.splice(index, 1)
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line
+                        console.log(error);
+                        this.processando = false;
+                        this.showMessage('Erro na conexão[Atividade-Delete]. Acione o suporte.', 'danger');
+                        this.erroConexao(error);
+                    });
+                } else {
+                    this.equipamentoTotal = this.equipamentoTotal - ( this.equipamentos_orcamento[index].qtd * this.equipamentos_orcamento[index].valor)
+                    this.equipamentos_orcamento.splice(index, 1)
+                }
+
+
+                
             }
         },
+        
 
 
         ////////////// ATIVIDADE

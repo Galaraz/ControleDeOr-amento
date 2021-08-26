@@ -12,6 +12,8 @@ import OrcamentoEnviado from '@/pages/orcamento/orcamentoEnviados';
 import OrcamentoPage from '@/pages/orcamento/orcamento';
 import CadClientePage from '@/pages/cadastros/clientes.vue'
 
+import CadastroEquipamentosPage from '@/pages/cadastros/equipamentos.vue'
+import CadastroFuncoesPage from '@/pages/cadastros/funcoes.vue'
 
 Vue.use(Router);
 
@@ -76,12 +78,14 @@ export default new Router({
         {
           path: 'equipamentos',
           name: 'CadastroEquipamentosPage',
-          component: () => import('@/pages/cadastros/equipamentos.vue')
+          // component: () => import('@/pages/cadastros/equipamentos.vue')
+          component: CadastroEquipamentosPage
         },
         {
           path: 'funcoes',
           name: 'CadastroFuncoesPage',
-          component: () => import('@/pages/cadastros/funcoes.vue')
+          // component: () => import('@/pages/cadastros/funcoes.vue')
+          component: CadastroFuncoesPage
         },
         // {
         //   path: 'servicos',
