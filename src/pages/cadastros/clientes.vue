@@ -21,18 +21,16 @@
                         <!-- class="text-white" -->
                     <tr>
                         <th class="text-center" style="width:50px"><i class="fas fa-circle text-secondary fa-lg"></i></th>
+                        <th>Fantasia</th>
                         <th>Nome</th>
-                        <th>Descrição</th>
-                        <th>Valor</th>
                         <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="(row, index) in registers.data" :key="row.id">
                         <td class="text-center"><span v-html="colorStatus(index)"></span></td>
+                        <td>{{row.nome_fantasia}}</td>
                         <td>{{row.nome}}</td>
-                        <td>{{row.descricao}}</td>
-                        <td>{{row.valor}}</td>
                         <td v-if="canUpdate" class="text-center">
                             <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
                         </td>
@@ -84,14 +82,14 @@
         <div class="col">
             <b-form-group
                 id="grp-nome"
-                label="Nome"
+                label="Nome Fantasia"
                 label-for="nome"
                 :state="stateNome"
             >
                 <b-form-input 
                     id="nome" 
                     ref="focusNome"
-                    v-model="registry.nome" 
+                    v-model="registry.nome_fantasia" 
                     :state="stateNome"
                     trim
                 ></b-form-input>
@@ -102,12 +100,12 @@
         <div class="col">
             <b-form-group
                 id="grp-descricao"
-                label="Descrição"
-                label-for="descricao"
+                label="Nome"
+                label-for="nome"
             >
                 <b-form-textarea
                     id="descricao"
-                    v-model="registry.descricao"
+                    v-model="registry.nome"
                     rows="3"
                     max-rows="6"
                 ></b-form-textarea>

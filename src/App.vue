@@ -17,7 +17,7 @@ export default {
     //   //this.$router.push("/login");
     // }
 
-    if(this.$store.state.user.name=="" || this.$store.state.user==null){
+    if(this.$store.state.user.name=="" || this.$store.state.user.name==null){
       this.$router.push('/login');
     }
   },

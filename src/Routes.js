@@ -9,6 +9,11 @@ import OrcamentoNovo from '@/pages/orcamento/orcamentoNovo';
 import OrcamentoLista from '@/pages/orcamento/orcamentoLista';
 import OrcamentoEnviado from '@/pages/orcamento/orcamentoEnviados';
 
+import OrcamentoPage from '@/pages/orcamento/orcamento';
+import CadClientePage from '@/pages/cadastros/clientes.vue'
+
+import CadastroEquipamentosPage from '@/pages/cadastros/equipamentos.vue'
+import CadastroFuncoesPage from '@/pages/cadastros/funcoes.vue'
 
 Vue.use(Router);
 
@@ -34,12 +39,14 @@ export default new Router({
         {
           path: 'orcamento/orcamento',
           name: 'orcamento-orcamento',
-          component: () => import(/* webpackChunkName: "AppOrcamento" */ '@/pages/orcamento/orcamento.vue')
+          component: OrcamentoPage,
+          // component: () => import(/* webpackChunkName: "AppOrcamento" */ '@/pages/orcamento/orcamento.vue')
         },
         {
           path: 'orcamento/orcamento/:uuid',
           name: 'orcamento-orcamento-uuid',
-          component: () => import(/* webpackChunkName: "AppOrcamento" */ '@/pages/orcamento/orcamento.vue')
+          component: OrcamentoPage,
+          //component: () => import('@/pages/orcamento/orcamento.vue')
         },
 
         {
@@ -71,12 +78,14 @@ export default new Router({
         {
           path: 'equipamentos',
           name: 'CadastroEquipamentosPage',
-          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/equipamentos.vue')
+          // component: () => import('@/pages/cadastros/equipamentos.vue')
+          component: CadastroEquipamentosPage
         },
         {
           path: 'funcoes',
           name: 'CadastroFuncoesPage',
-          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/funcoes.vue')
+          // component: () => import('@/pages/cadastros/funcoes.vue')
+          component: CadastroFuncoesPage
         },
         // {
         //   path: 'servicos',
@@ -86,7 +95,8 @@ export default new Router({
         {
           path: 'clientes',
           name: 'CadastroClientesPage',
-          component: () => import(/* webpackChunkName: "AppCad" */ '@/pages/cadastros/clientes.vue')
+          // component: () => import('@/pages/cadastros/clientes.vue')
+          component: CadClientePage,
         },
       ],
     }
