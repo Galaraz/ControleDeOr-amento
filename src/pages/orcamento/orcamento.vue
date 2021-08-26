@@ -51,14 +51,24 @@
                         <b-form-group
                             id="input-group-11" label="Cliente:" label-for="input-11"
                         >
-                            <b-form-select
+                            <!-- <b-form-select
                                 v-if="canUpdateCliente"
                                 id="input-11"
                                 v-model="cliente"
                                 :options="clientes"
                                 value-field="id"
                                 text-field="nome"
-                            ></b-form-select>
+                            ></b-form-select> -->
+                            <v-select
+                                v-if="canUpdateCliente"
+                                v-model="cliente"
+                                :options="clientes"
+                                value-field="id"
+                                inputId="id"
+                                label="nome"
+                                name="nput-11"
+                                id="nput-11"
+                            ></v-select>
                             <b-form-input
                                 v-else
                                 id="input-nomecliente"
@@ -66,8 +76,6 @@
                                 readonly
                             ></b-form-input>
                         </b-form-group>
-                        
-
                     </div>
                     <div class="col col-6">
                         <b-form-group id="input-group-4" label="Nome do Responsavel:" label-for="input-4">
@@ -176,16 +184,26 @@
 
                 <div v-if="canUpdate" class="row mt-4">
                     <div class="col col-8">
-                        <b-form-group id="input-group-6" label=" Incluir Equipamento" label-for="input-6">
-                        <b-form-select
-                            id="input-6"
-                            v-model="equipamento"
-                            :options="equipamentos"
-                            required
-                            value-field="id"
-                            text-field="nome"
-                        ></b-form-select>
+                        <b-form-group id="input-group-6" label="Selecione Equipamento" label-for="input-6">
+                            <!-- <b-form-select
+                                id="input-6"
+                                v-model="equipamento"
+                                :options="equipamentos"
+                                required
+                                value-field="id"
+                                text-field="nome"
+                            ></b-form-select> -->
+                            <v-select
+                                v-model="equipamento"
+                                :options="equipamentos"
+                                value-field="id"
+                                inputId="id"
+                                label="nome"
+                                name="paciente"
+                                id="paciente"
+                            ></v-select>
                         </b-form-group>
+                        
                     </div>
                     <div class="col col-2">
                             <b-form-group
@@ -220,7 +238,7 @@
                         <thead>
                         <!-- class="text-white" -->
                         <tr>
-                            <th>Codigo NCM</th>
+                            <th>Nome</th>
                             <th>Descrição</th>
                             <th class="text-right">Valor</th>
                             <th class="text-right">Quantidade</th>
@@ -305,7 +323,7 @@
                             </b-form-group>
                         </div>
 
-                        <div class="col col-2">
+                        <div class="col col-1">
                             <b-form-group
                             id="input-7"
                             label="Quantidade:"
@@ -381,13 +399,22 @@
                             <b-form-group
                             id="input-group-41" label="Função:" label-for="input-41"
                             >
-                            <b-form-select
-                                id="input-41"
-                                v-model="funcao"
-                                :options="funcoes"
-                                value-field="id"
-                                text-field="nome"
-                            ></b-form-select>
+                                <!-- <b-form-select
+                                    id="input-41"
+                                    v-model="funcao"
+                                    :options="funcoes"
+                                    value-field="id"
+                                    text-field="nome"
+                                ></b-form-select> -->
+                                <v-select
+                                    v-model="funcao"
+                                    :options="funcoes"
+                                    value-field="id"
+                                    inputId="id"
+                                    label="nome"
+                                    name="input-41"
+                                    id="input-41"
+                                ></v-select>
                             </b-form-group>
                         </div>
 
@@ -547,7 +574,7 @@
                 </b-button>
                 
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b-button v-if="canNovaVersao" size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="newVersion()">
+                <b-button v-if="canUpdate && registry.uuid!=null" size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="newVersion()">
                     <i class="far fa-copy ml-2 mr-2"></i>
                 </b-button>
 
@@ -633,7 +660,7 @@ export default {
 
             funcoes:[],
             funcao: {},
-            funcaoNova: { qtd_colaboradores: 1},
+            funcaoNova: { qtd_colaboradores: 1, horas: 0, horas_extras: 0},
             funcoes_orcamento: [],
             funcaoTotal: 0,
         }
@@ -688,7 +715,9 @@ export default {
             .then((result) => {
                 this.processando = false;
                 this.clientes = result.data;
-                this.cliente = this.clientes[0].id
+                // this.cliente = this.clientes[0].id
+                this.cliente = this.clientes[0]
+
                 // console.log(result)
                 // this.getModelos()
             })
@@ -710,7 +739,8 @@ export default {
                 .then((result) => {
                 this.processando = false;
                 this.equipamentos = result.data;
-                this.equipamento = this.equipamentos[0].id
+                // this.equipamento = this.equipamentos[0].id
+                this.equipamento = this.equipamentos[0]
                 // console.log(result)
                 // this.getModelos()
                 })
@@ -733,7 +763,8 @@ export default {
                 .then((result) => {
                 this.processando = false;
                 this.funcoes = result.data;
-                this.funcao = this.funcoes[0].id
+                // this.funcao = this.funcoes[0].id
+                this.funcao = this.funcoes[0]
                 // console.log(result)
                 // this.getModelos()
                 })
@@ -771,7 +802,7 @@ export default {
 
             this.$http({
                 method: 'post',
-                url: process.env.VUE_APP_URL_BASE_API + "/api/orcamento",
+                url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentos",
                 // url: "http://127.0.0.1:8000/api/orcamentos",
                 data: bodyFormData
             })
@@ -791,12 +822,43 @@ export default {
             });
         },
 
-
+        ///////////// EQUIPAMENTO
         equip_Add(){
-            let selecionado = this.equipamentos.find((data) => data.id === this.equipamento);
-            selecionado.qtd = this.equipamentoQtd
-            this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(selecionado.qtd) * parseFloat(selecionado.valor) )
-            this.equipamentos_orcamento.push(selecionado);
+            // let selecionado = this.equipamentos.find((data) => data.id === this.equipamento);
+            // selecionado.qtd = this.equipamentoQtd
+            // this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(selecionado.qtd) * parseFloat(selecionado.valor) )
+            // this.equipamentos_orcamento.push(selecionado);
+
+            if(isNaN(this.equipamentoQtd)){
+                alert("Digite uma quantidade válida.")
+                return
+            }
+            if(this.equipamentoQtd==null || this.equipamentoQtd==""){
+                alert("Digite uma quantidade.")
+                return
+            }
+            if(this.equipamentoQtd<=0){
+                alert("Digite uma quantidade maior que zero")
+                return
+            }
+
+            if(this.equipamento){
+
+                //verifica se funcao ja foi incluida
+                let existe = this.equipamentos_orcamento.find((data) => data.id === this.equipamento.id);
+                if(existe){
+                    alert("Equipamento já incluído")
+                    return
+                }
+
+                this.equipamento.qtd = this.equipamentoQtd
+                this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(this.equipamento.qtd) * parseFloat(this.equipamento.valor) )
+                this.equipamentos_orcamento.push(this.equipamento)
+            } else {
+                alert("Selecione um equipamento")
+            }
+
+            
             
         },
         equip_Delete(index){
@@ -806,6 +868,9 @@ export default {
                 this.equipamentos_orcamento.splice(index, 1)
             }
         },
+
+
+        ////////////// ATIVIDADE
 
         atividade_Add(){
             if(this.atividadeNova.descricao.length<3 || this.atividadeNova.descricao==""){
@@ -831,8 +896,8 @@ export default {
 
                 this.$http({
                     method: 'post',
-                    url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoaitividades",
-                    // url: "http://127.0.0.1:8000/api/orcamentoversaoaitividades",
+                    url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoatividades",
+                    // url: "http://127.0.0.1:8000/api/orcamentoversaoatividades",
                     data: bodyFormData
                 })
                 .then((result) => {
@@ -867,8 +932,8 @@ export default {
                     this.processando = true
                     this.$http({
                         method: 'delete',
-                        url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoaitividades",
-                        // url: "http://127.0.0.1:8000/api/orcamentoversaoaitividades",
+                        url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoatividades",
+                        // url: "http://127.0.0.1:8000/api/orcamentoversaoatividades",
                         data: { uuid: this.atividades_orcamento[index].uuid }
                     })
                     .then(() => {
@@ -888,20 +953,84 @@ export default {
             }
         },
 
-        funcoes_Add(){
-            let selecionado = this.funcoes.find((data) => data.id === this.funcao);
-            this.funcaoNova.id = selecionado.id
-            this.funcaoNova.nome = selecionado.nome
-            this.funcaoNova.valor_hora = selecionado.valor_hora
-            this.funcaoNova.valor_hora_noturno = selecionado.valor_hora_noturno
 
-            this.funcaoNova.subtotal = ( parseFloat(this.funcaoNova.horas) * parseFloat(selecionado.valor_hora) ) +
-                            ( parseFloat(this.funcaoNova.horas_extras) * parseFloat(selecionado.valor_hora_noturno) )
+        /////////// FUNCOES
+
+        funcoes_Add(){
+
+            if(!this.funcao){
+                alert("Selecione uma função")
+                return
+            }
+            if(isNaN(this.funcaoNova.qtd_colaboradores)){
+                alert("Digite uma quantidade válida (número).")
+                return
+            }
+            if(this.funcaoNova.qtd_colaboradores==null || this.funcaoNova.qtd_colaboradores=="" || this.funcaoNova.qtd_colaboradores<=0){
+                alert("Digite uma quantidade válida")
+                return
+            }
+
+            if(isNaN(this.funcaoNova.horas)){
+                alert("Digite uma quantidade de horas válida (número).")
+                return
+            } 
+            if(isNaN(this.funcaoNova.horas_extras)){
+                alert("Digite uma quantidade de horas extras válida (número).")
+                return
+            } 
+
+            if(
+                (this.funcaoNova.horas==null || this.funcaoNova.horas=="" || this.funcaoNova.horas<=0) &&
+                (this.funcaoNova.horas_extras==null || this.funcaoNova.horas_extras=="" || this.funcaoNova.horas_extras<=0) 
+            ){
+                alert("Digite alguma quantidade de horas.")
+                return
+            }
+
+            //verifica se funcao ja foi incluida
+            let existe = this.funcoes_orcamento.find((data) => data.id === this.funcao.id);
+            if(existe){
+                alert("Função já incluída")
+                return
+            }
+
+            
+            
+            // else {
+            //     if(this.funcaoNova.horas==null || this.funcaoNova.horas=="" || this.funcaoNova.horas<=0){
+            //         alert("Digite uma quantidade de horas válida")
+            //         return
+            //     }
+            // }
+
+            // let selecionado = this.funcoes.find((data) => data.id === this.funcao);
+            // this.funcaoNova.id = selecionado.id
+            // this.funcaoNova.nome = selecionado.nome
+            // this.funcaoNova.valor_hora = selecionado.valor_hora
+            // this.funcaoNova.valor_hora_noturno = selecionado.valor_hora_noturno
+            // this.funcaoNova.subtotal = ( parseFloat(this.funcaoNova.horas) * parseFloat(selecionado.valor_hora) ) +
+                            // ( parseFloat(this.funcaoNova.horas_extras) * parseFloat(selecionado.valor_hora_noturno) )
+            
+            this.funcao.qtd_colaboradores = this.funcaoNova.qtd_colaboradores
+            this.funcao.horas = this.funcaoNova.horas
+            this.funcao.horas_extras = this.funcaoNova.horas_extras
+            this.funcao.subtotal = 
+                    (   (parseFloat(this.funcao.horas) * parseFloat(this.funcao.valor_hora))
+                        +
+                        (parseFloat(this.funcao.horas_extras) * parseFloat(this.funcao.valor_hora_noturno))
+                    ) * this.funcao.qtd_colaboradores
+
             // console.log(this.funcaoNova.subtotal);
             this.funcaoTotal = this.funcaoTotal + this.funcaoNova.subtotal
 
-            this.funcoes_orcamento.push( this.funcaoNova )
-            this.funcaoNova = { id: null, nome: null, qtd_colaboradores: 1, horas: null, horas_extra: null}
+            // this.funcoes_orcamento.push( this.funcaoNova )
+            // this.funcoes_orcamento.push( this.funcao )
+            this.funcoes_orcamento.splice(0,0,this.funcao)
+            this.funcaoNova = { id: null, nome: null, qtd_colaboradores: 1, horas: 0, horas_extras: 0}
+            // this.funcao.qtd_colaboradores = 1
+            // this.funcao.horas = 0
+            // this.funcao.horas_extra = 0
         },
 
         funcoes_Delete(index){
@@ -920,6 +1049,9 @@ export default {
     },
     computed: {
         canSave(){
+            if(!this.cliente){
+                return false
+            }
             if(this.registry.status=="D"){
                 if( (this.equipamentoTotal+this.atividadeTotal+this.funcaoTotal)>0 ){
                     return true

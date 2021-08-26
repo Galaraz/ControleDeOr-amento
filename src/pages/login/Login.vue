@@ -45,11 +45,12 @@ Entrar na Aplicação</h3>" customHeader>
 
 <style>
 .fundo {
-    background: url("/img/login-bkg.png") no-repeat center top fixed;
+    /* background: url("/img/login-bkg.png") no-repeat center top fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;
+    background-size: cover; */
+    background-color: #282828;
 }
 a{
     color:#fff;

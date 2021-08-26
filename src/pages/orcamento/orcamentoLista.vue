@@ -140,8 +140,8 @@
       },
       getRegisters(page = 1){ 
         this.processando = true
-        // var urlGet = process.env.VUE_APP_URL_BASE_API+'/orcamentos?page=' + page 
-        var urlGet = 'http://127.0.0.1:8000/api/orcamentos?page=' + page 
+        var urlGet = process.env.VUE_APP_URL_BASE_API+'/api/orcamentos?page=' + page 
+        // var urlGet = 'http://127.0.0.1:8000/api/orcamentos?page=' + page 
         if(this.data_exame!=null && this.data_exame!=""){
             urlGet = urlGet+"&data_exame="+this.data_exame
         }
