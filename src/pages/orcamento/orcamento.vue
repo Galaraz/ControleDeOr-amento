@@ -787,6 +787,8 @@ export default {
         orcamento_processar(){
             if(this.registry.uuid==""||this.registry.uuid==null){
                 this.orcamento_save()
+            } else {
+                this.orcamento_update()
             }
         },
         orcamento_save(){
@@ -823,6 +825,29 @@ export default {
                 console.log(error);
                 this.processando = false;
                 this.showMessage('Erro na conexão[Orcamento-Save]. Acione o suporte.', 'danger');
+                this.erroConexao(error);
+            });
+        },
+
+        orcamento_update(){
+            this.processando = true 
+            this.$http({
+                method: 'patch',
+                url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentos",
+                data: this.registry
+            })
+            .then(() => {
+                this.processando = false;
+                // this.registry = result.data;
+                // console.log(result)
+                // this.getModelos()
+                this.showMessage("Orçamento atualizado com sucesso.","success");
+            })
+            .catch((error) => {
+                // eslint-disable-next-line
+                console.log(error);
+                this.processando = false;
+                this.showMessage('Erro na conexão[Orcamento-Patch]. Acione o suporte.', 'danger');
                 this.erroConexao(error);
             });
         },

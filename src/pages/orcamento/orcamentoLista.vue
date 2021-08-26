@@ -2,21 +2,39 @@
 <div>
   <div class="row">
     <div class="col">
-      <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
+      <b-overlay variant="white" spinner-variant="primary" :show="processandoBusca" rounded="sm" style="width:100%">
       <Widget
         title="<h5>&nbsp;&nbsp;<i class='fas fa-filter text-inverse'></i>&nbsp;&nbsp;Filtros</h5>"
         collapse customHeader
         class="mb-3"
       >
         <div class="row">
-          <div class="col">
 
+          <div class="col col-6">
+            <b-form-group
+              id="input-group-11" label="Cliente:" label-for="input-11"
+            >
+              <v-select
+                v-model="cliente"
+                :options="clientes"
+                value-field="id"
+                inputId="id"
+                label="nome"
+                name="input-11"
+                id="input-11"
+              ></v-select>
+            </b-form-group>
           </div>
+          
+
           <div class="col text-right">
             <b-button variant="inverse" size="sm" @click="getRegisters()"><i class="fas fa-search"></i> Buscar</b-button>
           </div>
         </div>
       </Widget>
+      </b-overlay>
+
+      <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
       <Widget
         bodyClass="widget-table-overflow"
         customHeader
@@ -25,10 +43,10 @@
 
 
         <div class="widget-title">
-                    <div class="d-inline-flex mb-1">
-                        <span><h5>&nbsp;&nbsp;<i class='fas fa-list text-primary'></i>&nbsp;&nbsp;Lista de Orçamentos</h5></span>
-                        <span class="text-info text-center" style="width:500px;" v-if="processando">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-spinner fa-spin text-info"></i>&nbsp;&nbsp;Processando...</span>
-                    </div>
+          <div class="d-inline-flex mb-1">
+              <span><h5>&nbsp;&nbsp;<i class='fas fa-list text-primary'></i>&nbsp;&nbsp;Lista de Orçamentos</h5></span>
+              <span class="text-info text-center" style="width:500px;" v-if="processando">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-spinner fa-spin text-info"></i>&nbsp;&nbsp;Processando...</span>
+          </div>
                 </div>
                 <div class="widget-controls">
                     <!-- <a data-widgster="collapse" v-b-tooltip.hover title="Incluir" @click="addRegistry()"><i class="fas fa-plus-circle fa-lg text-success"></i></a>
@@ -102,9 +120,13 @@
     data() {
       return {
         processando: false,
+        processandoBusca: false,
         registers: [],
         registry: {},
         canUpdate: true,
+
+        clientes: [],
+        cliente: {},
       }
     },
     methods: {
@@ -142,8 +164,8 @@
         this.processando = true
         var urlGet = process.env.VUE_APP_URL_BASE_API+'/api/orcamentos?page=' + page 
         // var urlGet = 'http://127.0.0.1:8000/api/orcamentos?page=' + page 
-        if(this.data_exame!=null && this.data_exame!=""){
-            urlGet = urlGet+"&data_exame="+this.data_exame
+        if(this.cliente!=null){
+            urlGet = urlGet+"&id_cliente="+this.cliente.id
         }
         this.$http({
           method: 'get',
@@ -165,11 +187,36 @@
         // this.$router.push({ name: 'orcamento-orcamento-uuid', params: { uuid: this.registers.data[index].uuid} } )
         this.$router.push("/orcamento/orcamento/"+this.registers.data[index].uuid)
       },
+
+      getClientes() {
+        this.processandoBusca = true;
+        this.$http({
+          method: 'get',
+          url: process.env.VUE_APP_URL_BASE_API + "/api/cad/clientes?all=1",
+        })
+        .then((result) => {
+          this.processandoBusca = false;
+          this.clientes = result.data;
+          // this.cliente = this.clientes[0].id
+          // this.cliente = this.clientes[0]
+
+          // console.log(result)
+          // this.getModelos()
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.log(error);
+          this.processandoBusca = false;
+          this.showMessage('Erro na conexão [Clientes]. Acione o suporte.', 'danger');
+          this.erroConexao(error);
+        });
+      },
     },
     created(){
       this.$store.commit('setNomePagina', '<i class="fas fa-list"></i>&nbsp;&nbsp;Lista de Orçamentos')
 
       this.getRegisters()
+      this.getClientes()
     }
   }
 </script>
