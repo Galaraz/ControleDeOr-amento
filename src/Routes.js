@@ -5,15 +5,16 @@ import Layout from '@/components/Layout/Layout';
 
 import Login from '@/pages/login/Login';
 import DashboardPage from '@/pages/dashboard';
+
 import OrcamentoNovo from '@/pages/orcamento/orcamentoNovo';
 import OrcamentoLista from '@/pages/orcamento/orcamentoLista';
 import OrcamentoEnviado from '@/pages/orcamento/orcamentoEnviados';
-
 import OrcamentoPage from '@/pages/orcamento/orcamento';
-import CadClientePage from '@/pages/cadastros/clientes.vue'
 
-import CadastroEquipamentosPage from '@/pages/cadastros/equipamentos.vue'
-import CadastroFuncoesPage from '@/pages/cadastros/funcoes.vue'
+import CadClientePage from '@/pages/cadastros/clientes.vue';
+import CadUsuarioPage from '@/pages/cadastros/usuarios.vue';
+import CadastroEquipamentosPage from '@/pages/cadastros/equipamentos.vue';
+import CadastroFuncoesPage from '@/pages/cadastros/funcoes.vue';
 
 Vue.use(Router);
 
@@ -97,6 +98,11 @@ export default new Router({
           name: 'CadastroClientesPage',
           // component: () => import('@/pages/cadastros/clientes.vue')
           component: CadClientePage,
+        },
+        {
+          path: 'usuarios',
+          name: 'CadastroUsuariosPage',
+          component: CadUsuarioPage,
         },
       ],
     }

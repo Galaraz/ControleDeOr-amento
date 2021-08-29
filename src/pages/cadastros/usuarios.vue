@@ -188,7 +188,7 @@ export default {
             this.processando = true
             this.$http({
                 method: 'get',
-                url: 'http://back.naxsysbrasil.com.br/api/cad/usarios?page=' + page,
+                url: 'http://back.naxsysbrasil.com.br/api/cad/usuarios?page=' + page,
             })
             .then(result => {
                 this.processando = false
