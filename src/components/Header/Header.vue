@@ -39,13 +39,13 @@
       </b-form>
     </b-nav>
     -->
-    <a class="navbarBrand d-md-none">
+    <!-- <a class="navbarBrand d-md-none">
       <i class="fa fa-circle text-primary" />
       &nbsp;
       Naxsys
       &nbsp;
       <i class="fa fa-circle text-primary" />
-    </a>
+    </a> -->
     <b-nav class="ml-auto">
       
       <!-- <b-nav-item-dropdown

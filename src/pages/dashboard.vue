@@ -4,42 +4,42 @@
   <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
   <div class="row d-flex justify-content-between mt-0 mb-4 ml-1 mr-1">
 
-    <div style="width: 16rem;">
+    <div style="width: 16rem;" class="mb-2">
       <b-card bg-variant="secondary" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
         <b-card-text>
           <span style="font-size:85%;">Em Digitação</span><br>
           <span class="p-0 mt-0" style="font-size:170%;"> {{StsD}}</span><br>
-          <span class="p-0 mt-0" style="font-size:170%;">R$ {{VlrD}}</span>
+          <span class="p-0 mt-0" style="font-size:170%;">R$ {{numeroBR(VlrD)}}</span>
         </b-card-text>
       </b-card>
     </div>
 
-    <div style="width: 16rem;">
+    <div style="width: 16rem;" class="mb-2">
       <b-card bg-variant="info" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
         <b-card-text>
           <span style="font-size:85%;">Finalizadas / Enviadas</span><br>
           <span class="p-0 mt-0" style="font-size:170%;"> {{StsF}}</span><br>
-          <span class="p-0 mt-0" style="font-size:170%;">R$ {{VlrF}}</span>
+          <span class="p-0 mt-0" style="font-size:170%;">R$ {{numeroBR(VlrF)}}</span>
         </b-card-text>
       </b-card>
     </div>
 
-    <div style="width: 16rem;">
+    <div style="width: 16rem;" class="mb-2">
       <b-card bg-variant="success" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
         <b-card-text>
           <span style="font-size:85%;">Vendidas</span><br>
           <span class="p-0 mt-0" style="font-size:170%;"> {{StsV}}</span><br>
-          <span class="p-0 mt-0" style="font-size:170%;">R$ {{VlrV}}</span>
+          <span class="p-0 mt-0" style="font-size:170%;">R$ {{numeroBR(VlrV)}}</span>
         </b-card-text>
       </b-card>
     </div>
 
-    <div style="width: 16rem;">
+    <div style="width: 16rem;" class="mb-2">
       <b-card bg-variant="danger" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
         <b-card-text>
           <span style="font-size:85%;">Perdidas / Canceladas</span><br>
           <span class="p-0 mt-0" style="font-size:170%;"> {{StsC}}</span><br>
-          <span class="p-0 mt-0" style="font-size:170%;">R$ {{VlrC}}</span>
+          <span class="p-0 mt-0" style="font-size:170%;">R$ {{numeroBR(VlrC)}}</span>
         </b-card-text>
       </b-card>
     </div>

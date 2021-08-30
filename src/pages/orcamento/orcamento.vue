@@ -341,22 +341,23 @@
                         <div class="col col-1">
                             <h1></h1><br>
                             <b-button
-                            size="sm"
-                            variant="success"
-                            v-b-tooltip.hover
-                            title="Incluir Atividade"
-                            class="mr-4 ml-4"
-                            @click="atividade_Add()"
-                            >
-                            <i class="fas fa-plus ml-2 mr-2"></i>
+                                size="sm"
+                                variant="success"
+                                v-b-tooltip.hover
+                                title="Incluir Atividade"
+                                class="mr-4 ml-4"
+                                @click="atividade_Add()"
+                                >
+                                <i class="fas fa-plus ml-2 mr-2"></i>
                             </b-button>
                         </div>
                         
                     </div>
 
                     <div class="row">
+                        <!-- table-striped  -->
                         <table
-                            class="table table-striped table-hover table-lg mb-0 requests-table mt-3 border-1"
+                            class="table table-hover table-lg mb-0 mt-3 border-1 p-0"
                         >
                             <thead>
                             <!-- class="text-white" -->
@@ -366,7 +367,8 @@
                                 <th class="text-right">Valor</th>
                                 <th class="text-right">Quantidade</th>
                                 <th class="text-right">Subtotal</th>
-                                <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
+                                <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Funções"></th>
+                                <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Excluir"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -376,10 +378,76 @@
                                 <td class="text-right">{{ numeroBR( rowAtv.valor_unit ) }}</td>
                                 <td class="text-right">{{ numeroBR(rowAtv.qtd) }}</td>
                                 <td class="text-right">R$ {{ numeroBR( rowAtv.valor_unit * rowAtv.qtd) }}</td>
+                                <td class="text-center">
+                                    <a @click="atividade_Funcao(indexAtv)"><i class="fas fa-user-cog text-primary"></i></a>
+                                </td>
                                 <td v-if="canUpdate" class="text-center">
-                                <a @click="atividade_Delete(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
+                                    <a @click="atividade_Delete(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
                                 </td>
                             </tr>
+
+                            <!-- <tr v-for="(rowAtv, indexAtv) in atividades_orcamento" :key="rowAtv.id" >
+                                <td colspan="6">
+                                    <table class="w-100 border-0 p-0">
+                                        <tr>
+                                            <td>{{ rowAtv.descricao }}</td>
+                                            <td class="text-center">{{ rowAtv.codigo }}</td>
+                                            <td class="text-right">{{ numeroBR( rowAtv.valor_unit ) }}</td>
+                                            <td class="text-right">{{ numeroBR(rowAtv.qtd) }}</td>
+                                            <td class="text-right">R$ {{ numeroBR( rowAtv.valor_unit * rowAtv.qtd) }}</td>
+                                            <td v-if="canUpdate" class="text-center">
+                                                <a @click="atividade_Delete(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table
+                                        class="table table-hover table-lg mb-0 mt-3 border-1 p-0"
+                                    >
+                                        <thead>
+                                        <tr>
+                                            <th>Função - Nome</th>
+                                            <th class="text-center">Qtd Colab</th>
+                                            <th class="text-right">Horas</th>
+                                            <th class="text-right">HE 50%</th>
+                                            <th class="text-right">HE 100%</th>
+                                            <th class="text-right">Adicional Noturnl</th>
+                                            <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Excluir"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="(rowFunAtv, indexFunAtv) in atividades_orcamento.fk_funcoes" :key="rowFunAtv.id" >
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td v-if="canUpdate" class="text-center">
+                                                <a @click="atividadeFuncao_Del(indexFunAtv)"><i class="far fa-trash-alt text-danger"></i></a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <b-button
+                                        size="sm"
+                                        variant="success"
+                                        v-b-tooltip.hover
+                                        title="Incluir Função para a Atividade"
+                                        class="mr-4 ml-4 mt-4"
+                                        @click="atividadeFuncao_Add(indexAtv)"
+                                    >
+                                        <i class="fas fa-plus ml-2 mr-2"></i>
+                                    </b-button>
+                                    
+                                </td>
+                            </tr> -->
+
+
+                                <!-- <tr>
+                                    <td colspan="5" class="text-center"><i class='fas fa-user-cog text-primary'></i> Funções</td>
+                                    <td v-if="canUpdate"></td>
+                                </tr> -->
+                            
                             </tbody>
                         </table>
                     </div>
@@ -389,7 +457,7 @@
 
                     <!-- ********** FUNCOES ********** -->
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col">
                             <br><br><hr>
                             <h3><i class='fas fa-user-cog text-primary'></i> Funções</h3>
@@ -401,13 +469,6 @@
                             <b-form-group
                             id="input-group-41" label="Função:" label-for="input-41"
                             >
-                                <!-- <b-form-select
-                                    id="input-41"
-                                    v-model="funcao"
-                                    :options="funcoes"
-                                    value-field="id"
-                                    text-field="nome"
-                                ></b-form-select> -->
                                 <v-select
                                     v-model="funcao"
                                     :options="funcoes"
@@ -465,14 +526,14 @@
                         <div class="col col-1">
                             <h1></h1><br>
                             <b-button
-                            size="sm"
-                            variant="success"
-                            v-b-tooltip.hover
-                            title="Incluir Atividade"
-                            class="mr-4 ml-4"
-                            @click="funcoes_Add()"
+                                size="sm"
+                                variant="success"
+                                v-b-tooltip.hover
+                                title="Incluir Atividade"
+                                class="mr-4 ml-4"
+                                @click="funcoes_Add()"
                             >
-                            <i class="fas fa-plus ml-2 mr-2"></i>
+                                <i class="fas fa-plus ml-2 mr-2"></i>
                             </b-button>
                         </div>
                     </div>
@@ -482,7 +543,6 @@
                             class="table table-striped table-hover table-lg mb-0 requests-table mt-3 border-1"
                         >
                             <thead>
-                            <!-- class="text-white" -->
                             <tr>
                                 <th>Funçao</th>
                                 <th class="text-right">Qtd Colab</th>
@@ -505,7 +565,7 @@
                             </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> -->
 
 
 
@@ -531,10 +591,10 @@
                                 <td>Valores totais de Atividades</td>
                                 <td>R$ {{numeroBR(atividadeTotal)}}</td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <td>Valores totais de Funções</td>
                                 <td>R$ {{numeroBR(funcaoTotal)}}</td>
-                            </tr>
+                            </tr> -->
                             <tr>
                                 <td></td>
                                 <td><h5>R$ {{numeroBR(valorTotalOrcamento)}}</h5></td>
@@ -565,9 +625,66 @@
                 customHeader
                 style="width:100%"
             >
-                <b-button v-if="canUpdate" :disabled="!canSave" size="sm" variant="primary" v-b-tooltip.hover title="Salvar" class="mr-4" @click="orcamento_processar()"><i class="fas fa-save ml-2 mr-2"></i></b-button>
 
+<!-- listaStatus: [
+    { status: "D", descricao: "Em Solicitação", cor:"secondary"},
+    { status: "V", descricao: "Aguardando Validação", cor:"secondary"},
+    { status: "E", descricao: "Aguardando Aprovação", cor:"primary"},
+    { status: "A", descricao: "Aprovado", cor:"success"},
+    { status: "R", descricao: "Rejeitado/Cancelado", cor:"danger"},
+    { status: "X", descricao: "Executado", cor:"info"},
+    { status: "F", descricao: "Faturado", cor:"success"},
+], -->
+
+                <b-button v-if="canUpdate" :disabled="!canSave" size="sm" variant="primary" v-b-tooltip.hover title="Salvar" class="mr-4" @click="orcamento_processar()"><i class="fas fa-save ml-2 mr-2"></i></b-button>
+                
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b-button v-if="canUpdate && registry.uuid!=null" size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="newVersion()">
+                    <i class="far fa-copy ml-2 mr-2"></i>
+                </b-button>
+
+                <span v-if="canUpdate && registry.uuid!=null && (registry.status=='D' || registry.status=='E')">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b-button size="sm" variant="primary" v-b-tooltip.hover title="Enviar para Cliente" class="mr-4 ml-4" @click="orcamento_enviar()">
+                        <i class="far fa-paper-plane ml-2 mr-2"></i>
+                    </b-button>
+                    &nbsp;&nbsp;&nbsp;
+                    <!-- v-if="registry.status=='E'"  -->
+                    <b-button size="sm" variant="default" v-b-tooltip.hover title="Imprimir" class="mr-4 ml-4" @click="orcamento_imprimir()">
+                        <i class="fas fa-print ml-2 mr-2"></i>
+                    </b-button>
+                </span>
+
+                
+                <span v-if="registry.status=='E' && !canSave">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b-button v-if="canUpdate" size="sm" variant="success" v-b-tooltip.hover title="Aprovado pelo cliente" class="mr-4 ml-4" @click="ativar()">
+                        <i class="far fa-thumbs-up ml-2 mr-2"></i>
+                    </b-button>
+                    <b-button v-if="canUpdate" size="sm" variant="danger" v-b-tooltip.hover title="Rejeitado" class="mr-4 ml-4" @click="inativar()">
+                        <i class="far fa-thumbs-down ml-2 mr-2"></i>
+                    </b-button>
+                </span>
+
+                <span v-if="canUpdate && registry.status=='A'">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b-button size="sm" variant="primary" v-b-tooltip.hover title="Marcar Executado" class="mr-4 ml-4" @click="newVersion()">
+                        <i class="fas fa-cogs ml-2 mr-2"></i>
+                    </b-button>
+                </span>
+                <span v-if="canUpdate && registry.status=='X'">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b-button size="sm" variant="primary" v-b-tooltip.hover title="Marcar Faturado" class="mr-4 ml-4" @click="newVersion()">
+                        <i class="far fa-money-bill-alt ml-2 mr-2"></i>
+                    </b-button>
+                </span>
+
+
+
+
+
+
+                <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b-button v-if="canUpdate && registry.uuid!=null && !canSave" :disabled="!canSave" size="sm" variant="success" v-b-tooltip.hover title="Finalizar Orçamento" class="mr-4 ml-4" @click="newVersion()">
                     <i class="fas fa-file-signature ml-2 mr-2"></i>
                 </b-button>
@@ -590,7 +707,7 @@
                             <i class="far fa-thumbs-down ml-2 mr-2"></i>
                         </b-button>
                     </span>
-                </span>
+                </span> -->
                 
                 <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <span v-if="registry.uuid!=null">
@@ -607,7 +724,7 @@
                 </span> -->
 
                 <span class="float-right">
-                    <b-button v-if="registry.status=='E'" size="sm" variant="default" v-b-tooltip.hover title="Imprimir" class="mr-4 ml-4" @click="newVersion()">
+                    <b-button v-if="registry.status!='D' && registry.status!='V'" size="sm" variant="default" v-b-tooltip.hover title="Imprimir" class="mr-4 ml-4" @click="newVersion()">
                         <i class="fas fa-print ml-2 mr-2"></i>
                     </b-button>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -623,6 +740,22 @@
     <!-- BOTOES - FIM -->
 
 
+<b-modal 
+    id="mAtividadeFuncoes"
+    size="xl"
+    :title=this.modalAtividadeFuncoes
+    button-size="sm"
+    body-bg-variant="white"
+    content-class="shadow"
+    hide-footer
+>
+    <atividade-funcoes
+        :atividade="atividadefuncao"
+        :canUpdate="canUpdate"
+        @atividade_Funcao_Atualizacao = "atividade_Funcao_Atualizacao"
+    ></atividade-funcoes>
+
+</b-modal>
 
 
 
@@ -631,9 +764,10 @@
 
 <script>
 import Widget from '@/components/Widget/Widget';
+import atividadeFuncoes from '@/components/orcamento/atividadefuncoes'
 export default {
     name: 'NomePagina',
-    components: { Widget },
+    components: { Widget, atividadeFuncoes },
     data() {
         return {
             //// Privilegios
@@ -656,15 +790,31 @@ export default {
             equipamentoTotal: 0,
             equipamentoQtd: 1,
 
-            atividades_orcamento: [],
+            atividades_orcamento: [ ],
             atividadeNova: {descricao: "", qtd: 0, valor_unit: 0 },
             atividadeTotal: 0,
+            atividadefuncao: {},
+            modalAtividadeFuncoes: null,
+            atividadeIndex: null,
 
             funcoes:[],
             funcao: {},
             funcaoNova: { qtd_colaboradores: 1, horas: 0, horas_extras: 0},
             funcoes_orcamento: [],
             funcaoTotal: 0,
+
+            listaStatus: [
+                { status: "D", descricao: "Em Solicitação", cor:"secondary"},
+                { status: "V", descricao: "Aguardando Validação", cor:"secondary"},
+                { status: "E", descricao: "Aguardando Aprovação", cor:"primary"},
+                { status: "A", descricao: "Aprovado", cor:"success"},
+                { status: "R", descricao: "Rejeitado/Cancelado", cor:"danger"},
+                { status: "X", descricao: "Executado", cor:"info"},
+                { status: "F", descricao: "Faturado", cor:"success"},
+            ],
+            stsDescricao: null,
+            stsCor: null,
+
         }
     },
     methods: {
@@ -758,30 +908,30 @@ export default {
                 });
             }
         },
-        getFuncoes() {
-            if(this.canUpdate){
-                // this.processando = true;
-                this.$http({
-                    method: 'get',
-                    url: process.env.VUE_APP_URL_BASE_API + "/api/cad/funcoes?all=1",
-                })
-                .then((result) => {
-                // this.processando = false;
-                this.funcoes = result.data;
-                // this.funcao = this.funcoes[0].id
-                this.funcao = this.funcoes[0]
-                // console.log(result)
-                // this.getModelos()
-                })
-                .catch((error) => {
-                // eslint-disable-next-line
-                console.log(error);
-                this.processando = false;
-                this.showMessage('Erro na conexão [Funcoes]. Acione o suporte.', 'danger');
-                this.erroConexao(error);
-                });
-            }
-        },
+        // getFuncoes() {
+        //     if(this.canUpdate){
+        //         // this.processando = true;
+        //         this.$http({
+        //             method: 'get',
+        //             url: process.env.VUE_APP_URL_BASE_API + "/api/cad/funcoes?all=1",
+        //         })
+        //         .then((result) => {
+        //         // this.processando = false;
+        //         this.funcoes = result.data;
+        //         // this.funcao = this.funcoes[0].id
+        //         this.funcao = this.funcoes[0]
+        //         // console.log(result)
+        //         // this.getModelos()
+        //         })
+        //         .catch((error) => {
+        //         // eslint-disable-next-line
+        //         console.log(error);
+        //         this.processando = false;
+        //         this.showMessage('Erro na conexão [Funcoes]. Acione o suporte.', 'danger');
+        //         this.erroConexao(error);
+        //         });
+        //     }
+        // },
 
         //////// ORCAMENTO
         orcamento_processar(){
@@ -850,6 +1000,40 @@ export default {
                 this.showMessage('Erro na conexão[Orcamento-Patch]. Acione o suporte.', 'danger');
                 this.erroConexao(error);
             });
+        },
+
+        orcamento_imprimir(){
+            if(this.registry.status=="D"){
+                var mensagem = "Deseja fechar o orçamento e imprimir?\n\nImportante: esta versão será fechada para alterações."
+                if(!confirm(mensagem)){
+                    return
+                }
+                
+                this.openWindowWithPost(process.env.VUE_APP_URL_BASE_API + "/api/orcamentos/print", {
+                    uuid: this.registry.uuid,
+                    // key: process.env.VUE_APP_MCC_TOKEN,
+                    // paciente: this.registers.data[index].id_paciente,
+                })
+            }
+        },
+        openWindowWithPost(url, data) {
+            var form = document.createElement("form");
+            form.target = "_blank";
+            form.method = "POST";
+            form.action = url;
+            form.style.display = "none";
+
+            for (var key in data) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = data[key];
+                form.appendChild(input);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
         },
 
         ///////////// EQUIPAMENTO
@@ -1051,6 +1235,26 @@ export default {
 
         /////////// FUNCOES
 
+        atividadeFuncao_Add(index){
+            let regadd = {nome: ""}
+            this.atividades_orcamento[index].fk_funcoes.push(regadd)
+        },
+
+        atividade_Funcao(index){
+            this.atividadeIndex = index
+            this.atividadefuncao = this.atividades_orcamento[index]
+            this.modalAtividadeFuncoes = "Atividade: "+this.atividadefuncao.descricao.substr(0,40)
+            // console.log(this.atividadefuncao)
+            this.$bvModal.show("mAtividadeFuncoes")
+        },
+
+        atividade_Funcao_Atualizacao(funcoesAtualizadas){
+            this.atividades_orcamento[this.atividadeIndex].fk_funcoes = funcoesAtualizadas
+            // console.log("atividade_Funcao_Atualizacao");
+            // console.log(funcoesAtualizadas);
+        },
+
+
         funcoes_Add(){
 
             if(!this.funcao){
@@ -1165,9 +1369,13 @@ export default {
         // this.mccUsuarioValidar('privilegio_para_acesso_na_pagina')
         this.$store.commit('setNomePagina', '<i class="far fa-file-alt"></i>&nbsp;Orçamento')
 
+        if(this.$store.state.user.type=="A" || this.$store.state.user.type=="S"){
+            this.caUpdate = true
+        }
+
         this.getData()
         this.getEquipamentos()
-        this.getFuncoes()
+        // this.getFuncoes()
     }
 };
 </script>
