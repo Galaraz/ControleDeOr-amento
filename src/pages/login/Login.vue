@@ -109,7 +109,6 @@ export default {
           // console.log(res.data)
           this.token = res.data.access_token
           this.$http.defaults.headers.common['Authorization'] = 'Bearer '+this.token
-          console.log('Bearer '+this.token);
           // this.$store.commit('setAppToken', this.token)
 
           // var now = new Date();

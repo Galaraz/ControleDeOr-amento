@@ -1085,7 +1085,7 @@ export default {
                         // url: "http://127.0.0.1:8000/api/orcamentoversaoequipamentos",
                         data: bodyFormData
                     })
-                    .then((result) => {
+                    .then(() => {
                         this.processando = false;
 
                         this.equipamento.qtd = this.equipamentoQtd
