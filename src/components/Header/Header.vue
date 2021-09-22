@@ -42,7 +42,7 @@
     <!-- <a class="navbarBrand d-md-none">
       <i class="fa fa-circle text-primary" />
       &nbsp;
-      Naxsysiiu
+      Naxsys
       &nbsp;
       <i class="fa fa-circle text-primary" />
     </a> -->

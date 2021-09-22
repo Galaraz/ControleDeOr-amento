@@ -1,6 +1,6 @@
 <template>
 <div>
-    
+    <b-alert show variant="warning"><i class="fas fa-exclamation-triangle"></i> Em Desenvolvimento.</b-alert>
     <div class="row">
         <div class="col">
             <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
@@ -21,6 +21,7 @@
                         <!-- class="text-white" -->
                     <tr>
                         <th class="text-center" style="width:50px"><i class="fas fa-circle text-secondary fa-lg"></i></th>
+                        <th class="text-center" style="width:90px"><i class="fas fa-hashtag text-secondary fa-lg"></i></th>
                         <th>Nome</th>
                         <th class="text-center">NCM</th>
                         <th>Descrição</th>
@@ -31,6 +32,7 @@
                     <tbody>
                     <tr v-for="(row, index) in registers.data" :key="row.id">
                         <td class="text-center"><span v-html="colorStatus(index)"></span></td>
+                        <td class="text-right">{{row.id}}</td>
                         <td>{{row.nome}}</td>
                         <td class="text-center">{{row.ncm}}</td>
                         <td>{{row.descricao}}</td>
@@ -103,17 +105,19 @@
 
    <div class="row">
         <div class="col col-6">
+            <!-- :state="stateValor" -->
             <b-form-group
                 id="grp-valor"
                 label="Valor"
                 label-for="valor"
-                :state="stateValor"
+                
             >
+                <!-- :state="stateValor" -->
                 <b-form-input 
                     id="valor" 
                     ref=""
                     v-model="registry.valor" 
-                    :state="stateValor"
+                    
                     trim
                 ></b-form-input>
             </b-form-group>
@@ -224,7 +228,7 @@ export default {
             this.processando = true
             this.$http({
                 method: 'get',
-                url: 'http://back.naxsysbrasil.com.br/api/cad/equipamentos?page=' + page,
+                url: process.env.VUE_APP_URL_BASE_API + "/api/cad/equipamentos?page=" + page,
             })
             .then(result => {
                 this.processando = false
@@ -242,12 +246,15 @@ export default {
         },
 
         editRegistry(index){
-            this.modalTitle = 'Seção: '+ this.registers.data[index].id
-            this.registry = this.registers.data[index]
-            this.registry.action = 'U'
-            this.registry.pos = index
-            // this.btnDeleteRecord = true
-            this.$bvModal.show("mRegistry")
+
+            this.$router.push("/cadastros/equipamento/"+this.registers.data[index].uuid)
+
+            // this.modalTitle = 'Seção: '+ this.registers.data[index].id
+            // this.registry = this.registers.data[index]
+            // this.registry.action = 'U'
+            // this.registry.pos = index
+            // // this.btnDeleteRecord = true
+            // this.$bvModal.show("mRegistry")
         },
         modalAddRegistry(){
             this.modalTitle = "Nova Seção"

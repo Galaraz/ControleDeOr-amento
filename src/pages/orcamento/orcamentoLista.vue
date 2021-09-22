@@ -10,7 +10,23 @@
       >
         <div class="row">
 
-          <div class="col col-6">
+          <div class="col col-3">
+            <b-form-group
+              id="input-group-22" label="Status:" label-for="input-22"
+            >
+              <v-select
+                v-model="status"
+                :options="statusLista"
+                value-field="status"
+                inputId="status"
+                label="descricao"
+                name="input-22"
+                id="input-22"
+              ></v-select>
+            </b-form-group>
+          </div>
+
+          <div class="col col-3">
             <b-form-group
               id="input-group-11" label="Cliente:" label-for="input-11"
             >
@@ -25,9 +41,25 @@
               ></v-select>
             </b-form-group>
           </div>
+
+          <div class="col col-4">
+            <b-form-group
+              id="input-group-21"
+              label="Referencia:"
+              label-for="referencia"
+              description=""
+            >
+              <b-form-input
+                id="referencia"
+                v-model="referencia"
+                type="text"
+              ></b-form-input>
+            </b-form-group>
+
+          </div>
           
 
-          <div class="col text-right">
+          <div class="col col-2 text-right">
             <b-button variant="inverse" size="sm" @click="getRegisters()"><i class="fas fa-search"></i> Buscar</b-button>
           </div>
         </div>
@@ -58,28 +90,32 @@
                     <thead>
                     <tr>
                         <th class="text-center" style="width:50px" v-b-tooltip.hover title="Status"><i class="fas fa-circle text-secondary"></i></th>
-                        <th class="text-left" style="width:180px">Código</th>
-                        
+                        <th class="text-center" style="width:180px">Status</th>
+                        <th class="text-left" style="width:160px">Código</th>
+                        <th class="text-center" style="width:150px">Tipo</th>
                         <th class="text-left">Cliente</th>
-                        <th class="text-left">Contato</th>
-                        <th class="text-left">E-mail</th>
-                        <th class="text-left">Fone</th>
+                        <th class="text-left">Referencia</th>
                         <th class="text-right">Valor</th>
-                        <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
+                        <!-- v-if="canUpdate"  -->
+                        <th style="width:50px" v-b-tooltip.hover title="Editar"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="(row, index) in registers.data" :key="row.id">
                         <td class="text-center" @click="exameProcessar(row, index)"><span v-html="displayStatus(row)"></span></td>
-                        <td class="text-left">{{row.codigo}}</td>
+                        <td class="text-center">{{textStatus(row)}}</td>
+                        <td class="text-left">{{row.codigo}}.{{row.versao}}</td>
+                        <td class="text-center">{{textTipo(row)}}</td>
                         <td>{{row.fk_cliente.nome_fantasia}}</td>
-                        <td>{{row.contato_nome}}</td>
-                        <td>{{row.contato_email}}</td>
-                        <td>{{row.contato_fone}}</td>
+                        <td>{{row.referencia}}</td>
                         <td class="text-right">{{numeroBR(row.valor_total)}}</td>
-                        <td v-if="canUpdate" class="text-center">
-                            <a v-if="row.status!='F'" @click="showRegistry(index)"
-                            ><i class="far fa-edit text-info"></i></a>
+                        <!-- v-if="canUpdate" -->
+                        <td class="text-center">
+                            <!-- v-if="row.status!='F'" -->
+                            <a @click="showRegistry(index)">
+                              <!-- <i class="far fa-edit text-info"></i> -->
+                              <span v-html="actionIcon(row)"></span>
+                            </a>
                         </td>
                     </tr>
                     </tbody>
@@ -127,45 +163,85 @@
 
         clientes: [],
         cliente: {},
+        referencia: null,
+        statusLista: [
+          { status: "D", descricao: "Em Solicitação", cor:"default"},
+          { status: "V", descricao: "Aguardando Validação", cor:"secondary"},
+          { status: "E", descricao: "Aguardando Aprovação", cor:"primary"},
+          { status: "A", descricao: "Aprovado", cor:"success"},
+          { status: "R", descricao: "Rejeitado/Cancelado", cor:"danger"},
+          { status: "X", descricao: "Executado", cor:"info"},
+          { status: "F", descricao: "Faturado", cor:"success"},
+        ],
+        status: {},
       }
     },
     methods: {
       displayStatus(registry){
         if(registry.status=='D') {
+          return '<i class="fas fa-circle text-default"></i>'
+        } else if(registry.status=='V') {
           return '<i class="fas fa-circle text-secondary"></i>'
-        } else if(registry.status=='F') {
-          return '<i class="fas fa-circle text-info"></i>'
         } else if(registry.status=='E') {
           return '<i class="fas fa-circle text-primary"></i>'
-        } else if(registry.status=='V') {
+        } else if(registry.status=='A') {
           return '<i class="fas fa-circle text-success"></i>'
-        } else if(registry.status=='P') {
+        } else if(registry.status=='R') {
           return '<i class="fas fa-circle text-danger"></i>'
+        } else if(registry.status=='F') {
+          return '<i class="fas fa-circle text-dark"></i>'
         } else {
           return '<i class="fas fa-circle text-warning"></i>'
         }
       },
+      // { status: "D", descricao: "Em Solicitação", cor:"secondary"},
+      // { status: "V", descricao: "Aguardando Validação", cor:"secondary"},
+      // { status: "E", descricao: "Aguardando Aprovação", cor:"primary"},
+      // { status: "A", descricao: "Aprovado", cor:"success"},
+      // { status: "R", descricao: "Rejeitado/Cancelado", cor:"danger"},
+      // { status: "X", descricao: "Executado", cor:"info"},
+      // { status: "F", descricao: "Faturado", cor:"success"},
       textStatus(registry){
         if(registry.status=='D') {
-          return 'Em Digitação'
-        } else if(registry.status=='F') {
-          return 'Finalizado'
-        } else if(registry.status=='E') {
-          return 'Enviado'
+          return 'Em Solicitação'
         } else if(registry.status=='V') {
-          return 'Vendido'
-        } else if(registry.status=='P') {
-          return 'Perdido'
+          return 'Aguardando Validação'
+        } else if(registry.status=='E') {
+          return 'Aguardando Aprovação'
+        } else if(registry.status=='A') {
+          return 'Aprovado'
+        } else if(registry.status=='R') {
+          return 'Rejeitado/Cancelado'
+        } else if(registry.status=='F') {
+          return 'Faturado'
         } else {
           return 'Erro: '+registry.status
         }
       },
+
+      textTipo(registry){
+        if(registry.tipo=='D'){
+          return 'On Demand'
+        } else if(registry.tipo=='C'){
+          return 'Corretiva'
+        } else {
+          return 'Erro: '+registry.tipo
+        }
+      },
+
       getRegisters(page = 1){ 
         this.processando = true
         var urlGet = process.env.VUE_APP_URL_BASE_API+'/api/orcamentos?page=' + page 
-        // var urlGet = 'http://127.0.0.1:8000/api/orcamentos?page=' + page 
-        if(this.cliente!=null){
+        if(this.status){
+          urlGet += "&status="+this.$route.params.status
+          // this.status = this.statusLista.find((data) => data.status == this.$route.params.status);
+        }
+        if(this.cliente!=null && this.cliente!="" && this.cliente!="undefined"){
+        // if(this.cliente){
             urlGet = urlGet+"&id_cliente="+this.cliente.id
+        }
+        if(this.referencia!=null && this.referencia!=""){
+            urlGet = urlGet+"&referencia="+this.referencia
         }
         this.$http({
           method: 'get',
@@ -182,7 +258,7 @@
         })
       },
       showRegistry(index){
-        console.log(this.registers.data[index].uuid);
+        // console.log(this.registers.data[index].uuid);
         // this.$router.push({ name: 'orcamento-orcamento-uuid', params: { uuid: this.registers.data[index].uuid}})
         // this.$router.push({ name: 'orcamento-orcamento-uuid', params: { uuid: this.registers.data[index].uuid} } )
         this.$router.push("/orcamento/orcamento/"+this.registers.data[index].uuid)
@@ -211,9 +287,23 @@
           this.erroConexao(error);
         });
       },
+      actionIcon(registro){
+        if(registro.status=="D"){
+          return '<i class="far fa-edit text-info"></i>'
+        } else {
+          return '<i class="far fa-eye text-secondary"></i>'
+        }
+      },
+    },
+    computed:{
+      
     },
     created(){
       this.$store.commit('setNomePagina', '<i class="fas fa-list"></i>&nbsp;&nbsp;Lista de Orçamentos')
+
+      if(this.$route.params.status){
+          this.status = this.statusLista.find((data) => data.status == this.$route.params.status);
+      }
 
       this.getRegisters()
       this.getClientes()

@@ -5,16 +5,23 @@ import Layout from '@/components/Layout/Layout';
 
 import Login from '@/pages/login/Login';
 import DashboardPage from '@/pages/dashboard';
-
 import OrcamentoNovo from '@/pages/orcamento/orcamentoNovo';
 import OrcamentoLista from '@/pages/orcamento/orcamentoLista';
 import OrcamentoEnviado from '@/pages/orcamento/orcamentoEnviados';
-import OrcamentoPage from '@/pages/orcamento/orcamento';
 
-import CadClientePage from '@/pages/cadastros/clientes.vue';
-import CadUsuarioPage from '@/pages/cadastros/usuarios.vue';
-import CadastroEquipamentosPage from '@/pages/cadastros/equipamentos.vue';
-import CadastroFuncoesPage from '@/pages/cadastros/funcoes.vue';
+import OrcamentoPage from '@/pages/orcamento/orcamento';
+import CadClientePage from '@/pages/cadastros/clientes.vue'
+
+import CadastroEquipamentosPage from '@/pages/cadastros/equipamentos.vue'
+import CadastroEquipamentoPage from '@/pages/cadastros/equipamento.vue'
+import CadastroFuncoesPage from '@/pages/cadastros/funcoes.vue'
+
+import EstoqueEntradaPage from '@/pages/estoque/entrada.vue'
+import EstoqueSaidaPage from '@/pages/estoque/saida.vue'
+import EstoqueRelatorioPage from '@/pages/estoque/relatorioEstoque.vue'
+import EstoqueAbaixoMinimoPage from '@/pages/estoque/relatorioAbaixoMinimo.vue'
+
+import UnderConstructionPage from '@/pages/underConstruction.vue'
 
 Vue.use(Router);
 
@@ -61,6 +68,11 @@ export default new Router({
           name: 'orcamento-lista',
           component: OrcamentoLista,
         },
+        {
+          path: 'orcamento/lista/:status',
+          name: 'orcamento-lista-status',
+          component: OrcamentoLista,
+        },
 
         {
           path: 'orcamento/enviados',
@@ -69,8 +81,40 @@ export default new Router({
         },
       ],
     },
-      
 
+    {
+      path: '/estoque',
+      name: 'estoque',
+      component: Layout,
+      children: [
+        {
+          path: 'entrada',
+          name: 'EstoqueEntradaPage',
+          component: EstoqueEntradaPage
+        },
+        {
+          path: 'saida',
+          name: 'EstoqueSaidaPage',
+          component: EstoqueSaidaPage
+        },
+        {
+          path: 'saidaorcamento',
+          name: 'EstoqueSaidaOrcamentoPage',
+          component: UnderConstructionPage
+        },
+        {
+          path: 'relestoque',
+          name: 'EstoqueRelatorioPage',
+          component: EstoqueRelatorioPage
+        },
+        {
+          path: 'relabaixominimo',
+          name: 'EstoqueRelatorioAbaixoMinimoPage',
+          component: EstoqueAbaixoMinimoPage
+        },
+      ],
+    },
+      
     {
       path: '/cadastros',
       name: 'Layout',
@@ -81,6 +125,12 @@ export default new Router({
           name: 'CadastroEquipamentosPage',
           // component: () => import('@/pages/cadastros/equipamentos.vue')
           component: CadastroEquipamentosPage
+        },
+        {
+          path: 'equipamento/:uuid',
+          name: 'CadastroEquipamentoPage',
+          // component: () => import('@/pages/cadastros/equipamentos.vue')
+          component: CadastroEquipamentoPage
         },
         {
           path: 'funcoes',
@@ -98,11 +148,6 @@ export default new Router({
           name: 'CadastroClientesPage',
           // component: () => import('@/pages/cadastros/clientes.vue')
           component: CadClientePage,
-        },
-        {
-          path: 'usuarios',
-          name: 'CadastroUsuariosPage',
-          component: CadUsuarioPage,
         },
       ],
     }

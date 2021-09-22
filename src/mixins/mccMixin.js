@@ -137,6 +137,9 @@ export default {
       return (data.substr(0, 10).split('-').reverse().join('/') );
     },
     numeroBR(numero){
+      if(numero==null){
+        return "0,00"
+      }
       numero = parseFloat(numero)
       numero = numero.toFixed(2).split('.');
       numero[0] = numero[0].split(/(?=(?:...)*$)/).join('.');

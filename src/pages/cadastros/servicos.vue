@@ -295,7 +295,7 @@ export default {
       this.processando = true;
       this.$http({
         method: 'get',
-        url: 'http://back.naxsysbrasil.com.br/api/cad/servicos?page=' + page,
+        url: process.env.VUE_APP_URL_BASE_API + "/api/cad/servicos?page=" + page,
       })
         .then((result) => {
           this.processando = false;
@@ -336,7 +336,7 @@ export default {
       if (this.registry.action == 'U') {
         this.$http({
           method: 'patch',
-          url: 'http://back.naxsysbrasil.com.br/api/cad/servicos?',
+          url: process.env.VUE_APP_URL_BASE_API + "/api/cad/servicos",
           data: this.registry,
         })
           .then(() => {
@@ -359,7 +359,7 @@ export default {
 
         this.$http({
           method: 'post',
-          url: 'http://back.naxsysbrasil.com.br/api/cad/servicos',
+          url: process.env.VUE_APP_URL_BASE_API + "/api/cad/servicos",
           data: bodyFormData,
         })
           .then((result) => {

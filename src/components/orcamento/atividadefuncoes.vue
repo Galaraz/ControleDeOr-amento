@@ -89,7 +89,7 @@
         <div class="col col-2">
             <b-form-group
             id="input-7"
-            label="Add Noturno"
+            label="Adic Noturno"
             label-for="add_noturno"
             >
             <b-form-input
@@ -127,7 +127,7 @@
                     <th class="text-right">Horas</th>
                     <th class="text-right">HE 50%</th>
                     <th class="text-right">HE 100%</th>
-                    <th class="text-right">Add Not</th>
+                    <th class="text-right">Adic Noturno</th>
                     <th class="text-right">Subtotal</th>
                     <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
                 </tr>
@@ -162,9 +162,9 @@
             <b-button class="mr-4" size="sm" variant="warning" v-b-tooltip.hover title="Fechar" @click="$bvModal.hide('mAtividadeFuncoes')">
                 <i class="fas fa-times ml-2 mr-2"></i>
             </b-button>
-            <!-- <b-button v-if="canUpdate" class="ml-4" size="sm" variant="primary" v-b-tooltip.hover title="Salvar dados" @click="registryAdd()">
-                <i class="fas fa-save ml-2 mr-2"></i>
-            </b-button> -->
+            <b-button v-if="canUpdate" class="ml-4" size="sm" variant="primary" v-b-tooltip.hover title="Salvar dados" @click="$bvModal.hide('mAtividadeFuncoes')">
+                <i class="fas fa-check ml-2 mr-2"></i>
+            </b-button>
         </div>
     </div>
 

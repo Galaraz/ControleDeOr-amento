@@ -22,17 +22,17 @@
                     <tr>
                         <th class="text-center" style="width:50px"><i class="fas fa-circle text-secondary fa-lg"></i></th>
                         <th>Nome</th>
-                        <th>Email</th>
-                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
                         <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="(row, index) in registers.data" :key="row.id">
                         <td class="text-center"><span v-html="colorStatus(index)"></span></td>
-                        <td>{{row.name}}</td>
-                        <td>{{row.email}}</td>
-                        <td>{{row.type}}</td>
+                        <td>{{row.nome}}</td>
+                        <td>{{row.descricao}}</td>
+                        <td>{{row.valor}}</td>
                         <td v-if="canUpdate" class="text-center">
                             <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
                         </td>
@@ -56,7 +56,7 @@
                             <b-button v-if="canAdd" @click="modalAddRegistry()" v-b-tooltip.hover title="Incluir Registro" variant="success" size="sm" class="mr-4"><i class="fas fa-plus ml-2 mr-2"></i></b-button>
                         </td>
                         <td>
-                            <!-- <pagination v-if="registers.data.length>0" :data="registers" :limit=3 @pagination-change-page="getRegisters"></pagination> -->
+                            <pagination v-if="registers.data.length>0" :data="registers" :limit=3 @pagination-change-page="getRegisters"></pagination>
                         </td>
                         <td class="text-right">
                             <b-button disabled v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
@@ -91,7 +91,7 @@
                 <b-form-input 
                     id="nome" 
                     ref="focusNome"
-                    v-model="registry.nqme" 
+                    v-model="registry.nome" 
                     :state="stateNome"
                     trim
                 ></b-form-input>
@@ -166,7 +166,7 @@ export default {
             canGet: true,
             ////
             processando: false,
-            registry: { name: "", full_Name: "", type: "U" },
+            registry: { nome: "", obs:"" },
             registers: {data: [] },
             modalTitle: null,
             btnDeleteRecord: false,
@@ -188,7 +188,7 @@ export default {
             this.processando = true
             this.$http({
                 method: 'get',
-                url: process.env.VUE_APP_URL_BASE_API + '/api/cad/usuarios?page=' + page,
+                url: 'http://back.naxsysbrasil.com.br/api/cad/usarios?page=' + page,
             })
             .then(result => {
                 this.processando = false
@@ -229,7 +229,7 @@ export default {
             if(this.registry.action=='U'){
                 this.$http({
                     method: 'patch',
-                    url: process.env.VUE_APP_URL_BASE_API +'/api/cad/usuarios',
+                    url: 'http://back.naxsysbrasil.com.br/api/cad/usuarios?',
                     data: this.registry
                 })
                 .then( () => {
@@ -252,7 +252,7 @@ export default {
 
                 this.$http({
                     method: 'post',
-                    url: process.env.VUE_APP_URL_BASE_API +'/api/cad/usuarios?',
+                    url: 'http://back.naxsysbrasil.com.br/api/cad/usuarios?',
                     data: bodyFormData
                 })
                 .then(result => {
@@ -329,7 +329,7 @@ export default {
     },
     computed: {
         stateNome() {
-            return this.registry.name.length >= 4
+            return this.registry.nome.length >= 4
         },
         disableBtnSaveRegistry(){
             if(!this.stateNome){

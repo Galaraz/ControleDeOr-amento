@@ -14,14 +14,14 @@
                 </b-card>
             </div>
 
-            <div style="width: 44rem;" class="ml-4 mb-0 p-0">
+            <div style="width: 1rem;" class="ml-4 mb-0 p-0">
                 
             </div>
-            <div style="width: 14rem;">
-                <b-card bg-variant="primary" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
+            <div style="width: 23rem;">
+                <b-card :bg-variant="colorStatus()" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
                     <b-card-text>
                         <span style="font-size:85%;"><i class="fas fa-tag"></i> Status</span><br>
-                        <span class="p-0 mt-0" style="font-size:170%;">Em Digitação</span>
+                        <span class="p-0 mt-0" style="font-size:170%;">{{textStatus()}}</span>
                     </b-card-text>
                 </b-card>
             </div>
@@ -80,17 +80,42 @@
                         </b-form-group>
                     </div>
                     <div class="col col-6">
+                        <b-form-group
+                            id="input-inputtipo" label="Tipo:" label-for="inputtipo"
+                        >
+                            <v-select
+                                v-if="registry.status=='D'"
+                                v-model="tipo"
+                                :options="listaTipos"
+                                value-field="id"
+                                inputId="id"
+                                label="nome"
+                                name="inputtipo"
+                                id="inputtipo"
+                            ></v-select>
+                            <b-form-input
+                                v-else
+                                id="input-tipo"
+                                v-model="tipo.nome"
+                                readonly
+                            ></b-form-input>
+                        </b-form-group>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col col-6">
                         <b-form-group id="input-group-4" label="Nome do Responsavel:" label-for="input-4">
                         <b-form-input
+                            :disabled="!canUpdate || !canChange"
                             id="input-2"
                             v-model="registry.contato_nome"
                             required
                         ></b-form-input>
                         </b-form-group>
                     </div>
-                </div>
+                <!-- </div>
 
-                <div class="row">
+                <div class="row"> -->
                     <div class="col col-6">
                         <b-form-group
                         id="input-group-2"
@@ -99,6 +124,7 @@
                         description=""
                         >
                         <b-form-input
+                            :disabled="!canUpdate || !canChange"
                             id="input-2"
                             v-model="registry.contato_email"
                             type="email"
@@ -107,7 +133,7 @@
                         </b-form-group>
                     </div>
 
-                    <div class="col col-6">
+                    <!-- <div class="col col-6">
                         <b-form-group
                         id="input-group-4"
                         label="Telefone:"
@@ -120,18 +146,32 @@
                             required
                         ></b-form-input>
                         </b-form-group>
+                    </div> -->
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col col-6">
+                        <b-form-group id="input-group-22" label="Nome do Solicitante:" label-for="input-22">
+                        <b-form-input
+                            :disabled="!canUpdate || !canChange"
+                            id="input-22"
+                            v-model="registry.solicitante_nome"
+                            required
+                        ></b-form-input>
+                        </b-form-group>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col col-12">
                         <b-form-group
-                        id="input-group-21"
-                        label="Referencia:"
-                        label-for="referencia"
-                        description=""
+                            id="input-group-21"
+                            label="Referencia:"
+                            label-for="referencia"
+                            description=""
                         >
                         <b-form-input
+                            :disabled="!canUpdate || !canChange"
                             id="referencia"
                             v-model="registry.referencia"
                             type="text"
@@ -142,12 +182,13 @@
                 <div class="row">
                     <div class="col col-12">
                         <b-form-group
-                        id="input-group-21"
-                        label="Condição de Pagamento:"
-                        label-for="condicao_pagamento"
-                        description=""
+                            id="input-group-21"
+                            label="Condição de Pagamento:"
+                            label-for="condicao_pagamento"
+                            description=""
                         >
                         <b-form-input
+                            :disabled="!canUpdate || !canChange"
                             id="condicao_pagamento"
                             v-model="registry.condicao_pagamento"
                             type="text"
@@ -158,12 +199,13 @@
                 <div class="row">
                     <div class="col col-12">
                         <b-form-group
-                        id="input-group-21"
-                        label="Validade da Proposta:"
-                        label-for="validade_proposta"
-                        description=""
+                            id="input-group-21"
+                            label="Validade da Proposta:"
+                            label-for="validade_proposta"
+                            description=""
                         >
                         <b-form-input
+                            :disabled="!canUpdate || !canChange"
                             id="validade_proposta"
                             v-model="registry.validade_proposta"
                             type="text"
@@ -173,7 +215,7 @@
                 </div>
 
 
-
+                <template v-if="registry.uuid!=null">
 
                 <!-- ********** EQUIPAMENTOS ********** -->
 
@@ -184,7 +226,7 @@
                     </div>
                 </div>
 
-                <div v-if="canUpdate" class="row mt-4">
+                <div v-if="canUpdate && canChange" class="row mt-4">
                     <div class="col col-8">
                         <b-form-group id="input-group-6" label="Selecione Equipamento" label-for="input-6">
                             <!-- <b-form-select
@@ -245,7 +287,7 @@
                             <th class="text-right">Valor</th>
                             <th class="text-right">Quantidade</th>
                             <th class="text-right">Subtotal</th>
-                            <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
+                            <th v-if="canUpdate && canChange" style="width:50px" v-b-tooltip.hover title="Editar"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -262,7 +304,7 @@
                                 ></b-form-input>
                             </td> -->
                             <td class="text-right">R$ {{ numeroBR(rowEqp.valor * rowEqp.qtd) }}</td>
-                            <td v-if="canUpdate" class="text-center">
+                            <td v-if="canUpdate && canChange" class="text-center">
                                 <a @click="equip_Delete(indexEqp)"><i class="far fa-trash-alt text-danger"></i></a>
                             </td>
                         </tr>
@@ -275,17 +317,17 @@
 
 
 
-                    <!-- ********** ATIVIDADES ********** -->
+                    <!-- ********** ATIVIDADES - HORA/HOMEM ********** -->
 
                     <div class="row">
                         <div class="col">
                             <br><br><hr>
-                            <h3><i class='fas fa-tools text-primary'></i> Atividades</h3>
+                            <h3><i class='fas fa-tools text-primary'></i>&nbsp;<i class='fas fa-user-friends text-secondary'></i>&nbsp;Atividades - Hora/Homem</h3>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col col-5">
+                    <div v-if="canUpdate && canChange" class="row">
+                        <div class="col col-8">
                             <b-form-group
                             id="input-4"
                             label="Descrição:"
@@ -299,7 +341,7 @@
                             </b-form-group>
                         </div>
 
-                        <div class="col col-2">
+                        <!-- <div class="col col-2">
                             <b-form-group
                             id="input-5"
                             label="Código:"
@@ -336,7 +378,7 @@
                                 v-model="atividadeNova.qtd"
                             ></b-form-input>
                             </b-form-group>
-                        </div>
+                        </div> -->
 
                         <div class="col col-1">
                             <h1></h1><br>
@@ -346,7 +388,7 @@
                                 v-b-tooltip.hover
                                 title="Incluir Atividade"
                                 class="mr-4 ml-4"
-                                @click="atividade_Add()"
+                                @click="atividadeHH_Add()"
                                 >
                                 <i class="fas fa-plus ml-2 mr-2"></i>
                             </b-button>
@@ -364,25 +406,26 @@
                             <tr>
                                 <th>Descriçao da atividade</th>
                                 <th class="text-center">Codigo</th>
-                                <th class="text-right">Valor</th>
-                                <th class="text-right">Quantidade</th>
+                                <!-- <th class="text-right">Valor</th> -->
+                                <!-- <th class="text-right">Quantidade</th> -->
                                 <th class="text-right">Subtotal</th>
-                                <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Funções"></th>
-                                <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Excluir"></th>
+                                <th v-if="canUpdate && canChange" style="width:50px" v-b-tooltip.hover title="Funções"></th>
+                                <th v-if="canUpdate && canChange" style="width:50px" v-b-tooltip.hover title="Excluir"></th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="(rowAtv, indexAtv) in atividades_orcamento" :key="rowAtv.id">
                                 <td>{{ rowAtv.descricao }}</td>
                                 <td class="text-center">{{ rowAtv.codigo }}</td>
-                                <td class="text-right">{{ numeroBR( rowAtv.valor_unit ) }}</td>
-                                <td class="text-right">{{ numeroBR(rowAtv.qtd) }}</td>
-                                <td class="text-right">R$ {{ numeroBR( rowAtv.valor_unit * rowAtv.qtd) }}</td>
-                                <td class="text-center">
+                                <!-- <td class="text-right">{{ numeroBR( rowAtv.valor_unit ) }}</td> -->
+                                <!-- <td class="text-right">{{ numeroBR(rowAtv.qtd) }}</td> -->
+                                <!-- <td class="text-right">R$ {{ numeroBR( rowAtv.valor_unit * rowAtv.qtd) }}</td> -->
+                                <td class="text-right">R$ {{ numeroBR( rowAtv.subtotal) }}</td>
+                                <td v-if="canUpdate && canChange" class="text-center">
                                     <a @click="atividade_Funcao(indexAtv)"><i class="fas fa-user-cog text-primary"></i></a>
                                 </td>
-                                <td v-if="canUpdate" class="text-center">
-                                    <a @click="atividade_Delete(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
+                                <td v-if="canUpdate && canChange" class="text-center">
+                                    <a @click="atividadeHH_Delete(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
                                 </td>
                             </tr>
 
@@ -448,6 +491,120 @@
                                     <td v-if="canUpdate"></td>
                                 </tr> -->
                             
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+
+                    <!-- ********** ATIVIDADES - PRECO FIXO ********** -->
+
+                    <div class="row">
+                        <div class="col">
+                            <br><br><hr>
+                            <h3><i class='fas fa-tools text-primary'></i>&nbsp;<i class='far fa-money-bill-alt text-secondary'></i>&nbsp;Atividades - Preço Fixo</h3>
+                        </div>
+                    </div>
+
+                    <div v-if="canUpdate && canChange" class="row">
+                        <div class="col col-7">
+                            <b-form-group
+                            id="input-4"
+                            label="Descrição:"
+                            label-for="descricao"
+                            >
+                            <b-form-input
+                                id="descricao"
+                                v-model="atividadeNovaPF.descricao"
+                                ref="atividadeNovaPFDescricao"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+
+                        <!-- <div class="col col-2">
+                            <b-form-group
+                            id="input-5"
+                            label="Código:"
+                            label-for="codigo"
+                            >
+                            <b-form-input
+                                id="codigo"
+                                v-model="atividadeNovaPF.codigo"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div> -->
+                        
+                        <div class="col col-2">
+                            <b-form-group
+                            id="input-6"
+                            label="Valor:"
+                            label-for="valor"
+                            >
+                            <b-form-input
+                                id="valor"
+                                v-model="atividadeNovaPF.valor_unit"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+
+                        <div class="col col-1">
+                            <b-form-group
+                            id="input-7"
+                            label="Quantidade:"
+                            label-for="qtd"
+                            >
+                            <b-form-input
+                                id="qtd"
+                                v-model="atividadeNovaPF.qtd"
+                            ></b-form-input>
+                            </b-form-group>
+                        </div>
+
+                        <div class="col col-1">
+                            <h1></h1><br>
+                            <b-button
+                                size="sm"
+                                variant="success"
+                                v-b-tooltip.hover
+                                title="Incluir Atividade"
+                                class="mr-4 ml-4"
+                                @click="atividadePF_Add()"
+                                >
+                                <i class="fas fa-plus ml-2 mr-2"></i>
+                            </b-button>
+                        </div>
+                        
+                    </div>
+
+                    <div class="row">
+                        <!-- table-striped  -->
+                        <table
+                            class="table table-hover table-lg mb-0 mt-3 border-1 p-0"
+                        >
+                            <thead>
+                            <!-- class="text-white" -->
+                            <tr>
+                                <th>Descriçao da atividade</th>
+                                <th class="text-center">Codigo</th>
+                                <th class="text-right">Valor</th>
+                                <th class="text-right">Quantidade</th>
+                                <th class="text-right">Subtotal</th>
+                                <th v-if="canUpdate && canChange" style="width:50px" v-b-tooltip.hover title="Excluir"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(rowAtv, indexAtv) in atividadesPF_orcamento" :key="rowAtv.id">
+                                <td>{{ rowAtv.descricao }}</td>
+                                <td class="text-center">{{ rowAtv.codigo }}</td>
+                                <td class="text-right">{{ numeroBR( rowAtv.valor_unit ) }}</td>
+                                <td class="text-right">{{ numeroBR(rowAtv.qtd) }}</td>
+                                <td class="text-right">R$ {{ numeroBR( rowAtv.valor_unit * rowAtv.qtd) }}</td>
+                                <td v-if="canUpdate && canChange" class="text-center">
+                                    <a @click="atividade_Delete(indexAtv)"><i class="far fa-trash-alt text-danger"></i></a>
+                                </td>
+                            </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -602,7 +759,7 @@
                         </table>
                     </div>
 
-
+                </template>
 
 
 
@@ -621,6 +778,7 @@
     <!-- BOTOES - INICIO -->
     <div class="row mt-3">
         <div class="col">
+            <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
             <Widget    
                 customHeader
                 style="width:100%"
@@ -636,10 +794,33 @@
     { status: "F", descricao: "Faturado", cor:"success"},
 ], -->
 
-                <b-button v-if="canUpdate" :disabled="!canSave" size="sm" variant="primary" v-b-tooltip.hover title="Salvar" class="mr-4" @click="orcamento_processar()"><i class="fas fa-save ml-2 mr-2"></i></b-button>
+                <b-button :disabled="!(canUpdate && registry.status=='D')" size="sm" variant="primary" v-b-tooltip.hover title="Salvar" class="mr-4" @click="orcamento_processar()"><i class="fas fa-save ml-2 mr-2"></i></b-button>
+                <b-button :disabled="!(canUpdate && canSave && registry.status=='D')" size="sm" variant="success" v-b-tooltip.hover title="Finalizar" class="mr-4 ml-4" @click="orcamento_finalizar()"><i class="fas fa-arrow-right ml-2 mr-2"></i></b-button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b-button :disabled="!(canUpdate && registry.status!='D')" size="sm" variant="primary" v-b-tooltip.hover title="Mudar Status" class="mr-4" @click="orcamentoStatusChange()"><i class="fas fa-random ml-2 mr-2"></i></b-button>
+                <b-button :disabled="!(canUpdate && registry.status!='D')" size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="orcamentoNovaVersao()"><i class="far fa-copy ml-2 mr-2"></i></b-button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <!-- <b-button disabled size="sm" variant="primary" v-b-tooltip.hover title="Enviar para Cliente" class="mr-4 ml-4" @click="orcamento_enviar()"><i class="far fa-paper-plane ml-2 mr-2"></i></b-button> -->
+                <!-- <b-button :disabled="!(canUpdate && registry.status!='D')" size="sm" variant="default" v-b-tooltip.hover title="Download" class="mr-4 ml-4" @click="orcamento_download()"><i class="fas fa-download ml-2 mr-2"></i></b-button> -->
+                <b-button :disabled="!(canUpdate && registry.status!='D')" size="sm" variant="default" v-b-tooltip.hover title="Imprimir" class="mr-4 ml-4" @click="orcamento_imprimir()"><i class="fas fa-print ml-2 mr-2"></i></b-button>
+
+
+
+                <!-- <template v-if="canUpdate && registry.status=='D'">
+                    <b-button size="sm" variant="primary" v-b-tooltip.hover title="Salvar" class="mr-4" @click="orcamento_processar()"><i class="fas fa-save ml-2 mr-2"></i></b-button>    
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </template>
+
+                <template v-if="canUpdate && registry.status!='D' ">
+                    <b-button size="sm" variant="primary" v-b-tooltip.hover title="Mudar Status" class="mr-4" @click="orcamentoStatusChange()"><i class="fas fa-random ml-2 mr-2"></i></b-button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b-button size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="newVersion()">
+                        <i class="far fa-copy ml-2 mr-2"></i>
+                    </b-button>
+                </template> -->
                 
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b-button v-if="canUpdate && registry.uuid!=null" size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="newVersion()">
+                
+                <!-- <b-button v-if="canUpdate && registry.uuid!=null" size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="newVersion()">
                     <i class="far fa-copy ml-2 mr-2"></i>
                 </b-button>
 
@@ -649,14 +830,14 @@
                         <i class="far fa-paper-plane ml-2 mr-2"></i>
                     </b-button>
                     &nbsp;&nbsp;&nbsp;
-                    <!-- v-if="registry.status=='E'"  -->
+                    
                     <b-button size="sm" variant="default" v-b-tooltip.hover title="Imprimir" class="mr-4 ml-4" @click="orcamento_imprimir()">
                         <i class="fas fa-print ml-2 mr-2"></i>
                     </b-button>
-                </span>
+                </span> -->
 
                 
-                <span v-if="registry.status=='E' && !canSave">
+                <!-- <span v-if="registry.status=='E' && !canSave">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <b-button v-if="canUpdate" size="sm" variant="success" v-b-tooltip.hover title="Aprovado pelo cliente" class="mr-4 ml-4" @click="ativar()">
                         <i class="far fa-thumbs-up ml-2 mr-2"></i>
@@ -677,57 +858,18 @@
                     <b-button size="sm" variant="primary" v-b-tooltip.hover title="Marcar Faturado" class="mr-4 ml-4" @click="newVersion()">
                         <i class="far fa-money-bill-alt ml-2 mr-2"></i>
                     </b-button>
-                </span>
-
-
-
-
-
-
-                <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b-button v-if="canUpdate && registry.uuid!=null && !canSave" :disabled="!canSave" size="sm" variant="success" v-b-tooltip.hover title="Finalizar Orçamento" class="mr-4 ml-4" @click="newVersion()">
-                    <i class="fas fa-file-signature ml-2 mr-2"></i>
-                </b-button>
-                <b-button v-if="canUpdate && registry.uuid!=null && !canSave" :disabled="!canSave" size="sm" variant="info" v-b-tooltip.hover title="Enviar para Cliente" class="mr-4 ml-4" @click="newVersion()">
-                    <i class="fas fa-file-export ml-2 mr-2"></i>
-                </b-button>
-                
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b-button v-if="canUpdate && registry.uuid!=null" size="sm" variant="warning" v-b-tooltip.hover title="Nova Versão" class="mr-4 ml-4" @click="newVersion()">
-                    <i class="far fa-copy ml-2 mr-2"></i>
-                </b-button>
-
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span v-if="registry.uuid!=null && !canSave">
-                    <span v-if="registry.status=='E'">
-                        <b-button v-if="canUpdate" size="sm" variant="success" v-b-tooltip.hover title="Vendido" class="mr-4 ml-4" @click="ativar()">
-                            <i class="far fa-thumbs-up ml-2 mr-2"></i>
-                        </b-button>
-                        <b-button v-if="canUpdate" size="sm" variant="danger" v-b-tooltip.hover title="Encerrado" class="mr-4 ml-4" @click="inativar()">
-                            <i class="far fa-thumbs-down ml-2 mr-2"></i>
-                        </b-button>
-                    </span>
                 </span> -->
-                
-                <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span v-if="registry.uuid!=null">
-                    <span v-if="registry.status=='A'">
-                        <b-button v-if="canUpdate" size="sm" variant="warning" v-b-tooltip.hover title="Inativar" class="mr-4 ml-4" @click="inativar()">
-                            <i class="fas fa-ban ml-2 mr-2"></i>
-                        </b-button>
-                    </span>
-                    <span v-else>
-                        <b-button v-if="canUpdate" size="sm" variant="success" v-b-tooltip.hover title="Ativar" class="mr-4 ml-4" @click="ativar()">
-                            <i class="fas fa-ban ml-2 mr-2"></i>
-                        </b-button>
-                    </span>
-                </span> -->
+
+
+
+
+
 
                 <span class="float-right">
-                    <b-button v-if="registry.status!='D' && registry.status!='V'" size="sm" variant="default" v-b-tooltip.hover title="Imprimir" class="mr-4 ml-4" @click="newVersion()">
+                    <!-- <b-button v-if="registry.status!='D' && registry.status!='V'" size="sm" variant="default" v-b-tooltip.hover title="Imprimir" class="mr-4 ml-4" @click="newVersion()">
                         <i class="fas fa-print ml-2 mr-2"></i>
                     </b-button>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
                     <b-button size="sm" variant="default" v-b-tooltip.hover title="Voltar para Lista" class="float-right" @click="backToList()">
                     <i class="far fa-list-alt ml-2 mr-2"></i>
                 </b-button>
@@ -735,6 +877,7 @@
 
                 
             </Widget>
+            </b-overlay>
         </div>
     </div>
     <!-- BOTOES - FIM -->
@@ -757,6 +900,50 @@
 
 </b-modal>
 
+<!-- size="lg" -->
+<b-modal 
+    id="mOrcamentoStatus"
+    title="Alterar status do Orçamento"
+    button-size="sm"
+    body-bg-variant="white"
+    content-class="shadow"
+>
+    <div class="row">
+        <div class="col">
+            <b-form-group
+                id="ig-001" label="Novo Status:" label-for="novoStatus"
+            >
+                <v-select
+                    v-model="novoStatus"
+                    :options="listaStatus"
+                    value-field="status"
+                    inputId="status"
+                    label="descricao"
+                    name="novoStatus"
+                    id="novoStatus"
+                ></v-select>
+            </b-form-group>
+        </div>
+    </div>
+
+    <template v-slot:modal-footer="{ cancel }">
+        <table class="w-100">
+            <tr>
+                <td class="text-right">
+                    <b-button size="sm" variant="warning" v-b-tooltip.hover title="Fechar" @click="cancel()">
+                        <i class="fas fa-times ml-2 mr-2"></i>
+                    </b-button>
+                    &nbsp;&nbsp;&nbsp;
+                    <b-button size="sm" variant="primary" v-b-tooltip.hover title="Salvar" @click="OrcamentoStatusChangeExec()">
+                        <i class="fas fa-save ml-2 mr-2"></i>
+                    </b-button>
+                </td>
+            </tr>
+
+        </table> 
+    </template>
+
+</b-modal>
 
 
 </div>
@@ -776,10 +963,20 @@ export default {
             canGet: false,
             canNovaVersao: true,
             canUpdateCliente: true,
+            canChange: true,
             ////
             processando: false,
             registry: { id: null, index: null, uuid: null, nome: null, status: "D", fk_cliente: {nome: null}, fk_versao: [] },
             // registers: {data: [] },
+            // listaStatus: [
+            //     { status: "V", descricao: "Aguardando Validação", cor:"secondary"},
+            //     { status: "E", descricao: "Aguardando Aprovação", cor:"primary"},
+            //     { status: "A", descricao: "Aprovado", cor:"success"},
+            //     { status: "R", descricao: "Rejeitado/Cancelado", cor:"danger"},
+            //     { status: "X", descricao: "Executado", cor:"info"},
+            //     { status: "F", descricao: "Faturado", cor:"success"},
+            // ],
+            
 
             clientes: [],
             cliente: {},
@@ -797,6 +994,9 @@ export default {
             modalAtividadeFuncoes: null,
             atividadeIndex: null,
 
+            atividadesPF_orcamento: [ ],
+            atividadeNovaPF: {descricao: "", qtd: 0, valor_unit: 0 },
+
             funcoes:[],
             funcao: {},
             funcaoNova: { qtd_colaboradores: 1, horas: 0, horas_extras: 0},
@@ -804,7 +1004,7 @@ export default {
             funcaoTotal: 0,
 
             listaStatus: [
-                { status: "D", descricao: "Em Solicitação", cor:"secondary"},
+                // { status: "D", descricao: "Em Solicitação", cor:"secondary"},
                 { status: "V", descricao: "Aguardando Validação", cor:"secondary"},
                 { status: "E", descricao: "Aguardando Aprovação", cor:"primary"},
                 { status: "A", descricao: "Aprovado", cor:"success"},
@@ -812,18 +1012,87 @@ export default {
                 { status: "X", descricao: "Executado", cor:"info"},
                 { status: "F", descricao: "Faturado", cor:"success"},
             ],
+            novoStatus: null,
             stsDescricao: null,
             stsCor: null,
+
+
+            listaTipos: [
+                {id: "D", nome: "On Demand"},
+                {id: "C", nome: "Corretiva"},
+            ],
+            tipo: {},
 
         }
     },
     methods: {
+        // { status: "D", descricao: "Em Solicitação", cor:"secondary"},
+        // { status: "V", descricao: "Aguardando Validação", cor:"secondary"},
+        // { status: "E", descricao: "Aguardando Aprovação", cor:"primary"},
+        // { status: "A", descricao: "Aprovado", cor:"success"},
+        // { status: "R", descricao: "Rejeitado/Cancelado", cor:"danger"},
+        // { status: "X", descricao: "Executado", cor:"info"},
+        // { status: "F", descricao: "Faturado", cor:"success"},
+        // displayStatus(registry){
+        //     if(registry.status=='D') {
+        //         return '<i class="fas fa-circle text-secondary"></i>'
+        //     } else if(registry.status=='V') {
+        //         return '<i class="fas fa-circle text-info"></i>'
+        //     } else if(registry.status=='E') {
+        //         return '<i class="fas fa-circle text-primary"></i>'
+        //     } else if(registry.status=='A') {
+        //         return '<i class="fas fa-circle text-success"></i>'
+        //     } else if(registry.status=='R') {
+        //         return '<i class="fas fa-circle text-danger"></i>'
+        //     } else if(registry.status=='F') {
+        //         return '<i class="fas fa-circle text-dark"></i>'
+        //     } else {
+        //         return '<i class="fas fa-circle text-warning"></i>'
+        //     }
+        // },
+        
+        textStatus(){
+            if(this.registry.status=='D') {
+                return 'Em Solicitação'
+            } else if(this.registry.status=='V') {
+                return 'Aguardando Validação'
+            } else if(this.registry.status=='E') {
+                return 'Aguardando Aprovação'
+            } else if(this.registry.status=='A') {
+                return 'Aprovado'
+            } else if(this.registry.status=='R') {
+                return 'Rejeitado/Cancelado'
+            } else if(this.registry.status=='F') {
+                return 'Faturado'
+            } else {
+                return 'Erro: '+this.registry.status
+            }
+        },
+
+        colorStatus(){
+            if(this.registry.status=='D') {
+                return 'secondary'
+            } else if(this.registry.status=='V') {
+                return 'info'
+            } else if(this.registry.status=='E') {
+                return 'warning'
+            } else if(this.registry.status=='A') {
+                return 'success'
+            } else if(this.registry.status=='R') {
+                return 'danger'
+            } else if(this.registry.status=='F') {
+                return 'dark'
+            } else {
+                return 'danger'
+            }
+        },
+
         getData(){
             if(this.$route.params.uuid){
                 this.registry.uuid = this.$route.params.uuid
                 this.registry.codigo = 0
                 this.registry.versao = 0
-                this.registry.status = "E"
+                this.registry.status = "D"
                 this.registry.nome = "Erro getCliente"
                 this.registry.fk_cliente = {nome: null}
                 this.canUpdateCliente = false
@@ -842,10 +1111,17 @@ export default {
                     // console.log(result)
 
                     this.atividades_orcamento = this.registry.fk_atividades
+                    this.atividadesPF_orcamento = this.registry.fk_atividadesPF
                     this.atividadeTotal = this.registry.atividadeTotal
 
                     this.equipamentos_orcamento = this.registry.fk_equipamentos
                     this.equipamentoTotal = this.registry.equipamentoTotal
+
+                    this.tipo = this.listaTipos.find((data) => data.id === this.registry.tipo)
+
+                    if(this.registry.status!="D"){
+                        this.canChange = false
+                    }
                 })
                 .catch((error) => {
                     // eslint-disable-next-line
@@ -859,6 +1135,8 @@ export default {
 
             } else {
                 this.getClientes()
+                this.tipo = this.listaTipos[0]
+                this.registry.validade_proposta = "3 dias"
             }
         },
         getClientes() {
@@ -935,6 +1213,14 @@ export default {
 
         //////// ORCAMENTO
         orcamento_processar(){
+            // if(this.cliente==null){
+            //     alert("Selecione o cliente do orçamento.")
+            //     return
+            // }
+            // if(this.tipo==null){
+            //     alert("Selecione o tipo do orçamento.")
+            //     return
+            // }
             if(this.registry.uuid==""||this.registry.uuid==null){
                 this.orcamento_save()
             } else {
@@ -944,10 +1230,12 @@ export default {
         orcamento_save(){
             this.processando = true;
 
-            let selecionado = this.clientes.find((data) => data.id === this.cliente);
+            // let selecionado = this.clientes.find((data) => data.id === this.cliente);
 
             var bodyFormData = new FormData();
-            bodyFormData.append("uuid_cliente", selecionado.uuid);
+            // bodyFormData.append("uuid_cliente", selecionado.uuid);
+            bodyFormData.append("uuid_cliente", this.cliente.uuid);
+            bodyFormData.append("tipo", this.tipo.id);
             bodyFormData.append("contato_nome", this.registry.contato_nome);
             bodyFormData.append("contato_fone", this.registry.contato_fone);
             bodyFormData.append("contato_email", this.registry.contato_email);
@@ -1002,19 +1290,102 @@ export default {
             });
         },
 
+        orcamentoStatusChange(){
+            this.novoStatus = this.listaStatus[0]
+            this.$bvModal.show("mOrcamentoStatus")
+
+        },
+
+        OrcamentoStatusChangeExec(){
+            this.$bvModal.hide("mOrcamentoStatus")
+            this.processando = true 
+            let dados = {}
+            dados.uuid = this.registry.uuid
+            dados.status = this.novoStatus.status 
+            
+            this.$http({
+                method: 'patch',
+                url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentos/statuschange",
+                data: dados
+            })
+            .then(() => {
+                this.processando = false;
+                this.registry.status = dados.status
+                this.showMessage("Orçamento atualizado com sucesso.","success");
+            })
+            .catch((error) => {
+                // eslint-disable-next-line
+                console.log(error);
+                this.processando = false;
+                this.showMessage('Erro na conexão[Orcamento-StatusChange]. Acione o suporte.', 'danger');
+                this.erroConexao(error);
+            });
+        },
+
+        orcamentoNovaVersao(){
+            var mensagem = "Deseja realmente criar nova versão para este orçamento?\n\nVoce não poderá mais acessar esta versão.\n\n"
+            if(confirm(mensagem)){
+                this.processando = true 
+                this.$http({
+                    method: 'patch',
+                    url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentos/novaversao/"+this.registry.uuid,
+                })
+                .then(() => {
+                    this.processando = false;
+                    // this.$router.push("/orcamento/orcamento/"+this.registry.uuid)
+                    this.$router.push("/orcamento/lista")
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line
+                    console.log(error);
+                    this.processando = false;
+                    this.showMessage('Erro na conexão[Orcamento-StatusChange/finalizar]. Acione o suporte.', 'danger');
+                    this.erroConexao(error);
+                });
+            }
+        },
+
+        orcamento_finalizar(){
+            var mensagem = "Deseja realmente finalizar este orçamento/versão?\n\nVoce não poderá alterar o arçamento após finalizado.\n\n"
+            if(confirm(mensagem)){
+                this.processando = true 
+                let dados = {}
+                dados.uuid = this.registry.uuid
+                dados.status = "V"
+                
+                this.$http({
+                    method: 'patch',
+                    url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentos/statuschange",
+                    data: dados
+                })
+                .then(() => {
+                    this.processando = false;
+                    this.registry.status = dados.status
+                    this.showMessage("Orçamento atualizado com sucesso.","success");
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line
+                    console.log(error);
+                    this.processando = false;
+                    this.showMessage('Erro na conexão[Orcamento-StatusChange/finalizar]. Acione o suporte.', 'danger');
+                    this.erroConexao(error);
+                });
+            }
+        },
+
         orcamento_imprimir(){
-            if(this.registry.status=="D"){
-                var mensagem = "Deseja fechar o orçamento e imprimir?\n\nImportante: esta versão será fechada para alterações."
-                if(!confirm(mensagem)){
-                    return
-                }
+            // if(this.registry.status=="D"){
+            //     var mensagem = "Deseja fechar o orçamento e imprimir?\n\nImportante: esta versão será fechada para alterações."
+            //     if(!confirm(mensagem)){
+            //         return
+            //     }
                 
                 this.openWindowWithPost(process.env.VUE_APP_URL_BASE_API + "/api/orcamentos/print", {
                     uuid: this.registry.uuid,
                     // key: process.env.VUE_APP_MCC_TOKEN,
                     // paciente: this.registers.data[index].id_paciente,
                 })
-            }
+            // }
         },
         openWindowWithPost(url, data) {
             var form = document.createElement("form");
@@ -1062,16 +1433,18 @@ export default {
             }
 
             if(this.equipamento){
-
+                // console.log(this.equipamentos_orcamento);
+                // alert("Equipamento ID: "+this.equipamento.id)
                 //verifica se equipamento ja foi incluida
-                let existe = this.equipamentos_orcamento.find((data) => data.id === this.equipamento.id);
+                let existe = this.equipamentos_orcamento.find((data) => data.id_equipamento === this.equipamento.id);
                 if(existe){
-                    alert("Equipamento já incluído")
+                    alert("Equipamento já incluído no orçamento")
                     return
                 }
+                // alert("Existe: "+existe)
                 
 
-                if(this.registry.uuid!=null &&this.registry.uuid!=""&&this.registry.uuid!="null"){
+                // if(this.registry.uuid!=null &&this.registry.uuid!=""&&this.registry.uuid!="null"){
                     // console.log(this.equipamento);
                     this.processando = true
                     var bodyFormData = new FormData();
@@ -1085,8 +1458,10 @@ export default {
                         // url: "http://127.0.0.1:8000/api/orcamentoversaoequipamentos",
                         data: bodyFormData
                     })
-                    .then(() => {
+                    .then( result => {
                         this.processando = false;
+                        this.equipamento.uuid = result.data.uuid
+                        // console.log("Equipamento UUID: "+this.equipamento.uuid)
 
                         this.equipamento.qtd = this.equipamentoQtd
                         this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(this.equipamento.qtd) * parseFloat(this.equipamento.valor) )
@@ -1099,12 +1474,12 @@ export default {
                         this.showMessage('Erro na conexão[Equipamento-Save]. Acione o suporte.', 'danger');
                         this.erroConexao(error);
                     });
-                } else {
+                // } else {
 
-                    this.equipamento.qtd = this.equipamentoQtd
-                    this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(this.equipamento.qtd) * parseFloat(this.equipamento.valor) )
-                    this.equipamentos_orcamento.push(this.equipamento)
-                }
+                //     this.equipamento.qtd = this.equipamentoQtd
+                //     this.equipamentoTotal = this.equipamentoTotal + ( parseFloat(this.equipamento.qtd) * parseFloat(this.equipamento.valor) )
+                //     this.equipamentos_orcamento.push(this.equipamento)
+                // }
 
             } else {
                 alert("Selecione um equipamento")
@@ -1114,10 +1489,11 @@ export default {
             
         },
         equip_Delete(index){
+            // alert(this.equipamentos_orcamento[index].uuid)
             var mensagem = "Deseja realmente remover o equipamento "+this.equipamentos_orcamento[index].nome+"?"
             if(confirm(mensagem)){
 
-                if(this.equipamentos_orcamento[index].uuid){
+                // if(this.equipamentos_orcamento[index].uuid){
                     this.processando = true
                     this.$http({
                         method: 'delete',
@@ -1137,10 +1513,10 @@ export default {
                         this.showMessage('Erro na conexão[Atividade-Delete]. Acione o suporte.', 'danger');
                         this.erroConexao(error);
                     });
-                } else {
-                    this.equipamentoTotal = this.equipamentoTotal - ( this.equipamentos_orcamento[index].qtd * this.equipamentos_orcamento[index].valor)
-                    this.equipamentos_orcamento.splice(index, 1)
-                }
+                // } else {
+                //     this.equipamentoTotal = this.equipamentoTotal - ( this.equipamentos_orcamento[index].qtd * this.equipamentos_orcamento[index].valor)
+                //     this.equipamentos_orcamento.splice(index, 1)
+                // }
 
 
                 
@@ -1151,27 +1527,23 @@ export default {
 
         ////////////// ATIVIDADE
 
-        atividade_Add(){
+        atividadeHH_Add(){
             if(this.atividadeNova.descricao.length<3 || this.atividadeNova.descricao==""){
                 alert("Digite uma descrição válida.")
                 return
             }
-            if(this.atividadeNova.qtd<0 || this.atividadeNova.qtd==""){
-                alert("Digite uma quantidade válida.")
-                return
-            }
-            if(this.atividadeNova.valor_unit<0 || this.atividadeNova.valor_unit==""){
-                alert("Digite um valor válido.")
-                return
-            }
+            this.atividadeNova.tipo = "H"
+            this.atividadeNova.subtotal = 0
+            
             if(this.registry.uuid!=null &&this.registry.uuid!=""&&this.registry.uuid!="null"){
                 this.processando = true
                 var bodyFormData = new FormData();
                 bodyFormData.append("uuid", this.registry.fk_versao[0].uuid);
                 bodyFormData.append("descricao", this.atividadeNova.descricao);
-                bodyFormData.append("valor_unit", this.atividadeNova.valor_unit);
-                bodyFormData.append("qtd", this.atividadeNova.qtd);
-                bodyFormData.append("codigo", this.atividadeNova.codigo);
+                bodyFormData.append("valor_unit", 0); //this.atividadeNova.valor_unit);
+                bodyFormData.append("qtd", 1); //this.atividadeNova.qtd);
+                bodyFormData.append("codigo", "14.06"); //this.atividadeNova.codigo);
+                bodyFormData.append("tipo", "H");
 
                 this.$http({
                     method: 'post',
@@ -1194,6 +1566,7 @@ export default {
                     this.erroConexao(error);
                 });
             } else {
+                this.atividadeNova.codigo = "14.06"
                 this.atividades_orcamento.push(this.atividadeNova)
                 this.atividadeTotal = this.atividadeTotal + (this.atividadeNova.valor_unit * this.atividadeNova.qtd)
                 this.atividadeNova = { descricao: "", codigo: "", valor_unit: 0, qtd: 0 }
@@ -1203,6 +1576,7 @@ export default {
             // this.atividadeTotal = this.atividadeTotal + 1.3
             //////// Mudar a linha acima para fazer o calculo
         },
+        
 
         atividade_Delete(index){
             var mensagem = "Deseja realmente remover a atividade?"
@@ -1233,6 +1607,68 @@ export default {
         },
 
 
+
+
+
+
+        atividadePF_Add(){
+            if(this.atividadeNovaPF.descricao.length<3 || this.atividadeNovaPF.descricao==""){
+                alert("Digite uma descrição válida.")
+                return
+            }
+            if(this.atividadeNovaPF.qtd<0 || this.atividadeNovaPF.qtd==""){
+                alert("Digite uma quantidade válida.")
+                return
+            }
+            if(this.atividadeNovaPF.valor_unit<0 || this.atividadeNovaPF.valor_unit==""){
+                alert("Digite um valor válido.")
+                return
+            }
+
+            this.atividadeNovaPF.tipo = "P"
+            this.atividadeNovaPF.codigo = "14.06"
+            if(this.registry.uuid!=null &&this.registry.uuid!=""&&this.registry.uuid!="null"){
+                this.processando = true
+                var bodyFormData = new FormData();
+                bodyFormData.append("uuid", this.registry.fk_versao[0].uuid);
+                bodyFormData.append("descricao", this.atividadeNovaPF.descricao);
+                bodyFormData.append("valor_unit", this.atividadeNovaPF.valor_unit);
+                bodyFormData.append("qtd", this.atividadeNovaPF.qtd);
+                bodyFormData.append("codigo", "14.06"); //this.atividadeNovaPF.codigo);
+                bodyFormData.append("tipo", "P");
+
+                this.$http({
+                    method: 'post',
+                    url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoatividades",
+                    // url: "http://127.0.0.1:8000/api/orcamentoversaoatividades",
+                    data: bodyFormData
+                })
+                .then((result) => {
+                    this.processando = false;
+                    this.atividadesPF_orcamento.push(result.data)
+                    this.atividadeTotal = this.atividadeTotal + (this.atividadeNovaPF.valor_unit * this.atividadeNovaPF.qtd)
+                    this.atividadeNovaPF = { descricao: "", codigo: "", valor_unit: 0, qtd: 0 }
+                    this.$refs.atividadeNovaPFDescricao.focus()
+                })
+                .catch((error) => {
+                    // eslint-disable-next-line
+                    console.log(error);
+                    this.processando = false;
+                    this.showMessage('Erro na conexão[Atividade-Save]. Acione o suporte.', 'danger');
+                    this.erroConexao(error);
+                });
+            } else {
+                this.atividadesPF_orcamento.push(this.atividadeNovaPF)
+                this.atividadeTotal = this.atividadeTotal + (this.atividadeNovaPF.valor_unit * this.atividadeNovaPF.qtd)
+                this.atividadeNovaPF = { descricao: "", codigo: "", valor_unit: 0, qtd: 0 }
+                this.$refs.atividadeNovaPFDescricao.focus()
+            }
+
+            // this.atividadeTotal = this.atividadeTotal + 1.3
+            //////// Mudar a linha acima para fazer o calculo
+        },
+
+
         /////////// FUNCOES
 
         atividadeFuncao_Add(index){
@@ -1241,6 +1677,7 @@ export default {
         },
 
         atividade_Funcao(index){
+            // console.log("index= "+index);
             this.atividadeIndex = index
             this.atividadefuncao = this.atividades_orcamento[index]
             this.modalAtividadeFuncoes = "Atividade: "+this.atividadefuncao.descricao.substr(0,40)
@@ -1249,9 +1686,44 @@ export default {
         },
 
         atividade_Funcao_Atualizacao(funcoesAtualizadas){
+
+            // console.log(funcoesAtualizadas);
+            // console.log("atividade_Funcao_Atualizacao");
+            // console.log("index2= "+this.atividadeIndex);
+            // console.log(this.atividades_orcamento[this.atividadeIndex]);
+            let totAtiv = 0;
+            funcoesAtualizadas.forEach(element => {
+                totAtiv += element.subtotal
+                // console.log("Total="+ totAtiv);
+            });
             this.atividades_orcamento[this.atividadeIndex].fk_funcoes = funcoesAtualizadas
+            this.atividades_orcamento[this.atividadeIndex].subtotal = totAtiv
+
+            // this.atividadesPF_orcamento.forEach(element =>{
+            //     totAtiv += (element.qtd * element.valor_unit)
+            // })
+            // this.atividadeTotal = totAtiv
+            this.atividadesAtualizaTotal()
+            
+            
+            // console.log(this.atividades_orcamento);
+            let atividades_orcamento_novo = this.atividades_orcamento
+            this.atividades_orcamento = []
+            this.atividades_orcamento = atividades_orcamento_novo
             // console.log("atividade_Funcao_Atualizacao");
             // console.log(funcoesAtualizadas);
+        },
+
+        atividadesAtualizaTotal(){
+            // console.log("atividadesAtualizaTotal");
+            let total = 0
+            this.atividades_orcamento.forEach(element =>{
+                total += element.subtotal //(element.qtd * element.valor_unit)
+            })
+            this.atividadesPF_orcamento.forEach(element =>{
+                total += (element.qtd * element.valor_unit)
+            })
+            this.atividadeTotal = total
         },
 
 
@@ -1349,6 +1821,9 @@ export default {
     computed: {
         canSave(){
             if(!this.cliente){
+                return false
+            }
+            if(!this.tipo){
                 return false
             }
             if(this.registry.status=="D"){

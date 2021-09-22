@@ -6,7 +6,7 @@
         @mouseleave="sidebarMouseLeave"
     >
       <header class="logo">
-        <router-link to="/dashboard"><span class="primary-word"><img src="/img/logo_naxsys.png" width="130px"></span></router-link>
+        <router-link to="/dashboard"><span class="primary-word"><img src="/img/logo_naxsys.jpg" width="130px"></span></router-link>
       </header>
 
       <NavLink
@@ -49,6 +49,21 @@
         index="orcamento/lista"
         isHeader
       />
+
+      <NavLink
+        :activeItem="activeItem"
+        header="Estoque"
+        link="/estoque"
+        iconName="fas fa-barcode"
+        index="estoque"
+        :childrenLinks="[
+          { header: 'Entrada', link: '/estoque/entrada', iconName: 'fas fa-sign-in-alt' },
+          { header: 'Saída', link: '/estoque/saida', iconName: 'fas fa-sign-out-alt' },
+          { header: 'Saída Orçamento', link: '/estoque/saidaorcamento', iconName: 'fas fa-sign-out-alt' },
+          { header: 'Rel Estoque', link: '/estoque/relestoque', iconName: 'fas fa-boxes' },
+          { header: 'Rel Abaixo Mínimo', link: '/estoque/relabaixominimo', iconName: 'fas fa-sort-numeric-down-alt' },
+        ]"
+      />
  
       <NavLink
         :activeItem="activeItem"
@@ -60,7 +75,6 @@
           { header: 'Equipamentos', link: '/cadastros/equipamentos', iconName: 'fas fa-microchip' },
           { header: 'Funções', link: '/cadastros/funcoes', iconName: 'fas fa-user-cog' },
           { header: 'Clientes', link: '/cadastros/clientes', iconName: 'fas fa-user-tie' },
-          { header: 'Usuarios', link: '/cadastros/usuarios', iconName: 'fas fa-user-tie' },
         ]"
       />
       <!-- { header: 'Atividades', link: '/cadastros/servicos', iconName: 'fas fa-tools' }, -->
