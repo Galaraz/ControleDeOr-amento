@@ -6,10 +6,12 @@
         @mouseleave="sidebarMouseLeave"
     >
       <header class="logo">
-        <router-link to="/dashboard"><span class="primary-word"><img src="/img/logo_naxsys.jpg" width="130px"></span></router-link>
+        <!-- old: logo_naxsys.png -->
+        <router-link to="/paginainicial"><span class="primary-word"><img src="/img/e-nax.jpeg" width="130px"></span></router-link>
       </header>
 
       <NavLink
+        v-if="this.$store.state.user.type=='A' || this.$store.state.user.type=='S'"
         :activeItem="activeItem"
         header="Painel"
         link="/dashboard"
@@ -17,14 +19,7 @@
         index="dashboard"
         isHeader
       />
-      <!-- <NavLink
-        :activeItem="activeItem"
-        header="Orçamento"
-        link="/orcamento/orcamento"
-        iconName="far fa-file-alt"
-        index="orcamento/orcamento"
-        isHeader
-      /> -->
+
       <NavLink
         :activeItem="activeItem"
         header="Novo Orçamento"
@@ -33,14 +28,7 @@
         index="orcamento/orcamento"
         isHeader
       />
-      <!-- <NavLink
-        :activeItem="activeItem"
-        header="Orçamentos Enviados"
-        link="/orcamento/enviados"
-        iconName="far fa-paper-plane"
-        index="orcamento/enviados"
-        isHeader
-      /> -->
+
       <NavLink
         :activeItem="activeItem"
         header="Orçamentos - Lista"
@@ -51,6 +39,7 @@
       />
 
       <NavLink
+        v-if="this.$store.state.user.type=='A' || this.$store.state.user.type=='S'"
         :activeItem="activeItem"
         header="Estoque"
         link="/estoque"
@@ -64,8 +53,40 @@
           { header: 'Rel Abaixo Mínimo', link: '/estoque/relabaixominimo', iconName: 'fas fa-sort-numeric-down-alt' },
         ]"
       />
+
+      <NavLink
+        v-if="(this.$store.state.user.type=='A' || this.$store.state.user.type=='S') && v3"
+        :activeItem="activeItem"
+        header="Ordem de Serviço"
+        link="/ordemservico"
+        iconName="fas fa-file-invoice"
+        index="ordemservico"
+        :childrenLinks="[
+          { header: 'Lista de OS', link: '/ordemservico/lista', iconName: 'far fa-file-alt' },
+          { header: 'Busca', link: '/ordemservico/busca', iconName: 'fas fa-search' },
+          { header: 'Prev X Real', link: '/ordemservico/relat/prevreal', iconName: 'fas fa-file-medical-alt' },
+          
+        ]"
+      />
+
+      <NavLink
+        v-if="(this.$store.state.user.type=='A' || this.$store.state.user.type=='S') && v3"
+        :activeItem="activeItem"
+        header="Comissionamento"
+        link="/comiss"
+        iconName="fas fa-money-check-alt"
+        index="comiss"
+        :childrenLinks="[
+          { header: 'Consulta Mes', link: '/comiss/consultames', iconName: 'far fa-calendar-alt' },
+          { header: 'Confirmar Pagto', link: '/comiss/confpagto', iconName: 'fas fa-comment-dollar' },
+          { header: 'Pagtos Efetuados', link: '/comiss/pagtos', iconName: 'far fa-money-bill-alt' },
+          
+          
+        ]"
+      />
  
       <NavLink
+        v-if="this.$store.state.user.type=='A'"
         :activeItem="activeItem"
         header="Cadastros"
         link="/cadastros"
@@ -73,137 +94,20 @@
         index="cadastros"
         :childrenLinks="[
           { header: 'Equipamentos', link: '/cadastros/equipamentos', iconName: 'fas fa-microchip' },
-          { header: 'Funções', link: '/cadastros/funcoes', iconName: 'fas fa-user-cog' },
+          { header: 'Colaboradores', link: '/cadastros/colaboradores', iconName: 'fas fa-id-badge' },
           { header: 'Clientes', link: '/cadastros/clientes', iconName: 'fas fa-user-tie' },
+          { header: 'Funções', link: '/cadastros/funcoes', iconName: 'fas fa-user-cog' },
+          { header: 'Usuários', link: '/cadastros/usuarios', iconName: 'fas fa-users' },
         ]"
       />
-      <!-- { header: 'Atividades', link: '/cadastros/servicos', iconName: 'fas fa-tools' }, -->
+      <!-- { header: 'Colaboradores', link: '/cadastros/colaboradores', iconName: 'fas fa-id-badge' }, -->
 
 
 
+      <br><br><br><br><br>
+      <h5 class="navTitle">Versão: {{versao}}</h5>
+      <br><br><br><br><br>
 
-
-
-
-
-
-      <!--<h5 class="navTitle first">
-        APP
-      </h5>-->
-      <!-- <ul class="nav">
-        <NavLink
-            :activeItem="activeItem"
-            header="Painel"
-            link="/dashboard"
-            iconName="flaticon-home"
-            index="dashboard"
-            isHeader
-        />
-        <NavLink
-            :activeItem="activeItem"
-            header="Funçoes"
-            link="/notifications"
-            iconName="flaticon-bell"
-            index="notifications"
-             :childrenLinks="[
-              { header: 'Equipamentos', link: '/app/cadastros/charts' },
-              { header: 'Serviços', link: '/app/cadastros/icons' },
-              { header: 'Funções', link: '/app/cadastros/maps' },
-              { header: 'Clientes', link: '/app/cadastros/clientes' },
-              { header: 'Usuários', link: '/app/cadastros/usuarios' },
-            ]"
-        />
-        <NavLink
-            :activeItem="activeItem"
-            header="Cadastros"
-            link="/cadastros"
-            iconName="flaticon-network"
-            index="cadastros"
-            :childrenLinks="[
-              { header: 'Equipamentos', link: '/app/cadastros/charts' },
-              { header: 'Serviços', link: '/app/cadastros/icons' },
-              { header: 'Funções', link: '/app/cadastros/maps' },
-              { header: 'Clientes', link: '/app/cadastros/clientes' },
-              { header: 'Usuários', link: '/app/cadastros/usuarios' },
-            ]"
-        />
-         <NavLink
-            :activeItem="activeItem"
-            header="Orçamentos"
-            link="/orcamento"
-            iconName="flaticon-network"
-            index="orcamento"
-            :childrenLinks="[
-              { header: 'Novo Orçamento', link: '/orcamento/' },
-              { header: 'Orçamentos Enviados', link: '/cadastros/icons' },
-              { header: 'Rascunhos', link: '/cadastros/maps' },
-            ]"
-        />
-         <NavLink
-            :activeItem="activeItem"
-            header="Usuarios"
-            link="/cadastros"
-            iconName="flaticon-network"
-            index="cadastros"
-            :childrenLinks="[
-              { header: 'Equipamentos', link: '/app/cadastros/charts' },
-              { header: 'Serviços', link: '/app/cadastros/icons' },
-              { header: 'Funções', link: '/app/cadastros/maps' },
-              { header: 'Clientes', link: '/app/cadastros/clientes' },
-              { header: 'Usuários', link: '/app/cadastros/usuarios' },
-            ]"
-        />
-         <NavLink
-            :activeItem="activeItem"
-            header="Sair"
-            link="/login"
-            iconName="flaticon-equal-1"
-            index="tables"
-            isHeader
-          />
-      </ul> -->
-      <!--
-      <h5 class="navTitle">
-        LABELS
-      </h5>
-      <ul class="sidebarLabels">
-        <li>
-          <a href="#">
-            <i class="fa fa-circle text-danger"/>
-            <span class="labelName">Core</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fa fa-circle text-primary"/>
-            <span class="labelName">UI Elements</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fa fa-circle text-success"/>
-            <span class="labelName">Forms</span>
-          </a>
-        </li>
-      </ul>
-      -->
-      <!-- <h5 class="navTitle">
-        PROJECTS
-      </h5>
-      <div class="sidebarAlerts">
-        <b-alert
-            v-for="alert in alerts"
-            :key="alert.id"
-            class="sidebarAlert" variant="transparent"
-            show dismissible
-        >
-          <span>{{alert.title}}</span><br/>
-          <b-progress class="sidebarProgress progress-xs mt-1"
-                      :variant="alert.color" :value="alert.value" :max="100"/>
-          <small>{{alert.footer}}</small>
-        </b-alert>
-      </div> -->
-    <!-- <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br> -->
     </nav>
     
   </div>
@@ -235,6 +139,10 @@ export default {
           color: 'primary',
         },
       ],
+
+      versao: null,
+      v3: false,
+
     };
   },
   methods: {
@@ -259,6 +167,7 @@ export default {
   },
   created() {
     this.setActiveByRoute();
+    this.versao = process.env.VUE_APP_FRONT_VERSION
   },
   computed: {
     ...mapState('layout', {

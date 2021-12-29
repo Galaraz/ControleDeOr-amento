@@ -1,8 +1,8 @@
 <template>
 <div class="dashboard-page">
 
-  <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
-  <div class="row d-flex justify-content-between mt-0 mb-4 ml-1 mr-1">
+  <!-- <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
+  <div class="row d-flex justify-content-between mt-0 mb-4 ml-1 mr-1"> -->
 
     <!-- <div style="width: 16rem;" class="mb-2">
       <b-card bg-variant="secondary" text-variant="white" class="text-right p-0 mt-0" body-class="p-0 mr-3 mt-1 mb-1">
@@ -66,24 +66,45 @@
         </b-card-text>
       </b-card>
     </div> -->
+  <!-- </div>
+  </b-overlay> -->
+
+  <!-- <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
+  <div class="row">
+    <div class="col">
+      <! -- title="<h5><i class='far fa-list-alt text-primary'></i> Orçamentos</h5>" -- >
+      <Widget
+        bodyClass="widget-table-overflow"
+        customHeader
+        style="width:100%"
+      >
+        <div class="widget-title ml-4 mb-3">
+          <h5><i class='far fa-file-alt text-primary'></i>&nbsp;&nbsp;Dados do Mes de </h5>
+        </div>
+      </Widget>
+    </div>
   </div>
-  </b-overlay>
+  </b-overlay> -->
 
 
   <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
   <div class="row">
     <div class="col">
+      <!-- title="<h5><i class='far fa-list-alt text-primary'></i> Orçamentos</h5>" -->
       <Widget
-        title="<h5><i class='far fa-list-alt text-primary'></i> Orçamentos</h5>"
+        
         bodyClass="widget-table-overflow"
         customHeader
         style="width:100%"
       >
-        <!-- <div class="widget-controls">
-            <a v-if="canAdd" data-widgster="collapse" v-b-tooltip.hover title="Incluir Registro" @click="modalAddRegistry()"><i class="fas fa-plus text-success"></i></a>
-            &nbsp;
-            <a data-widgster="load" v-b-tooltip.hover title="Refresh" @click="getRegisters()"><i class="fas fa-sync-alt text-primary"></i></a>
-        </div> -->
+        <div class="widget-title ml-4 mb-3">
+          <h5><i class='far fa-list-alt text-primary'></i> Orçamentos com alterações em {{nomeMes}}/{{ano}}</h5>
+        </div>
+        <div class="widget-controls">
+            <!-- <a v-if="canAdd" data-widgster="collapse" v-b-tooltip.hover title="Incluir Registro" @click="modalAddRegistry()"><i class="fas fa-plus text-success"></i></a>
+            &nbsp; -->
+            <a data-widgster="load" v-b-tooltip.hover title="Refresh" @click="getDashboard()"><i class="fas fa-sync-alt text-primary"></i></a>
+        </div>
 
         <table class="table table-striped table-hover table-lg mb-0 requests-table mt-3 border-1">
             <thead>
@@ -199,10 +220,16 @@ export default {
       StsX: 0, VlrX: 0,
       StsF: 0, VlrF: 0,
       StsC: 0, VlrC: 0,
+      nomeMes: null,
+      ano: null,
     };
   },
   methods: {
     getDashboard(){
+      let date = new Date(); // 2020-06-21
+      this.nomeMes = date.toLocaleString('pt-BR', { month: 'long' }); /* June */
+      this.ano = new Date().getFullYear()
+
       this.processando = true;
         this.$http({
           method: 'get',
@@ -279,7 +306,9 @@ export default {
   },
   created(){
     this.$store.commit('setNomePagina', '<i class="fas fa-tachometer-alt"></i>&nbsp;Dashboard')
-
+    if(! (this.$store.state.user.type=='A' || this.$store.state.user.type=='S')) {
+      this.$router.push({ name: 'SemPermissao'}); 
+    }
     this.getDashboard()
   }
 };

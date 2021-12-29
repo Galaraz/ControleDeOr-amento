@@ -110,11 +110,11 @@ export default {
           this.token = res.data.access_token
           this.$http.defaults.headers.common['Authorization'] = 'Bearer '+this.token
           // console.log('Bearer '+this.token);
-          // this.$store.commit('setAppToken', this.token)
+          this.$store.commit('setAppToken', this.token)
 
-          // var now = new Date();
-          // var expira = new Date(now.getTime() + res.data.expires_in*1000);
-          // this.$store.commit('setAppTokenExpiration', expira)
+          var now = new Date();
+          var expira = new Date(now.getTime() + res.data.expires_in*1000);
+          this.$store.commit('setAppTokenExpiration', expira)
           
           this.progresso = 50
           this.getMe()
@@ -148,7 +148,7 @@ export default {
         this.$store.commit('setUser', result.data)
         // console.log(this.$store.state.user);
         this.progresso = 60
-        this.$router.push({name: 'DashboardPage'}); 
+        this.$router.push({name: 'PaginaInicial'}); 
         //this.getPrivilegios()
       })
       .catch((error) => {

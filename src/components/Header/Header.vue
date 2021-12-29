@@ -80,7 +80,9 @@
         </b-dropdown-item-button> -->
         <b-dropdown-item><i class="far fa-user" /> Meus Dados</b-dropdown-item>
         <b-dropdown-divider />
-        <b-dropdown-item><i class="fas fa-lock" /> Trocar senha</b-dropdown-item>
+        <b-dropdown-item @click="trocarSenha()">
+          <i class="fas fa-lock" /> Trocar senha
+        </b-dropdown-item>
         <b-dropdown-divider />
         <b-dropdown-item-button @click="logout">
           <i class="fas fa-sign-out-alt" /> Sair do Sistema
@@ -140,8 +142,11 @@ export default {
     logout() {
       window.localStorage.setItem('authenticated', false);
       this.$store.commit('clearUser')
-      this.$router.push('/login');
+      this.$router.push('/logout');
     },
+    trocarSenha(){
+      this.$router.push({ name: 'CadastroUsuarioTrocaSenhaPage'})
+    }
   }
 };
 </script>

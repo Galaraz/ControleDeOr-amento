@@ -4,6 +4,9 @@ import Layout from '@/components/Layout/Layout';
 
 
 import Login from '@/pages/login/Login';
+import Logout from '@/pages/logout';
+import SemPermissaoPage from '@/pages/semPermissao';
+import PaginaInicialPage from '@/pages/paginaInicial';
 import DashboardPage from '@/pages/dashboard';
 import OrcamentoNovo from '@/pages/orcamento/orcamentoNovo';
 import OrcamentoLista from '@/pages/orcamento/orcamentoLista';
@@ -15,13 +18,20 @@ import CadClientePage from '@/pages/cadastros/clientes.vue'
 import CadastroEquipamentosPage from '@/pages/cadastros/equipamentos.vue'
 import CadastroEquipamentoPage from '@/pages/cadastros/equipamento.vue'
 import CadastroFuncoesPage from '@/pages/cadastros/funcoes.vue'
+import CadastroUsuariosPage from '@/pages/cadastros/usuarios.vue'
+import CadastroUsuarioPage from '@/pages/cadastros/usuario.vue'
+import CadastroUsuarioTrocaSenhaPage from '@/pages/cadastros/usuarioTrocaSenha.vue'
 
 import EstoqueEntradaPage from '@/pages/estoque/entrada.vue'
 import EstoqueSaidaPage from '@/pages/estoque/saida.vue'
 import EstoqueRelatorioPage from '@/pages/estoque/relatorioEstoque.vue'
 import EstoqueAbaixoMinimoPage from '@/pages/estoque/relatorioAbaixoMinimo.vue'
+import EstoqueSaidaOrcamentoPage from '@/pages/estoque/saidaOrcamento.vue'
 
-import UnderConstructionPage from '@/pages/underConstruction.vue'
+import OrdemServicoListaPage from '@/pages/ordemServico/lista.vue'
+import OrdemServicoDetalhePage from '@/pages/ordemServico/detalhe.vue'
+
+// import UnderConstructionPage from '@/pages/underConstruction.vue'
 
 Vue.use(Router);
 
@@ -34,6 +44,11 @@ export default new Router({
       component: Login,
     },
     {
+      path: '/logout',
+      name: 'Logout',
+      component: Logout,
+    },  
+    {
       path: '/',
       name: 'Layout',
       component: Layout,
@@ -43,7 +58,16 @@ export default new Router({
           name: 'DashboardPage',
           component: DashboardPage,
         },
-
+        {
+          path: 'paginainicial',
+          name: 'PaginaInicial',
+          component: PaginaInicialPage,
+        },
+        {
+          path: 'sempermissao',
+          name: 'SemPermissao',
+          component: SemPermissaoPage,
+        },
         {
           path: 'orcamento/orcamento',
           name: 'orcamento-orcamento',
@@ -100,7 +124,7 @@ export default new Router({
         {
           path: 'saidaorcamento',
           name: 'EstoqueSaidaOrcamentoPage',
-          component: UnderConstructionPage
+          component: EstoqueSaidaOrcamentoPage
         },
         {
           path: 'relestoque',
@@ -114,10 +138,28 @@ export default new Router({
         },
       ],
     },
+
+    {
+      path: '/ordemservico',
+      name: 'ordemservico',
+      component: Layout,
+      children: [
+        {
+          path: 'lista',
+          name: 'OrdemServicoListaPage',
+          component: OrdemServicoListaPage
+        },
+        {
+          path: 'os/:uuid',
+          name: 'OrdemServicoDetalhePage',
+          component: OrdemServicoDetalhePage
+        },
+      ],
+    },
       
     {
       path: '/cadastros',
-      name: 'Layout',
+      name: 'cadastros',
       component: Layout,
       children: [
         {
@@ -149,7 +191,33 @@ export default new Router({
           // component: () => import('@/pages/cadastros/clientes.vue')
           component: CadClientePage,
         },
+        {
+          path: 'usuarios',
+          name: 'CadastroUsuariosPage',
+          component: CadastroUsuariosPage,
+        },
+        {
+          path: 'usuario/trocarsenha',
+          name: 'CadastroUsuarioTrocaSenhaPage',
+          component: CadastroUsuarioTrocaSenhaPage,
+        },
+        {
+          path: 'usuario/:uuid',
+          name: 'CadastroUsuarioPage',
+          // component: () => import(/* webpackChunkName: "cad" */ '@/pages/CAD/usuario.vue')
+          component: CadastroUsuarioPage,
+        },
+        
+
+        
+
+        
       ],
+    },
+
+    {
+      path: "*",
+      redirect: "/paginainicial"
     }
    ] 
 });

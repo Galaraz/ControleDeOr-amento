@@ -1,6 +1,6 @@
 <template>
 <div>
-<b-alert show variant="warning"><i class="fas fa-exclamation-triangle"></i> Em Validação.</b-alert>
+<!-- <b-alert show variant="warning"><i class="fas fa-exclamation-triangle"></i> Em Validação.</b-alert> -->
     <div class="row">
         <div class="col col-6">
             <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
@@ -101,11 +101,11 @@
                         <b-form-group
                             id="grp-21"
                             label="Estoque"
-                            label-for="vlr_material"
+                            label-for="qtd_estoque"
                         >
                             <b-form-input 
-                                v-model="material.qtd_estoque" 
-                                id="vlr_material"
+                                v-model="qtd_estoque" 
+                                id="qtd_estoque"
                                 ref="focusValor"
                                 number
                                 disabled
@@ -259,9 +259,9 @@ export default {
             locais: [],
             id_local: null,
             material: [],
-            descricao: null,
             materiais: [],
             materiais_saida: [],
+            qtd_estoque: null,
         }
     },
     methods: {
@@ -279,6 +279,10 @@ export default {
                 // this.registry = result.data
                 // this.material.nome = result.data.nome
                 this.material = result.data
+                // console.log('GetMaterial');
+                // console.log(this.material);
+                // console.log(this.numeroBR(this.material.qtd_estoque,0));
+                this.qtd_estoque = this.numeroBR(this.material.qtd_estoque,0)
                 // this.material.valor = result.data.vlr_custo
                 this.$refs.focusQtd.$el.focus()
 
@@ -302,6 +306,7 @@ export default {
                         this.material.nome = this.material.id+' - Não encontrado'
                         this.material.qtd = null
                         this.material.valor = null
+                        this.qtd_estoque = null
                         this.$refs.focusID.$el.focus()
                         this.$bvToast.toast('Equipamento '+this.material.id+' não encontrado', {
                             title: 'Erro',
@@ -530,6 +535,7 @@ export default {
         materialSelecionarLista(index){
             this.$bvModal.hide("mMaterial")
             this.material = this.materiais[index]
+            this.qtd_estoque = this.numeroBR(this.material.qtd_estoque,0)
             this.focusQtd()
         },
 
@@ -545,6 +551,9 @@ export default {
     },
     created(){
         this.$store.commit('setNomePagina', '<i class="fas fa-barcode"></i>&nbsp;Estoque&nbsp;&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i>&nbsp;Saída de Equipamento do Estoque')
+        if(! (this.$store.state.user.type=='A' || this.$store.state.user.type=='S')) {
+            this.$router.push({ name: 'SemPermissao'}); 
+        }
     }
 };
 </script>

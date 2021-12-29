@@ -40,6 +40,7 @@ export default {
       // eslint-disable-next-line
       console.log(error)
       if(error.response){
+        console.log("Erro Conexao: "+error.response.status);
         if(error.response.status === 401) {
           this.$router.push({ name: 'Logout'}); 
         }
@@ -136,12 +137,19 @@ export default {
       if(data==null ||data=="" ){ return null }
       return (data.substr(0, 10).split('-').reverse().join('/') );
     },
-    numeroBR(numero){
+    numeroBR(numero,casas){
+      // console.log("**** numeroBR: "+numero+" / "+casas);
+      if(casas===null || casas===undefined){ casas = 2 }
       if(numero==null){
-        return "0,00"
+        if(casas>0){
+          return "0,00"
+        } else {
+          return "0"
+        }
       }
+      // console.log("Casas decimais: "+casas)
       numero = parseFloat(numero)
-      numero = numero.toFixed(2).split('.');
+      numero = numero.toFixed(casas).split('.');
       numero[0] = numero[0].split(/(?=(?:...)*$)/).join('.');
       return numero.join(',');
     }

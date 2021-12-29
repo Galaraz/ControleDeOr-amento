@@ -1,7 +1,5 @@
 <template>
 <div>
-    <b-alert show variant="warning"><i class="fas fa-exclamation-triangle"></i> Em Validação.</b-alert>
-
     <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
     <div class="row d-flex justify-content-between mt-0 mb-4 ml-1 mr-1">
 
@@ -168,8 +166,8 @@
                         <td class="text-center">{{dataHoraBR(movimentacao.created_at)}}</td>
                         <td class="text-center">{{(movimentacao.tipo)}}</td>
                         <td class="text-right">{{numeroBR(movimentacao.valor)}}</td>
-                        <td class="text-right">{{movimentacao.qtd}}</td>
-                        <td class="text-right">{{movimentacao.qtd_estoque}}</td>
+                        <td class="text-right">{{numeroBR(movimentacao.qtd,0)}}</td>
+                        <td class="text-right">{{numeroBR(movimentacao.qtd_estoque,0)}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -261,6 +259,8 @@ export default {
 
                 this.processando = false
                 this.registry = result.data
+                this.registry.qtd_estoque = this.numeroBR(this.registry.qtd_estoque,0)
+                this.registry.qtd_estoque_min = this.numeroBR(this.registry.qtd_estoque_min,0)
             })
             .catch( error => {
                 // eslint-disable-next-line

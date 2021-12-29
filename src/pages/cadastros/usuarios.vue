@@ -22,17 +22,17 @@
                     <tr>
                         <th class="text-center" style="width:50px"><i class="fas fa-circle text-secondary fa-lg"></i></th>
                         <th>Nome</th>
-                        <th>Descrição</th>
-                        <th>Valor</th>
+                        <th>E-mail</th>
+                        <th>Tipo</th>
                         <th v-if="canUpdate" style="width:50px" v-b-tooltip.hover title="Editar"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="(row, index) in registers.data" :key="row.id">
                         <td class="text-center"><span v-html="colorStatus(index)"></span></td>
-                        <td>{{row.nome}}</td>
-                        <td>{{row.descricao}}</td>
-                        <td>{{row.valor}}</td>
+                        <td>{{row.name}}</td>
+                        <td>{{row.email}}</td>
+                        <td>{{textType(row)}}</td>
                         <td v-if="canUpdate" class="text-center">
                             <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
                         </td>
@@ -59,9 +59,9 @@
                             <pagination v-if="registers.data.length>0" :data="registers" :limit=3 @pagination-change-page="getRegisters"></pagination>
                         </td>
                         <td class="text-right">
-                            <b-button disabled v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
+                            <!-- <b-button disabled v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
                             &nbsp;&nbsp;&nbsp;
-                            <b-button disabled v-b-tooltip.hover title="Imprimir" variant="default" size="sm" class="mr-2"><i class="fas fa-print ml-2 mr-2"></i></b-button>
+                            <b-button disabled v-b-tooltip.hover title="Imprimir" variant="default" size="sm" class="mr-2"><i class="fas fa-print ml-2 mr-2"></i></b-button> -->
                         </td>
                     </tr>
                 </table>
@@ -80,8 +80,29 @@
     content-class="shadow"
     @shown="focusNome"
 >
+    <b-overlay variant="white" spinner-variant="primary" :show="processandoAdd" rounded="sm" style="width:100%">
     <div class="row">
-        <div class="col">
+        <div class="col col-6">
+            <b-form-group
+                id="group-type"
+                label="Tipo de usuário"
+                label-for="type"
+            >
+                <v-select
+                    v-model="type"
+                    :options="opt_type"
+                    value-field="id"
+                    inputId="id"
+                    label="nome"
+                    name="type"
+                    id="type"
+                    style="width:300px"
+                ></v-select>
+            </b-form-group>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-6">
             <b-form-group
                 id="grp-nome"
                 label="Nome"
@@ -91,7 +112,7 @@
                 <b-form-input 
                     id="nome" 
                     ref="focusNome"
-                    v-model="registry.nome" 
+                    v-model="registry.name" 
                     :state="stateNome"
                     trim
                 ></b-form-input>
@@ -99,6 +120,24 @@
         </div>
     </div>
     <div class="row">
+        <div class="col">
+            <b-form-group
+                id="grp-email"
+                label="E-mail"
+                label-for="email"
+                :state="stateEmail"
+            >
+                <b-form-input 
+                    id="email" 
+                    v-model="registry.email" 
+                    :state="stateEmail"
+                    trim
+                    type="email"
+                ></b-form-input>
+            </b-form-group>
+        </div>
+    </div>
+    <!-- <div class="row">
         <div class="col">
             <b-form-group
                 id="grp-descricao"
@@ -113,32 +152,21 @@
                 ></b-form-textarea>
             </b-form-group>
         </div>
-    </div>
+    </div> -->
+    </b-overlay>
 
     <template v-slot:modal-footer="{ cancel }">
+        <b-overlay variant="white" spinner-variant="primary" :show="processandoAdd" rounded="sm" style="width:100%">
         <table class="w-100">
             <tr>
                 <td>
-                    <b-button v-if="btnDeleteRecord" size="sm" variant="danger" v-b-tooltip.hover title="Excluir" @click="deleteRecord()" class="ml-2">
-                        <i class="fas fa-trash-alt ml-2 mr-2"></i>
-                    </b-button>
-                    <span v-if="registry.status=='A'">
-                        <b-button v-if="canUpdate" size="sm" variant="warning" v-b-tooltip.hover title="Inativar" class="mr-4 ml-4" @click="inativar()">
-                            <i class="fas fa-ban ml-2 mr-2"></i>
-                        </b-button>
-                    </span>
-                    <span v-else>
-                        <b-button v-if="canUpdate" size="sm" variant="success" v-b-tooltip.hover title="Ativar" class="mr-4 ml-4" @click="ativar()">
-                            <i class="fas fa-ban ml-2 mr-2"></i>
-                        </b-button>
-                    </span>
                 </td>
                 <td class="text-right">
                     <b-button size="sm" variant="warning" v-b-tooltip.hover title="Fechar" @click="cancel()">
                         <i class="fas fa-times ml-2 mr-2"></i>
                     </b-button>
                     &nbsp;&nbsp;&nbsp;
-                    <b-button :disabled="disableBtnSaveRegistry" size="sm" variant="primary" v-b-tooltip.hover title="Salvar dados" @click="processRegistry()">
+                    <b-button :disabled="disableBtnSaveRegistry" size="sm" variant="primary" v-b-tooltip.hover title="Salvar" @click="processRegistry()">
                         <i class="fas fa-save ml-2 mr-2"></i>
                     </b-button>
                     <!-- :disabled="disableBtnSaveRegistry" -->
@@ -147,6 +175,7 @@
             </tr>
 
         </table> 
+        </b-overlay>
     </template>
 </b-modal>
 
@@ -166,11 +195,22 @@ export default {
             canGet: true,
             ////
             processando: false,
-            registry: { nome: "", obs:"" },
+            processandoAdd: false,
+            registry: { name: "", email: "", obs:"" },
             registers: {data: [] },
             modalTitle: null,
             btnDeleteRecord: false,
             btnSaveRecord: false,
+
+            opt_type: [
+                { id: 'A', nome: 'Administrador' },
+                { id: 'S', nome: 'Supervisor' },
+                { id: 'U', nome: 'Usuário' },
+            ],
+            type: {},
+
+            reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+
         }
     },
     methods: {
@@ -188,7 +228,7 @@ export default {
             this.processando = true
             this.$http({
                 method: 'get',
-                url: 'http://back.naxsysbrasil.com.br/api/cad/usarios?page=' + page,
+                url: process.env.VUE_APP_URL_BASE_API +'/api/cad/usuarios?page=' + page,
             })
             .then(result => {
                 this.processando = false
@@ -206,133 +246,85 @@ export default {
         },
 
         editRegistry(index){
-            this.modalTitle = 'Seção: '+ this.registers.data[index].id
-            this.registry = this.registers.data[index]
-            this.registry.action = 'U'
-            this.registry.pos = index
-            // this.btnDeleteRecord = true
-            this.$bvModal.show("mRegistry")
+            // console.log(this.registers);
+            this.$router.push({ name: 'CadastroUsuarioPage', params: { uuid: this.registers.data[index].uuid}})
+
+            // this.modalTitle = 'Seção: '+ this.registers.data[index].id
+            // this.registry = this.registers.data[index]
+            // this.registry.action = 'U'
+            // this.registry.pos = index
+            // // this.btnDeleteRecord = true
+            // this.$bvModal.show("mRegistry")
         },
         modalAddRegistry(){
-            this.modalTitle = "Nova Seção"
+            this.modalTitle = "Novo Usuário"
             this.registry = { 
-                action: "I", 
-                nome: "",
-                descricao: ""
+                name: "",
+                full_name: "",
+                email: "",
             }
+            this.type = this.opt_type[2]
             this.$bvModal.show("mRegistry")
         },
 
         processRegistry(){
-            this.processando = true
-            this.$bvModal.hide("mRegistry")
-            if(this.registry.action=='U'){
-                this.$http({
-                    method: 'patch',
-                    url: 'http://back.naxsysbrasil.com.br/api/cad/usuarios?',
-                    data: this.registry
-                })
-                .then( () => {
-                    this.processando = false
-                    // this.registers.push(result.data)
-                    this.showMessage('Registro alterado com sucesso.')
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line
-                    console.log(error)
-                    this.processando = false
-                    this.erroConexao(error)
-                })
 
+            if(!this.reg.test(this.registry.email)){
+                alert("Digite um e-mail válido.")
+                return
+            }
+
+            this.processandoAdd = true
+            var bodyFormData = new FormData();
+            bodyFormData.append("name", this.registry.name);
+            bodyFormData.append("email", this.registry.email);
+            bodyFormData.append("type", this.type.id);
+
+            this.$http({
+                method: 'post',
+                url: process.env.VUE_APP_URL_BASE_API +'/api/cad/usuarios',
+                data: bodyFormData
+            })
+            .then(result => {
+                this.processandoAdd = false
+                this.registers.data.push(result.data)
+                this.$bvModal.hide("mRegistry")
+                this.showMessage('Registro incluído com sucesso.')
+            })
+            .catch((error) => {
+                // eslint-disable-next-line
+                // console.log(error)
+                this.processandoAdd = false
+                this.erroConexao(error)
+            })
+
+        },
+
+        textType(registro){
+            if(registro.type=='A') {
+                return 'Administrador'
+            } else if(registro.type=='U') {
+                return 'Usuário'
+            } else if(registro.type=='S') {
+                return 'Supervisor'
             } else {
-
-                var bodyFormData = new FormData();
-                bodyFormData.append("nome", this.registry.nome);
-                bodyFormData.append("descricao", this.registry.descricao);
-
-                this.$http({
-                    method: 'post',
-                    url: 'http://back.naxsysbrasil.com.br/api/cad/usuarios?',
-                    data: bodyFormData
-                })
-                .then(result => {
-                    this.processando = false
-                    this.registers.data.push(result.data)
-                    this.showMessage('Registro incluído com sucesso.')
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line
-                    // console.log(error)
-                    this.processando = false
-                    this.erroConexao(error)
-                })
-            }
-
-        },
-
-        inativar(){
-            var mensagem = "Deseja realmente INATIVAR este registro?\n\n"
-            if(confirm(mensagem)){
-                this.processando = true
-                this.$http({
-                    method: 'patch',
-                    url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao/inativar',
-                    data: { uuid: this.registry.uuid }
-                })
-                .then( () => {
-                    this.processando = false
-                    this.registry.status = "I"
-                    
-                    // eslint-disable-next-line
-                    // console.log(result)
-                    // this.registry.fk_endereco.push(result)
-                    this.showMessage('Registro alterado com sucesso.')
-                    this.$bvModal.hide("mRegistry")
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line
-                    console.log(error)
-                    this.processandoEndereco = false
-                    this.erroConexao(error)
-                })
-            }
-        },
-
-        ativar(){
-            var mensagem = "Deseja ATIVAR o registro?\n\n"
-            if(confirm(mensagem)){
-                this.processando = true
-                this.$http({
-                    method: 'patch',
-                    url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao/ativar',
-                    data: { uuid: this.registry.uuid }
-                })
-                .then( () => {
-                    this.processando = false
-                    this.registry.status = "A"
-                    
-                    // eslint-disable-next-line
-                    // console.log(result)
-                    // this.registry.fk_endereco.push(result)
-                    this.showMessage('Registro alterado com sucesso.')
-                    this.$bvModal.hide("mRegistry")
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line
-                    console.log(error)
-                    this.processandoEndereco = false
-                    this.erroConexao(error)
-                })
+                return 'Erro: '+registro.status
             }
         },
         
     },
     computed: {
         stateNome() {
-            return this.registry.nome.length >= 4
+            return this.registry.name.length >= 4
+        },
+        stateEmail() {
+            return this.registry.email.length >= 4
         },
         disableBtnSaveRegistry(){
             if(!this.stateNome){
+                return true
+            }
+            if(!this.stateEmail){
                 return true
             }
             return false
@@ -341,10 +333,13 @@ export default {
     created(){
         //Validando permissao e secao
         // this.mccUsuarioValidar('jps.exametipo.list')
-        this.$store.commit('setNomePagina', '<i class="fas fa-cogs"></i>&nbsp;Cadastros&nbsp;&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;&nbsp;&nbsp;<i class="fas fa-truck"></i>&nbsp;Usuarios')
+        this.$store.commit('setNomePagina', '<i class="fas fa-cogs"></i>&nbsp;Cadastros&nbsp;&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;&nbsp;&nbsp;<i class="fas fa-users"></i>&nbsp;Usuarios')
         // this.canAdd = this.usuarioTemPermissao('jps.exametipo.add')
         // this.canUpdate = this.usuarioTemPermissao('jps.exametipo.update')
         // this.canGet = this.usuarioTemPermissao('privilegio_para_get')
+        if(! (this.$store.state.user.type=='A')) {
+            this.$router.push({ name: 'SemPermissao'}); 
+        }
 
         this.getRegisters()
         // this.getSecoes()

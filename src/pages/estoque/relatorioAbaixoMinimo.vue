@@ -1,6 +1,6 @@
 <template>
 <div>
-<b-alert show variant="warning"><i class="fas fa-exclamation-triangle"></i> Em Validação.</b-alert>
+<!-- <b-alert show variant="warning"><i class="fas fa-exclamation-triangle"></i> Em Validação.</b-alert> -->
 
     <div class="row">
         <div class="col">
@@ -32,8 +32,8 @@
                     <tr v-for="(row) in registers.data" :key="row.id">
                         <td class="text-right">{{row.id}}</td>
                         <td>{{row.nome}}</td>
-                        <td class="text-right">{{numeroBR(row.qtd_estoque_min)}}</td>
-                        <td class="text-right">{{numeroBR(row.qtd_estoque)}}</td>
+                        <td class="text-right">{{numeroBR(row.qtd_estoque_min,0)}}</td>
+                        <td class="text-right">{{numeroBR(row.qtd_estoque,0)}}</td>
                         <!-- <td v-if="canUpdate" class="text-center">
                             <a @click="editRegistry(index)"><i class="far fa-edit text-info"></i></a>
                         </td> -->
@@ -151,6 +151,9 @@ export default {
     },
     created(){
         this.$store.commit('setNomePagina', '<i class="fas fa-barcode"></i>&nbsp;Estoque&nbsp;&nbsp;&nbsp;<i class="fas fa-angle-right"></i>&nbsp;&nbsp;&nbsp;<i class="fas fa-boxes"></i>&nbsp;Relatório de Estoque Abaixo do Mínimo')
+        if(! (this.$store.state.user.type=='A' || this.$store.state.user.type=='S')) {
+            this.$router.push({ name: 'SemPermissao'}); 
+        }
 
         this.getRegisters()
     }

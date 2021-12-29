@@ -65,9 +65,9 @@
                             <pagination v-if="registers.data.length>0" :data="registers" :limit=3 @pagination-change-page="getRegisters"></pagination>
                         </td>
                         <td class="text-right">
-                            <b-button disabled v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
+                            <!-- <b-button disabled v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
                             &nbsp;&nbsp;&nbsp;
-                            <b-button disabled v-b-tooltip.hover title="Imprimir" variant="default" size="sm" class="mr-2"><i class="fas fa-print ml-2 mr-2"></i></b-button>
+                            <b-button disabled v-b-tooltip.hover title="Imprimir" variant="default" size="sm" class="mr-2"><i class="fas fa-print ml-2 mr-2"></i></b-button> -->
                         </td>
                     </tr>
                 </table>
@@ -254,7 +254,7 @@ export default {
             this.processando = true
             this.$http({
                 method: 'get',
-                url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes?page=' + page,
+                url: process.env.VUE_APP_URL_BASE_API+'/api/cad/funcoes?page=' + page,
             })
             .then(result => {
                 this.processando = false
@@ -297,7 +297,7 @@ export default {
             if(this.registry.action=='U'){
                 this.$http({
                     method: 'patch',
-                    url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes?',
+                    url: process.env.VUE_APP_URL_BASE_API+'/api/cad/funcoes',
                     data: this.registry
                 })
                 .then( () => {
@@ -324,7 +324,7 @@ export default {
                 
                 this.$http({
                     method: 'post',
-                    url: 'http://back.naxsysbrasil.com.br/api/cad/funcoes',
+                    url: process.env.VUE_APP_URL_BASE_API+'/api/cad/funcoes',
                     data: bodyFormData
                 })
                 .then(result => {
@@ -417,6 +417,10 @@ export default {
         // this.canAdd = this.usuarioTemPermissao('jps.exametipo.add')
         // this.canUpdate = this.usuarioTemPermissao('jps.exametipo.update')
         // this.canGet = this.usuarioTemPermissao('privilegio_para_get')
+
+        if(! (this.$store.state.user.type=='A')) {
+            this.$router.push({ name: 'SemPermissao'}); 
+        }
 
         this.getRegisters()
         // this.getSecoes()

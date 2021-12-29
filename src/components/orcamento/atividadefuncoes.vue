@@ -304,8 +304,9 @@ export default {
                     // url: "http://127.0.0.1:8000/api/orcamentoversaoatividadesfuncoes",
                     data: bodyFormData
                 })
-                .then(() => {
+                .then(result => {
                     this.processando = false;
+                    this.funcaoNova.uuid = result.data.uuid
                     // this.atividade.fk_funcoes.splice(0,0,result)
                     this.atividade.fk_funcoes.splice(0,0,this.funcaoNova)
                     this.funcaoNova = {id: null, uuid: null, qtd_colaboradores: 1, qtd_horas: 0, qtd_horas_50: 0, qtd_horas_100: 0, qtd_horas_noturno: 0}
@@ -336,7 +337,39 @@ export default {
             if(confirm(mensagem)){
 
                 if(this.atividade.uuid){
-                    alert("Savar base")
+
+                    var ativSel = this.atividade.fk_funcoes[index]
+                    var totAtividade =  (
+                                        ( ativSel.qtd_horas * ativSel.valor_hora ) +
+                                        ( ativSel.qtd_horas_50 * ativSel.valor_hora_50 ) +
+                                        ( ativSel.qtd_horas_100 * ativSel.valor_hora_100 ) +
+                                        ( ativSel.qtd_horas_noturno * ativSel.valor_hora_noturno )
+                                    ) * ativSel.qtd_colaboradores
+                    this.Total = this.Total - totAtividade
+                    
+                    this.processando = true
+                    this.$http({
+                        method: 'delete',
+                        url: process.env.VUE_APP_URL_BASE_API + "/api/orcamentoversaoatividadesfuncoes",
+                        data: { uuid: this.atividade.fk_funcoes[index].uuid }
+                    })
+                    .then(() => {
+                        this.processando = false
+                        this.atividade.fk_funcoes.splice(index, 1)
+                        this.$emit('atividade_Funcao_Atualizacao', this.atividade.fk_funcoes)
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line
+                        console.log(error);
+                        this.processando = false;
+                        this.showMessage('Erro na conexão[AtividadeFuncao-Delete]. Acione o suporte.', 'danger');
+                        this.erroConexao(error);
+                    });
+
+
+
+
+
                 } else {
                     var ativSel = this.atividade.fk_funcoes[index]
                     var totAtividade =  (
@@ -380,10 +413,35 @@ export default {
                                         ( (element.qtd_horas_noturno) * element.valor_hora_noturno )
                                     ) * (element.qtd_colaboradores)
                 this.Total = this.Total + totAtividade
+
+
+                // this.$http({
+                //     method: 'get',
+                //     url: process.env.VUE_APP_URL_BASE_API + "/api/cad/funcoes/"+element.id_funcao,
+                //     data: { uuid: element.id_funcao }
+                // })
+                // .then(result => {
+                //     element.nome = result.data.nome
+                // })
+                // .catch((error) => {
+                //     // eslint-disable-next-line
+                //     console.log(error);
+                //     this.processando = false;
+                //     this.showMessage('Erro na conexão[AtividadeFuncao-Delete]. Acione o suporte.', 'danger');
+                //     this.erroConexao(error);
+                // });
+
+                
+
+
+
             });
+            this.atividade = this.atividade
         }
 
         this.getFuncoes()
+
+        console.log(this.atividade)
     }
 };
 </script>

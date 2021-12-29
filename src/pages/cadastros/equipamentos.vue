@@ -1,6 +1,5 @@
 <template>
 <div>
-    <b-alert show variant="warning"><i class="fas fa-exclamation-triangle"></i> Em Desenvolvimento.</b-alert>
     <div class="row">
         <div class="col">
             <b-overlay variant="white" spinner-variant="primary" :show="processando" rounded="sm" style="width:100%">
@@ -63,9 +62,9 @@
                             <pagination v-if="registers.data.length>0" :data="registers" :limit=3 @pagination-change-page="getRegisters"></pagination>
                         </td>
                         <td class="text-right">
-                            <b-button disabled v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
-                            &nbsp;&nbsp;&nbsp;
-                            <b-button disabled v-b-tooltip.hover title="Imprimir" variant="default" size="sm" class="mr-2"><i class="fas fa-print ml-2 mr-2"></i></b-button>
+                            <b-button :disabled="btnExcelDisabled" v-b-tooltip.hover title="Gerar Excel" variant="default" size="sm" class="mr-2" @click="excel()"><i class="far fa-file-excel ml-2 mr-2"></i></b-button>
+                            <!-- &nbsp;&nbsp;&nbsp;
+                            <b-button disabled v-b-tooltip.hover title="Imprimir" variant="default" size="sm" class="mr-2"><i class="fas fa-print ml-2 mr-2"></i></b-button> -->
                         </td>
                     </tr>
                 </table>
@@ -190,6 +189,8 @@
     </template>
 </b-modal>
 
+<iframe id="iExec" name="iExec" frameborder="0" height="00" width="00" ></iframe>
+
 </div>
 </template>
 
@@ -211,6 +212,8 @@ export default {
             modalTitle: null,
             btnDeleteRecord: false,
             btnSaveRecord: false,
+
+            btnExcelDisabled: false,
         }
     },
     methods: {
@@ -325,60 +328,97 @@ export default {
 
         },
 
-        inativar(){
-            var mensagem = "Deseja realmente INATIVAR este registro?\n\n"
-            if(confirm(mensagem)){
-                this.processando = true
-                this.$http({
-                    method: 'patch',
-                    url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao/inativar',
-                    data: { uuid: this.registry.uuid }
-                })
-                .then( () => {
-                    this.processando = false
-                    this.registry.status = "I"
+        // inativar(){
+        //     var mensagem = "Deseja realmente INATIVAR este registro?\n\n"
+        //     if(confirm(mensagem)){
+        //         this.processando = true
+        //         this.$http({
+        //             method: 'patch',
+        //             url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao/inativar',
+        //             data: { uuid: this.registry.uuid }
+        //         })
+        //         .then( () => {
+        //             this.processando = false
+        //             this.registry.status = "I"
                     
-                    // eslint-disable-next-line
-                    // console.log(result)
-                    // this.registry.fk_endereco.push(result)
-                    this.showMessage('Registro alterado com sucesso.')
-                    this.$bvModal.hide("mRegistry")
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line
-                    console.log(error)
-                    this.processandoEndereco = false
-                    this.erroConexao(error)
-                })
-            }
-        },
+        //             // eslint-disable-next-line
+        //             // console.log(result)
+        //             // this.registry.fk_endereco.push(result)
+        //             this.showMessage('Registro alterado com sucesso.')
+        //             this.$bvModal.hide("mRegistry")
+        //         })
+        //         .catch((error) => {
+        //             // eslint-disable-next-line
+        //             console.log(error)
+        //             this.processandoEndereco = false
+        //             this.erroConexao(error)
+        //         })
+        //     }
+        // },
 
-        ativar(){
-            var mensagem = "Deseja ATIVAR o registro?\n\n"
-            if(confirm(mensagem)){
-                this.processando = true
-                this.$http({
-                    method: 'patch',
-                    url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao/ativar',
-                    data: { uuid: this.registry.uuid }
-                })
-                .then( () => {
-                    this.processando = false
-                    this.registry.status = "A"
+        // ativar(){
+        //     var mensagem = "Deseja ATIVAR o registro?\n\n"
+        //     if(confirm(mensagem)){
+        //         this.processando = true
+        //         this.$http({
+        //             method: 'patch',
+        //             url: process.env.VUE_APP_URL_BASE_API+'/api/jps/examesecao/ativar',
+        //             data: { uuid: this.registry.uuid }
+        //         })
+        //         .then( () => {
+        //             this.processando = false
+        //             this.registry.status = "A"
                     
-                    // eslint-disable-next-line
-                    // console.log(result)
-                    // this.registry.fk_endereco.push(result)
-                    this.showMessage('Registro alterado com sucesso.')
-                    this.$bvModal.hide("mRegistry")
-                })
-                .catch((error) => {
-                    // eslint-disable-next-line
-                    console.log(error)
-                    this.processandoEndereco = false
-                    this.erroConexao(error)
-                })
+        //             // eslint-disable-next-line
+        //             // console.log(result)
+        //             // this.registry.fk_endereco.push(result)
+        //             this.showMessage('Registro alterado com sucesso.')
+        //             this.$bvModal.hide("mRegistry")
+        //         })
+        //         .catch((error) => {
+        //             // eslint-disable-next-line
+        //             console.log(error)
+        //             this.processandoEndereco = false
+        //             this.erroConexao(error)
+        //         })
+        //     }
+        // },
+
+        excel(){
+
+            this.btnExcelDisabled = true
+
+            setTimeout(() => {  
+
+                this.openWindowWithPost(process.env.VUE_APP_URL_BASE_API + "/api/cad/equipamentos_ext/excel", 
+                    {
+                        // uuid: this.registry.uuid,
+                    }
+                )
+
+                this.btnExcelDisabled = false
+            }, 5000);
+
+            
+        },
+        openWindowWithPost(url, data) {
+            var form = document.createElement("form");
+            form.target = "iExec";
+            form.method = "POST";
+            form.action = url;
+            form.style.display = "none";
+
+            for (var key in data) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = data[key];
+                form.appendChild(input);
             }
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
         },
         
     },
@@ -400,6 +440,10 @@ export default {
         // this.canAdd = this.usuarioTemPermissao('jps.exametipo.add')
         // this.canUpdate = this.usuarioTemPermissao('jps.exametipo.update')
         // this.canGet = this.usuarioTemPermissao('privilegio_para_get')
+
+        if(! (this.$store.state.user.type=='A')) {
+            this.$router.push({ name: 'SemPermissao'}); 
+        }
 
         this.getRegisters()
         // this.getSecoes()

@@ -77,7 +77,7 @@
         <div class="widget-title">
           <div class="d-inline-flex mb-1">
               <span><h5>&nbsp;&nbsp;<i class='fas fa-list text-primary'></i>&nbsp;&nbsp;Lista de Orçamentos</h5></span>
-              <span class="text-info text-center" style="width:500px;" v-if="processando">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-spinner fa-spin text-info"></i>&nbsp;&nbsp;Processando...</span>
+              <!-- <span class="text-info text-center" style="width:500px;" v-if="processando">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-spinner fa-spin text-info"></i>&nbsp;&nbsp;Processando...</span> -->
           </div>
                 </div>
                 <div class="widget-controls">
@@ -102,7 +102,7 @@
                     </thead>
                     <tbody>
                     <tr v-for="(row, index) in registers.data" :key="row.id">
-                        <td class="text-center" @click="exameProcessar(row, index)"><span v-html="displayStatus(row)"></span></td>
+                        <td class="text-center"><span v-html="displayStatus(row)"></span></td>
                         <td class="text-center">{{textStatus(row)}}</td>
                         <td class="text-left">{{row.codigo}}.{{row.versao}}</td>
                         <td class="text-center">{{textTipo(row)}}</td>
@@ -188,6 +188,8 @@
           return '<i class="fas fa-circle text-success"></i>'
         } else if(registry.status=='R') {
           return '<i class="fas fa-circle text-danger"></i>'
+        } else if(registry.status=='X') {
+          return '<i class="fas fa-circle text-info"></i>'
         } else if(registry.status=='F') {
           return '<i class="fas fa-circle text-dark"></i>'
         } else {
@@ -212,6 +214,8 @@
           return 'Aprovado'
         } else if(registry.status=='R') {
           return 'Rejeitado/Cancelado'
+        } else if(registry.status=='X') {
+          return 'Executado'
         } else if(registry.status=='F') {
           return 'Faturado'
         } else {
@@ -233,8 +237,9 @@
         this.processando = true
         var urlGet = process.env.VUE_APP_URL_BASE_API+'/api/orcamentos?page=' + page 
         if(this.status){
-          urlGet += "&status="+this.$route.params.status
+          // urlGet += "&status="+this.$route.params.status
           // this.status = this.statusLista.find((data) => data.status == this.$route.params.status);
+          urlGet += "&status="+this.status.status
         }
         if(this.cliente!=null && this.cliente!="" && this.cliente!="undefined"){
         // if(this.cliente){

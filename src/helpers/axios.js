@@ -5,7 +5,7 @@ Vue.use({
     install(Vue) {
         // Vue.prototype.$http = axios
         Vue.prototype.$http = axios.create({
-            baseURL: 'http://127.0.0.1:8000/',
+            baseURL: process.env.VUE_APP_URL_BASE_API,
             // baseURL: 'http://jpsback.mcc.tec.br',
         })
         Vue.prototype.$httpExt = axios.create({ })
